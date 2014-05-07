@@ -1,3 +1,5 @@
+export PATH=$PATH:$HOME/Util
+
 alias l='ls --color=auto -l'
 alias la='ls --color=auto -la'
 alias vi=vim
