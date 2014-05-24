@@ -11,3 +11,10 @@ function man
 	man "$argv"
 end
 
+function fish_prompt
+	echo -n (set_color -o blue)(whoami) 
+	echo -n " "
+	echo -n (set_color -o white)(prompt_pwd) 
+	echo -n " "
+	echo (set_color -o blue)\$ (set_color normal)
+end
