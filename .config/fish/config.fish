@@ -1,5 +1,9 @@
 set fish_greeting
 
+set fish_color_autosuggestion 666666
+set fish_color_command '5FAFFF' '--bold'
+set fish_color_param normal
+
 function man
 	command env LESS_TERMCAP_mb=(set_color normal) \
 	LESS_TERMCAP_md=(set_color -o cyan) \
