@@ -4,6 +4,11 @@ set fish_color_autosuggestion 666666
 set fish_color_command '5FAFFF' '--bold'
 set fish_color_param normal
 
+set fish_pager_color_description 878787
+set fish_pager_color_prefix '5FAFFF' '--bold'
+set fish_pager_color_completion normal
+set fish_pager_color_progress white
+
 function man
 	command env LESS_TERMCAP_mb=(set_color normal) \
 	LESS_TERMCAP_md=(set_color -o $fish_color_command) \
