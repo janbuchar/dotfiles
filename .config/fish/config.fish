@@ -25,3 +25,5 @@ function fish_prompt
 	(set_color -o white)(prompt_pwd) \
 	(set_color -o blue)\$ (set_color normal)
 end
+
+bind \cr 'commandline -f execute; commandline -f accept-autosuggestion'
