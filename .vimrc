@@ -1,4 +1,5 @@
 set nocompatible
+set noswapfile
 filetype plugin indent on
 
 if &t_Co > 2 || has("gui_running")
