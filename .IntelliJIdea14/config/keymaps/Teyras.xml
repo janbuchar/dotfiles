@@ -1,0 +1,58 @@
+<keymap version="1" name="Teyras" parent="Default for KDE">
+  <action id="CommentByLineComment">
+    <keyboard-shortcut first-keystroke="control SLASH" />
+    <keyboard-shortcut first-keystroke="control DIVIDE" />
+    <keyboard-shortcut first-keystroke="control D" />
+  </action>
+  <action id="CompareDirs" />
+  <action id="CompareTwoFiles" />
+  <action id="Console.Jdbc.Execute" />
+  <action id="Console.Jpa.Execute" />
+  <action id="CopyElement" />
+  <action id="Debug">
+    <keyboard-shortcut first-keystroke="shift F9" />
+    <keyboard-shortcut first-keystroke="F5" />
+  </action>
+  <action id="EditorChooseLookupItemCompleteStatement">
+    <keyboard-shortcut first-keystroke="shift control ENTER" />
+    <keyboard-shortcut first-keystroke="control ENTER" />
+  </action>
+  <action id="EditorCompleteStatement">
+    <keyboard-shortcut first-keystroke="shift control ENTER" />
+    <keyboard-shortcut first-keystroke="control ENTER" />
+  </action>
+  <action id="EditorDuplicate" />
+  <action id="EditorSplitLine" />
+  <action id="FileChooser.GotoDesktop" />
+  <action id="Groovy.Shell.Execute" />
+  <action id="HideAllWindows">
+    <keyboard-shortcut first-keystroke="control H" />
+  </action>
+  <action id="Refactorings.QuickListPopupAction">
+    <keyboard-shortcut first-keystroke="control T" />
+  </action>
+  <action id="Run">
+    <keyboard-shortcut first-keystroke="shift F10" />
+    <keyboard-shortcut first-keystroke="control F5" />
+  </action>
+  <action id="SendEOF" />
+  <action id="SwitchApply">
+    <keyboard-shortcut first-keystroke="shift alt ENTER" />
+  </action>
+  <action id="SwitchDown">
+    <keyboard-shortcut first-keystroke="shift alt DOWN" />
+  </action>
+  <action id="SwitchLeft">
+    <keyboard-shortcut first-keystroke="shift alt LEFT" />
+  </action>
+  <action id="SwitchRight">
+    <keyboard-shortcut first-keystroke="shift alt RIGHT" />
+  </action>
+  <action id="SwitchUp">
+    <keyboard-shortcut first-keystroke="shift alt UP" />
+  </action>
+  <action id="TypeHierarchy" />
+  <action id="UML.ApplyCurrentLayout" />
+  <action id="Vcs.UpdateProject" />
+  <action id="ViewSource" />
+</keymap>

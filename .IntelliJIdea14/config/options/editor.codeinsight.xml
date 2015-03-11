@@ -1,0 +1,8 @@
+<application>
+  <component name="CodeInsightSettings">
+    <option name="PARAMETER_INFO_DELAY" value="200" />
+    <option name="AUTO_POPUP_JAVADOC_INFO" value="true" />
+    <option name="JAVADOC_INFO_DELAY" value="200" />
+    <option name="SURROUND_SELECTION_ON_QUOTE_TYPED" value="true" />
+  </component>
+</application>
