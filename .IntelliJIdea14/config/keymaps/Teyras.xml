@@ -1,4 +1,8 @@
 <keymap version="1" name="Teyras" parent="Default for KDE">
+  <action id="CodeCompletion">
+    <keyboard-shortcut first-keystroke="control SPACE" />
+    <keyboard-shortcut first-keystroke="shift SPACE" />
+  </action>
   <action id="CommentByLineComment">
     <keyboard-shortcut first-keystroke="control SLASH" />
     <keyboard-shortcut first-keystroke="control DIVIDE" />
