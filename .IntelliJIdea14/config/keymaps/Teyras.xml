@@ -1,4 +1,8 @@
 <keymap version="1" name="Teyras" parent="Default for KDE">
+  <action id="ActivateProjectToolWindow">
+    <keyboard-shortcut first-keystroke="alt 1" />
+    <keyboard-shortcut first-keystroke="alt PLUS" />
+  </action>
   <action id="CodeCompletion">
     <keyboard-shortcut first-keystroke="control SPACE" />
     <keyboard-shortcut first-keystroke="shift SPACE" />
