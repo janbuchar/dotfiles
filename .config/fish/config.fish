@@ -26,4 +26,7 @@ function fish_prompt
 	(set_color -o blue)\$ (set_color normal)
 end
 
-bind \cr 'commandline -f execute; commandline -f accept-autosuggestion'
+function fish_user_key_bindings
+	bind \cf 'commandline -f execute; commandline -f accept-autosuggestion'
+end
+
