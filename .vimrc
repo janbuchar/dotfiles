@@ -23,4 +23,5 @@ imap <C-k> <C-Up>
 imap <C-l> <C-Right> 
 set autoindent
 set smartindent
+set pastetoggle=<F10>
 
