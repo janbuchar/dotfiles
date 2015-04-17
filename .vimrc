@@ -15,13 +15,9 @@ set incsearch
 set wildchar=<Tab>
 set wildmenu
 set wildmode=longest:full,full
-set langmap=ě2,š3,č4,ř5,ž6,ý7,á8,í9,é0,\":,-/,_?
 
-imap <C-h> <C-Left>
-imap <C-j> <C-Down>
-imap <C-k> <C-Up>
-imap <C-l> <C-Right> 
+nmap <-> </>
+
 set autoindent
 set smartindent
 set pastetoggle=<F10>
-
