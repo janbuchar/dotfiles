@@ -16,7 +16,7 @@ set wildchar=<Tab>
 set wildmenu
 set wildmode=longest:full,full
 
-nmap <-> </>
+nmap - /
 
 set autoindent
 set smartindent
