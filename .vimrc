@@ -21,3 +21,7 @@ nmap - /
 set autoindent
 set smartindent
 set pastetoggle=<F10>
+
+autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+au FileType markdown set tw=80
+
