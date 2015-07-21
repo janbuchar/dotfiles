@@ -27,7 +27,7 @@ function fish_prompt
 end
 
 function fish_user_key_bindings
-	bind \cf 'commandline -f execute; commandline -f accept-autosuggestion'
+	bind \cf 'commandline -f accept-autosuggestion; commandline -f execute'
 	bind \cr 'commandline -r "ranger "'
 end
 
