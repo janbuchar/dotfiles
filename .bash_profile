@@ -14,21 +14,25 @@ alias la='ls --color=auto -la'
 alias vi=vim
 
 # Prompt
-if [[ $EUID -ne 0 ]]; then
-        if [ -n "$SSH_CLIENT"  ]; then
-                host="\[\e[1;37m\]@\[\e[1;34m\]\H"
-        else
-                host=""
-        fi
-        export PS1="\[\e[1;34m\]\u${host} \[\e[1;37m\]\w\[\e[1;34m\] $ \[\e[m\]"
+white="1;37m"
+
+if [ $EUID -ne 0 ]; then
+	color="1;34m"
 else
-        if [ -n "$SSH_CLIENT"  ]; then
-                host="\[\e[1;37m\]@\[\e[1;31m\]\H"
-        else 
-                host=""
-        fi
-        export PS1="\[\e[1;31m\]\u${host} \[\e[1;37m\]\w\[\e[1;31m\] $ \[\e[m\]"
+	color="1;31m"
 fi
+
+if [ -n "$SSH_CLIENT" ]; then
+	host="\[\e[$white\]@\[\e[$color\]\H"
+else
+	host=""
+fi
+
+if [ "$TERM" == "screen" ]; then
+	host="${host} \[\e[$white\](screen)"
+fi
+
+export PS1="\[\e[$color\]\u${host} \[\e[$white\]\w\[\e[$color\] $ \[\e[m\]"
 
 # Colorized manpages
 man() {
