@@ -1,3 +1,6 @@
+runtime bundle/vim-pathogen/autoload/pathogen.vim
+execute pathogen#infect()
+
 set nocompatible
 set noswapfile
 filetype plugin indent on
@@ -25,4 +28,8 @@ set pastetoggle=<F10>
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 au FileType markdown set tw=80
 au FileType markdown set expandtab
+
+let g:pandoc#modules#disabled = ["folding", "spell"]
+let g:pandoc#formatting#mode = "ha"
+let g:pandoc#formatting#textwidth = 80
 
