@@ -19,6 +19,7 @@ set incsearch
 set wildchar=<Tab>
 set wildmenu
 set wildmode=longest:full,full
+set hidden
 
 nmap - /
 
@@ -33,6 +34,11 @@ au FileType markdown set expandtab
 let g:pandoc#modules#disabled = ["folding", "spell"]
 let g:pandoc#formatting#mode = "ha"
 let g:pandoc#formatting#textwidth = 80
+
+set noruler
+set showcmd
+set laststatus=2
+set noshowmode
 
 let mapleader = "," 
 
