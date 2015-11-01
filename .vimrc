@@ -11,6 +11,7 @@ if &t_Co > 2 || has("gui_running")
 endif
 
 set number
+colorscheme elflord
 highlight LineNr ctermfg=white ctermbg=black
 
 set confirm
