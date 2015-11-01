@@ -7,3 +7,6 @@
 [submodule ".vim/bundle/vim-pandoc-syntax"]
 	path = .vim/bundle/vim-pandoc-syntax
 	url = https://github.com/vim-pandoc/vim-pandoc-syntax.git
+[submodule ".vim/bundle/cscope.vim"]
+	path = .vim/bundle/cscope.vim
+	url = https://github.com/brookhong/cscope.vim.git
