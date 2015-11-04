@@ -11,5 +11,5 @@
 	path = .vim/bundle/cscope.vim
 	url = https://github.com/brookhong/cscope.vim.git
 [submodule "/home/teyras/.vim/bundle/vim-airline"]
-	path = /home/teyras/.vim/bundle/vim-airline
+	path = .vim/bundle/vim-airline
 	url = https://github.com/bling/vim-airline
