@@ -3,6 +3,7 @@ execute pathogen#infect()
 
 set nocompatible
 set noswapfile
+set timeoutlen=50
 filetype plugin indent on
 
 if &t_Co > 2 || has("gui_running")
@@ -34,6 +35,8 @@ au FileType markdown set expandtab
 let g:pandoc#modules#disabled = ["folding", "spell"]
 let g:pandoc#formatting#mode = "ha"
 let g:pandoc#formatting#textwidth = 80
+
+let g:airline#extensions#whitespace#enabled = 0
 
 set noruler
 set showcmd
