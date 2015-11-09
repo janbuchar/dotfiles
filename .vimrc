@@ -23,6 +23,7 @@ set wildmode=longest:full,full
 set hidden
 
 nmap - /
+nmap ! :!
 
 set autoindent
 set smartindent
