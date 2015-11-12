@@ -46,6 +46,7 @@ set noshowmode
 
 let mapleader = "," 
 
+let g:cscope_silent = 1
 " Cscope bindings
 
 nnoremap <leader>fa :call CscopeFindInteractive(expand('<cword>'))<CR>
