@@ -69,3 +69,28 @@ nnoremap  <leader>ff :call CscopeFind('f', expand('<cword>'))<CR>
 " i: Find files #including this file
 nnoremap  <leader>fi :call CscopeFind('i', expand('<cword>'))<CR>
 
+" Wrap CtrlP so that it searches for the project VCS root, but doesn't try to
+" index the home (or root) directory
+
+function GetWorkingPath(cwd)
+	let path = a:cwd
+
+	while path != $HOME && path != "/"
+		echo path
+		if isdirectory(path . "/.git")
+			return path
+		endif
+
+		let path = simplify(path . "/..")
+	endwhile
+
+	return a:cwd
+endfunction
+
+function CtrlPWrapper()
+	execute 'CtrlP' GetWorkingPath(getcwd())
+endfunction
+
+let g:ctrlp_working_path_mode = 'a'
+let g:ctrlp_map = '<nop>'
+nmap <c-p> :call CtrlPWrapper()<cr>
