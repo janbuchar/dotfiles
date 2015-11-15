@@ -22,12 +22,8 @@ set wildmenu
 set wildmode=longest:full,full
 set hidden
 
-nmap - /
-nmap ! :!
-
 set autoindent
 set smartindent
-set pastetoggle=<F10>
 
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 au FileType markdown set tw=80
@@ -43,11 +39,18 @@ set noruler
 set showcmd
 set laststatus=2
 set noshowmode
+let g:cscope_silent = 1
 
+""" Key bindings
+
+"" Basic shortcuts
+nnoremap - /
+nnoremap ! :!
+set pastetoggle=<F10>
+let g:AutoPairsShortcutJump = '<C-e>'
 let mapleader = "," 
 
-let g:cscope_silent = 1
-" Cscope bindings
+"" Cscope bindings
 
 nnoremap <leader>fa :call CscopeFindInteractive(expand('<cword>'))<CR>
 nnoremap <leader>l :call ToggleLocationList()<CR>
@@ -93,4 +96,4 @@ endfunction
 
 let g:ctrlp_working_path_mode = 'a'
 let g:ctrlp_map = '<nop>'
-nmap <c-p> :call CtrlPWrapper()<cr>
+nnoremap <c-p> :call CtrlPWrapper()<cr>
