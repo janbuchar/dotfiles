@@ -1,0 +1,25 @@
+let mapleader = ","
+
+" Moving around
+nnoremap H ^
+vnoremap H ^
+nnoremap L $
+vnoremap L $
+
+" Moving between splits
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+" Search 
+nnoremap - /
+
+" IDE actions
+noremap <C-Return> :action EditorCompleteStatement<CR>
+noremap <C-t> :action Refactorings.QuickListPopupAction<CR>
+noremap <C-p> :action SearchEverywhere<CR>
+noremap <F5> :action Debug<CR>
+noremap <C-F5> :action Run<CR>
+nnoremap <leader>a :action ActivateProjectToolWindow<CR>
+nnoremap <leader>h :action HideAllWindows<CR>

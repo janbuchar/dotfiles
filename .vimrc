@@ -40,8 +40,25 @@ let g:cscope_silent = 1
 """ Key bindings
 
 "" Basic shortcuts
+
+" Search
 nnoremap - /
+
+" Run shell command
 nnoremap ! :!
+
+" Start/end of line
+nnoremap H ^
+vnoremap H ^
+nnoremap L $
+vnoremap L $
+
+" Moving between splits
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
 set pastetoggle=<F10>
 let g:AutoPairsShortcutJump = '<C-e>'
 let mapleader = "," 
