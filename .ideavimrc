@@ -18,9 +18,14 @@ nnoremap - /
 " IDE actions
 inoremap <C-Return> <C-o>:action EditorCompleteStatement<CR>
 noremap <C-t> :action Refactorings.QuickListPopupAction<CR>
+
 nnoremap <C-p> :action SearchEverywhere<CR>
+
 noremap <F5> :action Debug<CR>
 noremap <C-F5> :action Run<CR>
 noremap <S-F5> :action Build<CR>
+
 nnoremap ,t :action ActivateProjectToolWindow<CR>
 nnoremap ,h :action HideAllWindows<CR>
+
+nnoremap ,c :action ChangesView.Commit<CR>
