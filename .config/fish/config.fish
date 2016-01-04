@@ -20,6 +20,11 @@ function man
 	man "$argv"
 end
 
+function mkcd
+	mkdir "$argv"
+	cd "$argv"
+end
+
 function fish_prompt
 	echo -n (set_color -o blue)(whoami) \
 	(set_color -o white)(prompt_pwd) \

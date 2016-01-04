@@ -46,3 +46,8 @@ man() {
         man "$@"
 }
 
+# Make dir and change to it
+mkcd() {
+	mkdir "$*"
+	cd "$*"
+}
