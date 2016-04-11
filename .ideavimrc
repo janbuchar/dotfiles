@@ -16,16 +16,22 @@ nnoremap <C-l> <C-w>l
 nnoremap - /
 
 " IDE actions
+"" Editing
 inoremap <C-Return> <C-o>:action EditorCompleteStatement<CR>
 noremap <C-t> :action Refactorings.QuickListPopupAction<CR>
 
-nnoremap <C-p> :action SearchEverywhere<CR>
+"" Navigation
+nnoremap <C-p> :action GotoFile<CR>
+nnoremap <C-n> :action GotoClass<CR>
 
+"" Running and stuff
 noremap <F5> :action Debug<CR>
 noremap <C-F5> :action Run<CR>
 noremap <S-F5> :action Build<CR>
 
+"" Tool windows
 nnoremap ,t :action ActivateProjectToolWindow<CR>
 nnoremap ,h :action HideAllWindows<CR>
 
+"" VCS
 nnoremap ,c :action ChangesView.Commit<CR>
