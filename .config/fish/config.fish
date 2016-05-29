@@ -26,9 +26,13 @@ function mkcd
 end
 
 function fish_prompt
-	echo -n (set_color -o blue)(whoami) \
-	(set_color -o white)(prompt_pwd) \
-	(set_color -o blue)\$ (set_color normal)
+	set_color --bold blue
+	echo -n (whoami)
+	set_color --bold normal
+	echo -n " "(prompt_pwd)" "
+	set_color --bold blue
+	echo -n "\$ "
+	set_color normal
 end
 
 function fish_user_key_bindings
