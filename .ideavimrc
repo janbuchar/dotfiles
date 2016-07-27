@@ -35,3 +35,4 @@ nnoremap ,h :action HideAllWindows<CR>
 
 "" VCS
 nnoremap ,c :action ChangesView.Commit<CR>
+nnoremap ,p :action Vcs.Push<CR>
