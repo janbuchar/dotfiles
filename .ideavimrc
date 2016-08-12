@@ -23,6 +23,7 @@ noremap <C-t> :action Refactorings.QuickListPopupAction<CR>
 "" Navigation
 nnoremap <C-p> :action GotoFile<CR>
 nnoremap <C-n> :action GotoClass<CR>
+nnoremap ,u :action FindUsages<CR>
 
 "" Running and stuff
 noremap <F5> :action Debug<CR>
