@@ -19,6 +19,7 @@ nnoremap - /
 "" Editing
 inoremap <C-Return> <C-o>:action EditorCompleteStatement<CR>
 noremap <C-t> :action Refactorings.QuickListPopupAction<CR>
+noremap <C-g> :action Generate<CR>
 
 "" Navigation
 nnoremap <C-p> :action GotoFile<CR>
