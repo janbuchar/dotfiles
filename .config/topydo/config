@@ -1,0 +1,8 @@
+[topydo]
+filename = ~/Dropbox/Todo/todo.txt
+archive_filename = ~/Dropbox/Todo/done.txt
+
+[colorscheme]
+priority_colors = A:light-yellow,B:cyan,C:light-blue
+context_color = light-green
+project_color = light-cyan
