@@ -1,9 +1,11 @@
+let mapleader = " " 
+
 runtime bundle/vim-pathogen/autoload/pathogen.vim
 execute pathogen#infect()
 
 set nocompatible
 set noswapfile
-set timeoutlen=50
+set timeoutlen=500
 filetype plugin indent on
 
 if &t_Co > 2 || has("gui_running")
@@ -30,6 +32,7 @@ let g:pandoc#formatting#mode = "ha"
 let g:pandoc#formatting#textwidth = 80
 
 let g:airline#extensions#whitespace#enabled = 0
+let g:airline_powerline_fonts = 1
 
 set noruler
 set showcmd
@@ -41,8 +44,11 @@ let g:cscope_silent = 1
 
 "" Basic shortcuts
 
-" Search
+" Search (cz keyboard)
 nnoremap - /
+
+" ftFT next match (cz keyboard)
+nnoremap ů ;
 
 " Run shell command
 nnoremap ! :!
@@ -61,29 +67,9 @@ nnoremap <C-l> <C-w>l
 
 set pastetoggle=<F10>
 let g:AutoPairsShortcutJump = '<C-e>'
-let mapleader = "," 
 
-"" Cscope bindings
-
-nnoremap <leader>fa :call CscopeFindInteractive(expand('<cword>'))<CR>
-nnoremap <leader>l :call ToggleLocationList()<CR>
-
-" s: Find this C symbol
-nnoremap  <leader>fs :call CscopeFind('s', expand('<cword>'))<CR>
-" g: Find this definition
-nnoremap  <leader>fg :call CscopeFind('g', expand('<cword>'))<CR>
-" d: Find functions called by this function
-nnoremap  <leader>fd :call CscopeFind('d', expand('<cword>'))<CR>
-" c: Find functions calling this function
-nnoremap  <leader>fc :call CscopeFind('c', expand('<cword>'))<CR>
-" t: Find this text string
-nnoremap  <leader>ft :call CscopeFind('t', expand('<cword>'))<CR>
-" e: Find this egrep pattern
-nnoremap  <leader>fe :call CscopeFind('e', expand('<cword>'))<CR>
-" f: Find this file
-nnoremap  <leader>ff :call CscopeFind('f', expand('<cword>'))<CR>
-" i: Find files #including this file
-nnoremap  <leader>fi :call CscopeFind('i', expand('<cword>'))<CR>
+" Format paragraph
+nnoremap <leader>f gwip
 
 " Wrap CtrlP so that it searches for the project VCS root, but doesn't try to
 " index the home (or root) directory

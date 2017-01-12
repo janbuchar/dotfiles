@@ -1,4 +1,4 @@
-let mapleader = ","
+let mapleader = " "
 
 " Moving around
 nnoremap H ^
@@ -15,6 +15,9 @@ nnoremap <C-l> <C-w>l
 " Search 
 nnoremap - /
 
+" ftFT next match
+nnoremap ů ;
+
 " IDE actions
 "" Editing
 inoremap <C-Return> <C-o>:action EditorCompleteStatement<CR>
@@ -24,7 +27,7 @@ noremap <C-g> :action Generate<CR>
 "" Navigation
 nnoremap <C-p> :action GotoFile<CR>
 nnoremap <C-n> :action GotoClass<CR>
-nnoremap ,u :action FindUsages<CR>
+nnoremap <leader>u :action FindUsages<CR>
 
 "" Running and stuff
 noremap <F5> :action Debug<CR>
@@ -32,10 +35,10 @@ noremap <C-F5> :action Run<CR>
 noremap <S-F5> :action Build<CR>
 
 "" Tool windows
-nnoremap ,t :action ActivateProjectToolWindow<CR>
-nnoremap ,h :action HideAllWindows<CR>
+nnoremap <leader>t :action ActivateProjectToolWindow<CR>
+nnoremap <leader>h :action HideAllWindows<CR>
 
 "" VCS
-nnoremap ,c :action ChangesView.Commit<CR>
-nnoremap ,p :action Vcs.Push<CR>
-nnoremap ,P :action Git.Pull<CR>
+nnoremap <leader>c :action ChangesView.Commit<CR>
+nnoremap <leader>p :action Vcs.Push<CR>
+nnoremap <leader>P :action Git.Pull<CR>
