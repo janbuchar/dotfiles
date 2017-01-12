@@ -5,7 +5,10 @@ execute pathogen#infect()
 
 set nocompatible
 set noswapfile
+
 set timeoutlen=500
+set ttimeoutlen=50
+
 filetype plugin indent on
 
 if &t_Co > 2 || has("gui_running")
