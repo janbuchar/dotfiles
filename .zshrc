@@ -91,3 +91,6 @@ ZSH_HIGHLIGHT_STYLES[builtin]=fg=39,bold
 
 # Suggestions
 source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+# Accepting suggestions
+bindkey "^ " autosuggest-execute
