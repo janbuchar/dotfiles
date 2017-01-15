@@ -42,6 +42,7 @@ precmd() {
 setopt prompt_subst
 setopt autopushd
 
+# Prompt
 if [ $EUID -ne 0 ]; then
 	color="blue"
 else
@@ -55,6 +56,28 @@ else
 fi
 
 PROMPT="%B%(!.%F{red}.%F{$color})%n%F{red}$host %F{white}%~%F{$color} %(!.#.$)%f%b "
+
+# Ctrl+arrow bindings
+bindkey "^[[1;5C" forward-word
+bindkey "^[[1;5D" backward-word
+
+# Colorized manpages
+man() {
+        env LESS_TERMCAP_mb=$'\E[01;31m' \
+        LESS_TERMCAP_md=$'\E[01;38;5;74m' \
+        LESS_TERMCAP_me=$'\E[0m' \
+        LESS_TERMCAP_se=$'\E[0m' \
+        LESS_TERMCAP_so=$'\E[38;5;246m' \
+        LESS_TERMCAP_ue=$'\E[0m' \
+        LESS_TERMCAP_us=$'\E[04;38;5;146m' \
+        man "$@"
+}
+
+# Create a directory and change into it
+mkcd() {
+	mkdir -p "$@"
+	cd "$@"
+}
 
 source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
