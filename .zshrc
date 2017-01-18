@@ -41,6 +41,7 @@ precmd() {
 
 setopt prompt_subst
 setopt autopushd
+setopt auto_cd
 
 # Prompt
 if [ $EUID -ne 0 ]; then
