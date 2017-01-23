@@ -8,6 +8,7 @@ set noswapfile
 
 set timeoutlen=500
 set ttimeoutlen=50
+set updatetime=250
 
 filetype plugin indent on
 
