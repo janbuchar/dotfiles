@@ -75,6 +75,11 @@ let g:AutoPairsShortcutJump = '<C-e>'
 " Format paragraph
 nnoremap <leader>f gwip
 
+"" Git commands
+nnoremap <leader>c :Gcommit -a<cr>
+nnoremap <leader>p :Gpush<cr>
+nnoremap <leader>P :Gpull<cr>
+
 " Wrap CtrlP so that it searches for the project VCS root, but doesn't try to
 " index the home (or root) directory
 
