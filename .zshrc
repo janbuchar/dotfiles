@@ -1,4 +1,4 @@
-source .profile
+source $HOME/.profile
 
 # The following lines were added by compinstall
 
