@@ -58,7 +58,11 @@ else
         host=""
 fi
 
-PROMPT="%B%(!.%F{red}.%F{$color})%n%F{red}$host %F{white}%~%F{$color} %(!.#.$)%f%b "
+if [ -n "$TMUX" ]; then
+	PROMPT="%B%F{white}%~%F{$color} %(!.#.$)%f%b "
+else
+	PROMPT="%B%(!.%F{red}.%F{$color})%n%F{red}$host %F{white}%~%F{$color} %(!.#.$)%f%b "
+fi
 
 # Ctrl+arrow bindings
 bindkey "^[[1;5C" forward-word
