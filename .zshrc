@@ -79,6 +79,9 @@ function zle-line-init zle-keymap-select {
 zle -N zle-line-init
 zle -N zle-keymap-select
 
+bindkey -M vicmd "H" beginning-of-line
+bindkey -M vicmd "L" end-of-line
+
 # Ctrl+arrow bindings
 bindkey "^[[1;5C" forward-word
 bindkey "^[[1;5D" backward-word
