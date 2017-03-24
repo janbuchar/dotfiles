@@ -44,6 +44,7 @@ precmd() {
 setopt prompt_subst
 setopt autopushd
 setopt auto_cd
+export KEYTIMEOUT=1
 
 # Prompt
 if [ $EUID -ne 0 ]; then
@@ -59,10 +60,24 @@ else
 fi
 
 if [ -n "$TMUX" ]; then
-	PROMPT="%B%F{white}%~%F{$color} %(!.#.$)%f%b "
+	_PROMPT="%B%F{white}%~%F{$color} %(!.#.$)%f%b "
 else
-	PROMPT="%B%(!.%F{red}.%F{$color})%n%F{red}$host %F{white}%~%F{$color} %(!.#.$)%f%b "
+	_PROMPT="%B%(!.%F{red}.%F{$color})%n%F{red}$host %F{white}%~%F{$color} %(!.#.$)%f%b "
 fi
+
+VI_NORMAL="%B[%F{white}N%f]%b "
+VI_INSERT="%B[%F{blue}I%f]%b "
+
+precmd() { PROMPT=$VI_INSERT$_PROMPT }
+
+function zle-line-init zle-keymap-select {
+	PREFIX="${${KEYMAP/vicmd/$VI_NORMAL}/(main|viins)/$VI_INSERT}"
+	PROMPT=$PREFIX$_PROMPT
+	zle reset-prompt
+}
+
+zle -N zle-line-init
+zle -N zle-keymap-select
 
 # Ctrl+arrow bindings
 bindkey "^[[1;5C" forward-word
