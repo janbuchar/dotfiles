@@ -47,6 +47,8 @@ setopt auto_cd
 export KEYTIMEOUT=1
 
 # Prompt
+source $HOME/.zsh/oh-my-zsh/plugins/shrink-path/shrink-path.plugin.zsh
+
 if [ $EUID -ne 0 ]; then
 	color="blue"
 else
@@ -60,9 +62,9 @@ else
 fi
 
 if [ -n "$TMUX" ]; then
-	_PROMPT="%B%F{white}%~%F{$color} %(!.#.$)%f%b "
+	_PROMPT='%B%F{white}$(shrink_path -l -t)%F{$color} %(!.#.$)%f%b '
 else
-	_PROMPT="%B%(!.%F{red}.%F{$color})%n%F{red}$host %F{white}%~%F{$color} %(!.#.$)%f%b "
+	_PROMPT='%B%(!.%F{red}.%F{$color})%n%F{red}$host %F{white}$(shrink_path -l -t)%F{$color} %(!.#.$)%f%b '
 fi
 
 VI_NORMAL="%B[%F{white}N%f]%b "
