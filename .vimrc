@@ -37,6 +37,7 @@ let g:pandoc#formatting#textwidth = 80
 
 let g:airline#extensions#whitespace#enabled = 0
 let g:airline_powerline_fonts = 1
+let g:airline_theme = "base16_default"
 
 set noruler
 set showcmd
@@ -105,3 +106,4 @@ endfunction
 let g:ctrlp_working_path_mode = 'a'
 let g:ctrlp_map = '<nop>'
 nnoremap <c-p> :call CtrlPWrapper()<cr>
+

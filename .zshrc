@@ -115,6 +115,7 @@ ZSH_HIGHLIGHT_STYLES[command]=fg=39,bold
 ZSH_HIGHLIGHT_STYLES[alias]=fg=39,bold
 ZSH_HIGHLIGHT_STYLES[function]=fg=39,bold
 ZSH_HIGHLIGHT_STYLES[builtin]=fg=39,bold
+ZSH_HIGHLIGHT_STYLES[wildcard]=fg=39
 
 # Suggestions
 source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
