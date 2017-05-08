@@ -20,7 +20,7 @@ HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=1000
 setopt appendhistory
-setopt inc_append_history # Add comamnds as they are typed, don't wait until shell exit
+setopt inc_append_history # Add commands as they are typed, do not wait until shell exit
 setopt hist_ignore_dups # Do not write events to history that are duplicates of previous events
 # ===== Completion 
 setopt always_to_end # When completing from the middle of a word, move the cursor to the end of the word    
@@ -56,19 +56,19 @@ else
 fi
 
 if [ -n "$SSH_CLIENT" ]; then
-        host="%F{white}@%F{$color}%m%f"
+        host="%F{default}@%F{$color}%m%f"
 else
         host=""
 fi
 
 if [ -n "$TMUX" ]; then
-	_PROMPT='%B%F{white}$(shrink_path -l -t)%F{$color} %(!.#.$)%f%b '
+	_PROMPT='%B%F{default}$(shrink_path -l -t)%F{$color} %(!.#.$)%f%b '
 else
-	_PROMPT='%B%(!.%F{red}.%F{$color})%n%F{red}$host %F{white}$(shrink_path -l -t)%F{$color} %(!.#.$)%f%b '
+	_PROMPT='%B%(!.%F{red}.%F{$color})%n%F{red}$host %F{default}$(shrink_path -l -t)%F{$color} %(!.#.$)%f%b '
 fi
 
-VI_NORMAL="%B[%F{white}N%f]%b "
-VI_INSERT="%B[%F{blue}I%f]%b "
+VI_NORMAL="%B[%F{default}N%f]%b "
+VI_INSERT="%B[%F{$color}I%f]%b "
 
 precmd() { PROMPT=$VI_INSERT$_PROMPT }
 
@@ -84,9 +84,25 @@ zle -N zle-keymap-select
 bindkey -M vicmd "H" beginning-of-line
 bindkey -M vicmd "L" end-of-line
 
+# Page Up/Down
+bindkey "\033[5~" beginning-of-line
+bindkey -M vicmd "\033[5~" beginning-of-line
+bindkey "\033[6~" end-of-line
+bindkey -M vicmd "\033[6~" end-of-line
+
 # Ctrl+arrow bindings
 bindkey "^[[1;5C" forward-word
 bindkey "^[[1;5D" backward-word
+
+# Home/End
+bindkey "\033[1~" beginning-of-line
+bindkey -M vicmd "\033[1~" beginning-of-line
+bindkey "\033[4~" end-of-line
+bindkey -M vicmd "\033[4~" end-of-line
+
+# Delete
+bindkey "\033[3~" delete-char
+bindkey -M vicmd "\033[3~" delete-char
 
 # Colorized manpages
 man() {
@@ -109,13 +125,25 @@ mkcd() {
 # Syntax highlighting
 source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-ZSH_HIGHLIGHT_STYLES[reserved-word]=fg=39,bold
-ZSH_HIGHLIGHT_STYLES[precommand]=fg=39,bold
-ZSH_HIGHLIGHT_STYLES[command]=fg=39,bold
-ZSH_HIGHLIGHT_STYLES[alias]=fg=39,bold
-ZSH_HIGHLIGHT_STYLES[function]=fg=39,bold
-ZSH_HIGHLIGHT_STYLES[builtin]=fg=39,bold
-ZSH_HIGHLIGHT_STYLES[wildcard]=fg=39
+color_command=green
+color_path=default
+color_string=magenta
+color_option=cyan
+color_keyword=yellow
+
+ZSH_HIGHLIGHT_STYLES[reserved-word]=fg=$color_keyword,bold
+ZSH_HIGHLIGHT_STYLES[precommand]=fg=$color_keyword,bold
+ZSH_HIGHLIGHT_STYLES[builtin]=fg=$color_command,bold
+ZSH_HIGHLIGHT_STYLES[command]=fg=$color_command,bold
+ZSH_HIGHLIGHT_STYLES[alias]=fg=$color_command,bold
+ZSH_HIGHLIGHT_STYLES[function]=fg=$color_command,bold
+ZSH_HIGHLIGHT_STYLES[path]=fg=$color_path
+ZSH_HIGHLIGHT_STYLES[wildcard]=fg=$color_path,bold
+ZSH_HIGHLIGHT_STYLES[globbing]=fg=$color_path,bold
+ZSH_HIGHLIGHT_STYLES[double-quoted-argument]=fg=$color_string
+ZSH_HIGHLIGHT_STYLES[single-quoted-argument]=fg=$color_string
+ZSH_HIGHLIGHT_STYLES[single-hyphen-option]=fg=$color_option
+ZSH_HIGHLIGHT_STYLES[double-hyphen-option]=fg=$color_option
 
 # Suggestions
 source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh

@@ -16,7 +16,11 @@ env:
 # (changes require restart)
 dimensions:
   columns: 100
-  lines: 30
+  lines: 36
+
+padding:
+  x: 0
+  y: 0
 
 # The FreeType rasterizer needs to know the device DPI for best results
 # (changes require restart)
@@ -35,21 +39,21 @@ font:
   # The normal (roman) font face to use.
   normal:
           #family: monospace # should be "Menlo" or something on macOS.
-    family: Source Code Pro for Powerline
+    family: Liberation Mono
     # Style can be specified to pick a specific face.
     # style: Regular
 
   # The bold font face
   bold:
           #family: monospace # should be "Menlo" or something on macOS.
-    family: Source Code Pro for Powerline
+    family: Liberation Mono
     # Style can be specified to pick a specific face.
     # style: Bold
 
   # The italic font face
   italic:
           #family: monospace # should be "Menlo" or something on macOS.
-    family: Source Code Pro for Powerline
+    family: Liberation Mono
     # Style can be specified to pick a specific face.
     # style: Italic
 
@@ -58,8 +62,8 @@ font:
   # Offset is the extra space around each character. offset.y can be thought of
   # as modifying the linespacing, and offset.x as modifying the letter spacing.
   offset:
-    x: 2.0
-    y: -7.0
+    x: 1.0
+    y: 1.0
 
   # OS X only: use thin stroke font rendering. Thin strokes are suitable
   # for retina displays, but for non-retina you probably want this set to
