@@ -12,11 +12,29 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
+" Moving between tabs
+nnoremap J gT
+nnoremap K gt
+
+" Cursor position
+nnoremap <leader>H H
+nnoremap <leader>L L
+nnoremap <leader>M M
+
 " Search 
 nnoremap - /
 
 " ftFT next match
 nnoremap ů ;
+
+" Open docs
+nnoremap <leader>k K
+
+" Edit actions
+"" join lines
+nnoremap <leader>j J
+"" split line
+nnoremap <leader>s i<CR><ESC>
 
 " IDE actions
 "" Editing
