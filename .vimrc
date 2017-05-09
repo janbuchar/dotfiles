@@ -3,6 +3,8 @@ let mapleader = " "
 runtime bundle/vim-pathogen/autoload/pathogen.vim
 execute pathogen#infect()
 
+runtime airline_theme.vim
+
 set nocompatible
 set noswapfile
 
@@ -37,7 +39,7 @@ let g:pandoc#formatting#textwidth = 80
 
 let g:airline#extensions#whitespace#enabled = 0
 let g:airline_powerline_fonts = 0
-let g:airline_theme = "base16_default"
+let g:airline_theme = "teyras"
 let g:airline_left_sep = ''
 let g:airline_left_alt_sep = ''
 let g:airline_right_sep = ''
