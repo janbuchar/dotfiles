@@ -1,3 +1,7 @@
+set incsearch
+set surround
+set hlsearch
+
 let mapleader = " "
 
 " Moving around
