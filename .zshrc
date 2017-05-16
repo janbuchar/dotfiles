@@ -145,6 +145,9 @@ ZSH_HIGHLIGHT_STYLES[single-quoted-argument]=fg=$color_string
 ZSH_HIGHLIGHT_STYLES[single-hyphen-option]=fg=$color_option
 ZSH_HIGHLIGHT_STYLES[double-hyphen-option]=fg=$color_option
 
+# Auto-add matching braces
+source ~/.zsh/zsh-autopair/autopair.zsh
+
 # Suggestions
 source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 

@@ -43,3 +43,6 @@
 [submodule ".vim/bundle/vim-surround"]
 	path = .vim/bundle/vim-surround
 	url = https://github.com/tpope/vim-surround.git
+[submodule ".zsh/zsh-autopair"]
+	path = .zsh/zsh-autopair
+	url = https://github.com/hlissner/zsh-autopair.git
