@@ -77,11 +77,26 @@ fi
 VI_NORMAL="%B[%F{default}N%f]%b "
 VI_INSERT="%B[%F{$color}I%f]%b "
 
-precmd() { PROMPT=$VI_INSERT$_PROMPT }
+function right-prompt {
+	if ! which pyenv > /dev/null; then
+		return 0
+	fi
+	if [ $( pyenv version-name ) = system ]; then
+		return 0
+	fi
+
+	RPROMPT="%F{green}[py: $( pyenv version-name )]"
+}
+
+precmd() { 
+	PROMPT=$VI_INSERT$_PROMPT
+	right-prompt
+}
 
 function zle-line-init zle-keymap-select {
 	PREFIX="${${KEYMAP/vicmd/$VI_NORMAL}/(main|viins)/$VI_INSERT}"
 	PROMPT=$PREFIX$_PROMPT
+	right-prompt
 	zle reset-prompt
 }
 
