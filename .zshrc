@@ -46,6 +46,13 @@ setopt autopushd
 setopt auto_cd
 export KEYTIMEOUT=1
 
+# Start pyenv
+if which pyenv > /dev/null; then
+	export PYENV_VIRTUALENV_DISABLE_PROMPT=1
+	eval "$(pyenv init -)"
+	eval "$(pyenv virtualenv-init -)"
+fi
+
 # Prompt
 source $HOME/.zsh/oh-my-zsh/plugins/shrink-path/shrink-path.plugin.zsh
 
