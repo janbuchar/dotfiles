@@ -77,6 +77,8 @@ fi
 VI_NORMAL="%B[%F{default}N%f]%b "
 VI_INSERT="%B[%F{$color}I%f]%b "
 
+ZLE_RPROMPT_INDENT=0
+
 function right-prompt {
 	if ! which pyenv > /dev/null; then
 		return 0
