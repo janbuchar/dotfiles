@@ -81,9 +81,11 @@ ZLE_RPROMPT_INDENT=0
 
 function right-prompt {
 	if ! which pyenv > /dev/null; then
+		RPROMPT=""
 		return 0
 	fi
 	if [ $( pyenv version-name ) = system ]; then
+		RPROMPT=""
 		return 0
 	fi
 
