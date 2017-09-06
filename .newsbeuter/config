@@ -1,0 +1,23 @@
+browser firefox
+
+urls-source     "ttrss"
+ttrss-url       "https://ttrss.bucharjan.cz"
+ttrss-login     "admin"
+
+ttrss-flag-star    "s"
+ttrss-flag-publish "p"
+
+bind-key j down feedlist
+bind-key k up feedlist
+bind-key l open feedlist
+
+bind-key j next articlelist
+bind-key k prev articlelist
+bind-key h quit articlelist
+bind-key l open articlelist
+bind-key J next-feed articlelist
+bind-key K prev-feed articlelist
+
+bind-key j down article
+bind-key k up article
+bind-key h quit article
