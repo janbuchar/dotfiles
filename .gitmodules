@@ -46,3 +46,6 @@
 [submodule ".zsh/zsh-autopair"]
 	path = .zsh/zsh-autopair
 	url = https://github.com/hlissner/zsh-autopair.git
+[submodule ".vim/bundle/vim-repeat"]
+	path = .vim/bundle/vim-repeat
+	url = https://github.com/tpope/vim-repeat.git
