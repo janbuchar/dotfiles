@@ -21,3 +21,5 @@ bind-key K prev-feed articlelist
 bind-key j down article
 bind-key k up article
 bind-key h quit article
+
+show-keymap-hint no
