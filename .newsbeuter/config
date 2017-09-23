@@ -7,9 +7,16 @@ ttrss-login     "admin"
 ttrss-flag-star    "s"
 ttrss-flag-publish "p"
 
+auto-reload yes
+reload-time 5
+
 bind-key j down feedlist
 bind-key k up feedlist
 bind-key l open feedlist
+
+bind-key j down tagselection
+bind-key k up tagselection
+bind-key l open tagselection
 
 bind-key j next articlelist
 bind-key k prev articlelist
@@ -17,6 +24,8 @@ bind-key h quit articlelist
 bind-key l open articlelist
 bind-key J next-feed articlelist
 bind-key K prev-feed articlelist
+bind-key o open-in-browser-and-mark-read articlelist
+bind-key m toggle-article-read articlelist
 
 bind-key j down article
 bind-key k up article
