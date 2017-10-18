@@ -59,6 +59,18 @@ set laststatus=2
 set noshowmode
 let g:cscope_silent = 1
 
+" neocomplete support
+let g:neocomplete#enable_at_startup = 1
+
+if !exists('g:neocomplete#force_omni_input_patterns')
+    let g:neocomplete#force_omni_input_patterns = {}
+endif
+
+autocmd FileType python setlocal omnifunc=jedi#completions
+let g:jedi#auto_vim_configuration = 0
+let g:jedi#popup_on_dot = 0
+let g:neocomplete#force_omni_input_patterns.python = '[^. \t]\.\w*'
+
 """ Key bindings
 
 "" Basic shortcuts
