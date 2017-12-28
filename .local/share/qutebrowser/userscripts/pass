@@ -1,0 +1,112 @@
+#!/usr/bin/env python
+
+import click
+import os
+import re
+import subprocess
+import sys
+from itertools import islice, tee, groupby
+from pathlib import Path
+from urllib.parse import urlparse
+
+
+def pairs(iterator):
+    return zip(iterator, iterator)
+
+
+def run(*cmd):
+    process = subprocess.run(cmd, stdout=subprocess.PIPE, check=True)
+    output = re.sub(r'\x1B\[[0-?]*[ -/ ]*[@-~]', '', process.stdout.decode())  # Remove ANSI formatting
+    return output.splitlines()
+
+
+def alert(text):
+    run("zenity", "--info", "--text=" + str(text))
+
+
+def prepend(subject, prefix):
+    if subject.startswith(prefix):
+        return subject
+
+    return prefix + subject
+
+
+def send_command(command):
+    with open(os.getenv("QUTE_FIFO", ""), "w") as out:
+        out.write(command + "\n")
+
+
+def load_cache(data_dir):
+    cache_path = Path(data_dir) / "pass_urls.txt"
+    lines = run("pass", "grep", "^url:")
+    cache_path.write_text("\n".join(lines))
+    return lines
+
+
+def lookup_url(data_dir, request_url):
+    cache_path = Path(data_dir) / "pass_urls.txt"
+
+    if not cache_path.exists():
+        lines = load_cache(data_dir)
+    else:
+        lines = cache_path.read_text().splitlines()
+
+    for name, urls in pairs(list(items) for _, items in groupby(lines, lambda line: line.startswith("url:"))):
+        name = name[0].rstrip(":")
+
+        for url in urls:
+            loaded_url = urlparse(url[4:].strip())
+
+            if loaded_url.scheme == "":
+                loaded_url = urlparse("http://" + url[4:].strip())
+
+            if prepend(loaded_url.netloc, "www.") == prepend(request_url.netloc, "www."):
+                yield name
+
+
+def fill_form(password, other):
+    send_command(f"jseval -q document.querySelector('input[type=password]').value = '{password}';")
+
+    for name, value in other.items():
+        send_command(f"jseval -q document.querySelector('input[name*={name}]').value = '{value}';")
+
+@click.group()
+def cli():
+    pass
+
+
+@cli.command()
+def autofill():
+    request_url = urlparse(os.getenv("QUTE_URL", ""))
+    matches = list(lookup_url(os.getenv("QUTE_DATA_DIR", ""), request_url))
+
+    choice = None
+
+    if len(matches) == 0:
+        pass
+    elif len(matches) == 1:
+        choice = matches[0]
+    else:
+        choice = matches[0]  # TODO
+
+    if choice is not None:
+        lines = run("pass", "show", choice)
+        password = lines[0]
+        other = dict(re.split(r'\s*:\s*', line, 1) for line in lines if ":" in line and not line.startswith("url:"))
+        fill_form(password, other)
+    else:
+        alert("Nothing found")
+
+
+@cli.command()
+def update():
+    load_cache(os.getenv("QUTE_DATA_DIR", ""))
+    alert("Update done")
+
+
+if __name__ == "__main__":
+    try:
+        cli()
+    except BaseException as e:
+        if not type(e) == SystemExit:
+            alert(type(e).__name__ + ": " + str(e))

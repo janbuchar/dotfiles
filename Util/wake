@@ -1,0 +1,42 @@
+#!/bin/sh
+# Tries to wake a remote host using wake on lan
+# If the remote host is running, the script saves its MAC
+
+MAC_FILE=$(dirname $0)/.macky
+TIMEOUT=60
+
+hostname=$1
+
+if [ ! -f $MAC_FILE ]; then
+	touch $MAC_FILE
+fi
+
+record=$(grep "^$hostname " $MAC_FILE)
+
+if [ -z "$record" ]; then
+	ping -c 1 "$hostname" > /dev/null 2> /dev/null
+	response=$(arp -a "$hostname")
+	
+	if echo $response | grep "no match found"; then
+		echo Unknown host $hostname >&2
+		exit 42
+	fi
+
+	record="$hostname $(echo $response | cut -d " " -f 4)"
+	echo "$record" >> $MAC_FILE
+fi
+
+echo -n "$hostname: "
+wol $(echo $record | cut -d " " -f 2)
+
+attempts=0
+while ! ssh $hostname "echo Foo" > /dev/null 2> /dev/null; do
+	attempts=$(( $attempts + 1 ))
+	if [ "$attempts" == $TIMEOUT ]; then
+		echo Timed out >&2
+		exit 42
+	fi
+	sleep 1
+done
+
+echo $hostname is up and running

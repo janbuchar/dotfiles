@@ -1,0 +1,29 @@
+#!/bin/sh
+# qutebrowser session launcher
+# Loosely based on https://github.com/ayekat/dotfiles/blob/master/bin/qutebrowser
+
+XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+
+# The first argument is the name of the session
+session="${1:-web}"
+
+# Set up session base directory
+basedir="$XDG_RUNTIME_DIR/qutebrowser/$session"
+title="{perc}{title}{title_sep}qutebrowser[$session]"
+args="-l info --loglines 0 --basedir $basedir --set window.title_format $title"
+
+mkdir -p \
+	"$basedir" \
+	"$XDG_CONFIG_HOME/qutebrowser" \
+	"$XDG_CACHE_HOME/qutebrowser/$session" \
+	"$XDG_DATA_HOME/qutebrowser/$session" \
+	"$basedir/runtime"
+ln -fsT "$XDG_CONFIG_HOME/qutebrowser" "$basedir/config"
+ln -fsT "$XDG_CACHE_HOME/qutebrowser/$session" "$basedir/cache"
+ln -fsT "$XDG_DATA_HOME/qutebrowser/$session" "$basedir/data"
+ln -fsT "$XDG_DATA_HOME/qutebrowser/userscripts" "$basedir/data/userscripts"
+
+exec qutebrowser $args "$2"

@@ -1,0 +1,9 @@
+#!/bin/sh
+if [ $# -lt 1 ]; then
+	echo "usage: watchlog file" >&2
+	exit 1
+fi
+
+tail -f $1 -n 250 | 
+	stdbuf -i0 -o0 -e0 sed -e 's/\\n/\n/g' -e 's/\\\\/\\/g' | 
+	ccze -o scroll -o nolookups -m ansi

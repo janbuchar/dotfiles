@@ -1,4 +1,4 @@
-browser firefox
+browser qb-open
 
 urls-source     "ttrss"
 ttrss-url       "https://ttrss.bucharjan.cz"

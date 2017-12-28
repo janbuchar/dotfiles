@@ -1,0 +1,11 @@
+#!/bin/sh
+if [ $# -eq 1 ]; then
+	ts=$1
+elif [ $# -eq 0 ]; then
+	ts="$( cat )"
+else
+	echo "usage: tsdate timestamp" >&2
+	exit 1
+fi
+
+date -d @$ts

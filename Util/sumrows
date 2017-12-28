@@ -1,0 +1,10 @@
+#!/bin/sh
+# Just sums numbers in a text file, one number per row. No more, no less.
+
+if [ $# -lt 1 ]; then
+	file="-"
+else
+	file="$1"
+fi
+
+cat $file | paste -s -d+ | bc

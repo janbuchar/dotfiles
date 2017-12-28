@@ -1,0 +1,34 @@
+#!/bin/sh
+
+if [ $# -lt 1 ]; then
+	echo "usage: watchweb [-t <request_timeout>] <url>"
+	exit 42
+fi
+
+CURL_CMD="curl -s"
+
+if [ $1 = "-m" ]; then
+	CURL_CMD="$CURL_CMD -m $2"
+	shift
+	shift
+fi
+
+CURL_CMD="$CURL_CMD $1" # Append URL
+INTERVAL=10
+
+new_hash=""
+
+function get_hash() {
+	new_hash="$( $CURL_CMD | md5sum | cut -f 1 )"
+}
+
+get_hash
+hash="$new_hash"
+
+while [ "$hash" = "$new_hash" ]; do
+	sleep $INTERVAL
+	get_hash
+done
+
+tput bel
+

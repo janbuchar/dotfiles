@@ -1,0 +1,4 @@
+#!/bin/sh
+
+exec tmux new-session\; \
+  set-option destroy-unattached on
