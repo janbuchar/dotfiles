@@ -1,3 +1,5 @@
+import os
+
 config.bind('d', 'scroll-page 0 0.5')
 config.bind('u', 'scroll-page 0 -0.5')
 config.bind('-', 'set-cmd-text /')
@@ -12,9 +14,10 @@ config.bind('pw', 'spawn --userscript pass autofill')
 config.bind('pu', 'spawn --userscript pass update')
 
 config.set('auto_save.session', True)
+config.set('downloads.location.directory', os.path.expanduser("~/Downloads"))
 
 config.set('tabs.padding', {"top": 3, "bottom": 4, "left": 5, "right": 5})
-config.set('tabs.width.indicator', 0)
+config.set('tabs.indicator.width', 0)
 config.set('scrolling.bar', True)
 config.set('statusbar.padding', {"top": 3, "bottom": 2, "left": 0, "right": 0})
 config.set('fonts.tabs', '10pt "Liberation Sans"')
