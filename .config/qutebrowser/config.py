@@ -47,5 +47,6 @@ config.set('url.searchengines', {
     'wp': 'http://www.wikipedia.org/search-redirect.php?family=wikipedia&search={}&language=en&go=Go',
     'wpcs': 'http://www.wikipedia.org/search-redirect.php?family=wikipedia&search={}&language=cs&go=Go',
     'aw': 'https://wiki.archlinux.org/index.php?title=Special:Search&search={}',
-    'gh': 'https://github.com/search?utf8=✓&q={}'
+    'gh': 'https://github.com/search?utf8=✓&q={}',
+    'r': 'https://reddit.com/r/{}'
 })
