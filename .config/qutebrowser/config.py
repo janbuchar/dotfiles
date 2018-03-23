@@ -20,6 +20,7 @@ config.set('tabs.padding', {"top": 3, "bottom": 4, "left": 5, "right": 5})
 config.set('tabs.indicator.width', 0)
 config.set('scrolling.bar', True)
 config.set('statusbar.padding', {"top": 3, "bottom": 2, "left": 0, "right": 0})
+config.set('statusbar.widgets', ["keypress", "url", "progress"])
 config.set('fonts.tabs', '10pt "Liberation Sans"')
 config.set('fonts.statusbar', '10pt "Liberation Sans"')
 
