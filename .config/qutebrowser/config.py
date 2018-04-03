@@ -49,5 +49,8 @@ config.set('url.searchengines', {
     'wpcs': 'http://www.wikipedia.org/search-redirect.php?family=wikipedia&search={}&language=cs&go=Go',
     'aw': 'https://wiki.archlinux.org/index.php?title=Special:Search&search={}',
     'gh': 'https://github.com/search?utf8=✓&q={}',
-    'r': 'https://reddit.com/r/{}'
+    'r': 'https://reddit.com/r/{}',
+    'aur': 'https://aur.archlinux.org/packages/?O=0&K={}',
+    'mapy': 'https://mapy.cz/zakladni?q={}'
+
 })
