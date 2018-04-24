@@ -80,7 +80,7 @@ VI_INSERT="%B[%F{$color}I%f]%b "
 ZLE_RPROMPT_INDENT=0
 
 function right-prompt {
-	if ! which pyenv > /dev/null; then
+	if ! which pyenv > /dev/null 2> /dev/null; then
 		RPROMPT=""
 		return 0
 	fi
