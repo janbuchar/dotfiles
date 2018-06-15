@@ -1,0 +1,30 @@
+[Desktop Action NewTab]
+Exec=konsole --new-tab
+Name[cs_CZ]=Otevřít novou kartu
+Name=Open a New Tab
+
+[Desktop Action NewWindow]
+Exec=konsole
+Name[cs_CZ]=Otevřít nové okno
+Name=Open a New Window
+
+[Desktop Entry]
+Actions=NewWindow;NewTab;
+Comment=Přístup k příkazové řádce
+Exec=konsole -e /bin/zsh
+GenericName[cs_CZ]=Terminál
+GenericName=Terminal
+Icon=utilities-terminal
+Name=Konsole (no tmux)
+NoDisplay=false
+Path[$e]=
+StartupNotify=true
+Terminal=0
+TerminalOptions=
+TryExec=konsole
+Type=Application
+X-DBUS-StartupType=Unique
+X-DocPath=konsole/index.html
+X-KDE-AuthorizeAction=shell_access
+X-KDE-SubstituteUID=false
+X-KDE-Username=

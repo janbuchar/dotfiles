@@ -1,0 +1,6 @@
+[Desktop Entry]
+Exec=qb-open
+MimeType=application/x-extension-html;
+Name=qb-open
+NoDisplay=true
+Type=Application
