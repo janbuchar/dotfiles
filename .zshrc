@@ -80,16 +80,23 @@ VI_INSERT="%B[%F{$color}I%f]%b "
 ZLE_RPROMPT_INDENT=0
 
 function right-prompt {
-	if ! which pyenv > /dev/null 2> /dev/null; then
-		RPROMPT=""
-		return 0
-	fi
-	if [ $( pyenv version-name ) = system ]; then
-		RPROMPT=""
-		return 0
+	if which pyenv > /dev/null 2> /dev/null; then
+		if [ $( pyenv version-name ) != system ]; then
+			venv_name=$(pyenv version-name)
+		fi
 	fi
 
-	RPROMPT="%F{green}[py: $( pyenv version-name )]"
+	if which pipenv > /dev/null 2> /dev/null; then
+		if [ -n "$PIPENV_ACTIVE" ]; then
+			venv_name=$(basename $(pipenv --where))
+		fi
+	fi
+
+	if [ -n "$venv_name" ]; then
+		RPROMPT="%F{green}[py: $venv_name]"
+	else
+		RPROMPT=""
+	fi
 }
 
 precmd() { 
