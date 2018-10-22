@@ -28,6 +28,9 @@ nnoremap <leader>M M
 " Search 
 nnoremap - /
 
+" Cancel search highlighting with escape
+nnoremap <ESC> :noh<CR>
+
 " ftFT next match
 nnoremap ů ;
 
