@@ -53,6 +53,11 @@ if which pyenv > /dev/null 2> /dev/null; then
 	eval "$(pyenv virtualenv-init -)"
 fi
 
+# Start direnv
+if which direnv > /dev/null 2>&1; then
+	eval "$(direnv hook zsh)"
+fi
+
 # Prompt
 source $HOME/.zsh/oh-my-zsh/plugins/shrink-path/shrink-path.plugin.zsh
 
