@@ -26,6 +26,8 @@ config.set('statusbar.widgets', ["keypress", "url", "progress"])
 config.set('fonts.tabs', '10pt "Liberation Sans"')
 config.set('fonts.statusbar', '10pt "Liberation Sans"')
 
+config.set("fonts.monospace", "Liberation Mono, DejaVu Sans Mono, monospace")
+
 config.set('colors.statusbar.normal.bg', '#eff0f1')
 config.set('colors.statusbar.normal.fg', '#000')
 config.set('colors.statusbar.insert.bg', '#27ae60')
