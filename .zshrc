@@ -20,6 +20,7 @@ HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=1000
 setopt appendhistory
+setopt histignorespace
 setopt inc_append_history # Add commands as they are typed, do not wait until shell exit
 setopt hist_ignore_dups # Do not write events to history that are duplicates of previous events
 # ===== Completion 
@@ -134,6 +135,9 @@ bindkey -M vicmd "\033[4~" end-of-line
 # Delete
 bindkey "\033[3~" delete-char
 bindkey -M vicmd "\033[3~" delete-char
+
+# Clear screen with "K"
+bindkey -M vicmd "K" clear-screen
 
 # Colorized manpages
 man() {

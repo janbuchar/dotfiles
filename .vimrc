@@ -60,7 +60,7 @@ set noshowmode
 let g:cscope_silent = 1
 
 " neocomplete support
-let g:neocomplete#enable_at_startup = 1
+"let g:neocomplete#enable_at_startup = 1
 
 if !exists('g:neocomplete#force_omni_input_patterns')
     let g:neocomplete#force_omni_input_patterns = {}
@@ -106,6 +106,8 @@ nnoremap <leader>f gwip
 nnoremap <leader>c :Gcommit -a<cr>
 nnoremap <leader>p :Gpush<cr>
 nnoremap <leader>P :Gpull<cr>
+
+nnoremap <Esc> :noh<cr>
 
 " Wrap CtrlP so that it searches for the project VCS root, but doesn't try to
 " index the home (or root) directory
