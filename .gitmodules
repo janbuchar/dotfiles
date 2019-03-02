@@ -68,5 +68,5 @@
 	path = .vim/bundle/vim-tmux-navigator
 	url = https://github.com/christoomey/vim-tmux-navigator
 [submodule "/home/teyras/.vim/bundle/typescript-vim"]
-	path = /home/teyras/.vim/bundle/typescript-vim
+	path = .vim/bundle/typescript-vim
 	url = https://github.com/leafgarland/typescript-vim.git
