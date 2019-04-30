@@ -85,10 +85,10 @@ nnoremap ů ;
 nnoremap ! :!
 
 " Start/end of line
-nnoremap H ^
-vnoremap H ^
-nnoremap L $
-vnoremap L $
+nnoremap gh ^
+vnoremap gh ^
+nnoremap gl $
+vnoremap gl $
 
 " Moving between splits
 nnoremap <C-h> <C-w>h

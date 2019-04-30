@@ -113,8 +113,8 @@ function zle-line-init zle-keymap-select {
 zle -N zle-line-init
 zle -N zle-keymap-select
 
-bindkey -M vicmd "H" beginning-of-line
-bindkey -M vicmd "L" end-of-line
+bindkey -M vicmd "gh" beginning-of-line
+bindkey -M vicmd "gl" end-of-line
 
 # Page Up/Down
 bindkey "\033[5~" beginning-of-line
