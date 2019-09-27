@@ -1,0 +1,8 @@
+#!/bin/sh
+
+export PYENV_VERSION=workdays
+
+python $(dirname $0)/workdays.py $@
+
+unset PYENV_VERSION
+
