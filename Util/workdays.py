@@ -7,9 +7,11 @@ now = datetime.now()
 @click.command()
 @click.argument("month", default=now.month)
 @click.argument("year", default=now.year)
-def main(year, month):
+@click.option("--past", is_flag=True, default=False)
+def main(year, month, past):
     holidays = Holidays(year)
     result = 0
+    today = datetime.now().date()
 
     for day_number in range(1, 32):
         try:
@@ -18,8 +20,9 @@ def main(year, month):
             continue  # Out of range for the month
 
         is_not_weekend = day.weekday() < 5
+        should_count = not past or day < today
 
-        if day not in holidays and is_not_weekend:
+        if day not in holidays and is_not_weekend and should_count:
             result += 1
 
     click.echo(result)
