@@ -11,7 +11,6 @@ config.bind('K', 'tab-next')
 config.bind(']', 'navigate next')
 config.bind('[', 'navigate prev')
 config.bind('pw', 'spawn --userscript pass autofill')
-config.bind('pu', 'spawn --userscript pass update')
 config.bind('m', 'spawn vlc {url}')
 config.bind('M', 'hint links spawn vlc {hint-url}')
 
@@ -26,7 +25,7 @@ config.set('statusbar.widgets', ["keypress", "url", "progress"])
 config.set('fonts.tabs', '10pt "Liberation Sans"')
 config.set('fonts.statusbar', '10pt "Liberation Sans"')
 
-config.set("fonts.monospace", "Liberation Mono, DejaVu Sans Mono, monospace")
+config.set("fonts.default_family", ["Liberation Mono", "DejaVu Sans Mono", "monospace"])
 
 config.set('colors.statusbar.normal.bg', '#eff0f1')
 config.set('colors.statusbar.normal.fg', '#000')
@@ -55,6 +54,8 @@ config.set('url.searchengines', {
     'gh': 'https://github.com/search?utf8=✓&q={}',
     'r': 'https://reddit.com/r/{}',
     'aur': 'https://aur.archlinux.org/packages/?O=0&K={}',
-    'mapy': 'https://mapy.cz/zakladni?q={}'
-
+    'mapy': 'https://mapy.cz/zakladni?q={}',
+    'mdn': 'https://developer.mozilla.org/en-US/search?q={}',
+    'cpp': 'https://en.cppreference.com/mwiki/index.php?search={}',
+    'py': 'https://docs.python.org/3/search.html?q={}',
 })
