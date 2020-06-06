@@ -28,7 +28,7 @@ def window_props(win_id):
         if sep not in line:
             continue
 
-        name, value = line.split(sep)
+        name, value = line.split(sep, 1)
 
         if name == "_KDE_NET_WM_ACTIVITIES(STRING)":
             result["activities"] = value.strip('"').split(",")

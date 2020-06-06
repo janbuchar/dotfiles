@@ -12,7 +12,7 @@ session="${1:-web}"
 
 # Set up session base directory
 basedir="$XDG_RUNTIME_DIR/qutebrowser/$session"
-title="{perc}{title}{title_sep}qutebrowser[$session]"
+title="{perc}{current_title}{title_sep}qutebrowser[$session]"
 args="-l info --loglines 0 --basedir $basedir --set window.title_format $title"
 
 mkdir -p \
