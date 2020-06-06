@@ -19,6 +19,7 @@ if &t_Co > 2 || has("gui_running")
 	set hlsearch
 endif
 
+set relativenumber
 set number
 colorscheme elflord
 highlight LineNr ctermfg=white ctermbg=black
@@ -72,6 +73,28 @@ let g:jedi#popup_on_dot = 0
 let g:neocomplete#force_omni_input_patterns.python = '[^. \t]\.\w*'
 
 """ Key bindings
+
+"" Number keys
+nnoremap + 1
+vnoremap + 1
+nnoremap ě 2
+vnoremap ě 2
+nnoremap š 3
+vnoremap š 3
+nnoremap č 4
+vnoremap č 4
+nnoremap ř 5
+vnoremap ř 5
+nnoremap ž 6
+vnoremap ž 6
+nnoremap ý 7
+vnoremap ý 7
+nnoremap á 8
+vnoremap á 8
+nnoremap í 9
+vnoremap í 9
+nnoremap é 0
+vnoremap é 0
 
 "" Basic shortcuts
 

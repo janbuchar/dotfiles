@@ -2,7 +2,34 @@ set incsearch
 set surround
 set hlsearch
 
+set rnu
+set number
+
 let mapleader = " "
+
+set clipboard+=ideaput
+
+" Number keys
+nnoremap + 1
+vnoremap + 1
+nnoremap ě 2
+vnoremap ě 2
+nnoremap š 3
+vnoremap š 3
+nnoremap č 4
+vnoremap č 4
+nnoremap ř 5
+vnoremap ř 5
+nnoremap ž 6
+vnoremap ž 6
+nnoremap ý 7
+vnoremap ý 7
+nnoremap á 8
+vnoremap á 8
+nnoremap í 9
+vnoremap í 9
+nnoremap é 0
+vnoremap é 0
 
 " Moving around
 nnoremap gh ^
@@ -62,6 +89,7 @@ noremap <S-F5> :action Build<CR>
 
 "" Tool windows
 nnoremap <leader>t :action ActivateProjectToolWindow<CR>
+nnoremap <leader>o :action ActivateTODOToolWindow<CR>
 nnoremap <leader>h :action HideAllWindows<CR>
 
 "" VCS
