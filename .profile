@@ -1,5 +1,5 @@
 # Add Utils path
-export PATH=$PATH:$HOME/Util
+export PATH=$PATH:$HOME/Util:$HOME/.local/bin
 
 # Set editor
 export EDITOR=$( which vim )
