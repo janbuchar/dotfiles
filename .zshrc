@@ -50,13 +50,8 @@ export KEYTIMEOUT=1
 # Start pyenv
 if which pyenv > /dev/null 2> /dev/null; then
 	export PYENV_VIRTUALENV_DISABLE_PROMPT=1
-	eval "$(pyenv init -)"
-	eval "$(pyenv virtualenv-init -)"
-fi
-
-# Start direnv
-if which direnv > /dev/null 2>&1; then
-	eval "$(direnv hook zsh)"
+	#eval "$(pyenv init -)"
+	#eval "$(pyenv virtualenv-init -)"
 fi
 
 # Prompt
@@ -188,3 +183,8 @@ source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # Accepting suggestions
 bindkey "^ " autosuggest-execute
+
+# Start direnv
+if which direnv > /dev/null 2>&1; then
+	eval "$(direnv hook zsh)"
+fi
