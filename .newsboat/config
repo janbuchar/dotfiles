@@ -39,3 +39,11 @@ unbind-key G
 bind-key G end
 
 show-keymap-hint no
+
+feed-sort-order firsttag
+feedlist-format "%11u %t"
+
+color listfocus black cyan
+color listfocus_unread black cyan bold
+
+show-title-bar no
