@@ -73,10 +73,10 @@ def lookup_url(request_url):
 
 
 def fill_form(login, password):
-    for input_type in ("text", "email"):
+    for input_selector in ("input[type=text]", "input[type=email]", "input:not([type])"):
         for attr_name in ("id", "name", "placeholder"):
             for attr_value in ("login", "mail", "user", "name"):
-                selector = f"'input[type={input_type}][{attr_name}*={attr_value} i]'"
+                selector = f"'{input_selector}[{attr_name}*={attr_value} i]'"
                 send_command(f"jseval -q document.querySelector({selector}).value = '{login}';")
 
     send_command(f"jseval -q document.querySelector('input[type=password]').value = '{password}';")
