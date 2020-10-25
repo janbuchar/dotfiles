@@ -1,9 +1,9 @@
 [Layout]
-DisplayNames=
-LayoutList=cz
+DisplayNames=,czc
+LayoutList=cz,cz(coder)
 LayoutLoopCount=-1
 Model=pc101
-Options=
+Options=crtl:nocaps
 ResetOldOptions=true
 ShowFlag=false
 ShowLabel=true

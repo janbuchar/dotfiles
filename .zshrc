@@ -58,7 +58,7 @@ fi
 source $HOME/.zsh/oh-my-zsh/plugins/shrink-path/shrink-path.plugin.zsh
 
 if [ $EUID -ne 0 ]; then
-	color="blue"
+	color="cyan"
 else
 	color="red"
 fi
@@ -90,7 +90,7 @@ function right-prompt {
 		return 0
 	fi
 
-	RPROMPT="%F{green}[py: $( pyenv version-name )]"
+	RPROMPT="%F{cyan}[py: $( pyenv version-name )]"
 }
 
 precmd() { 
@@ -107,6 +107,8 @@ function zle-line-init zle-keymap-select {
 
 zle -N zle-line-init
 zle -N zle-keymap-select
+
+alias vim=nvim
 
 bindkey -M vicmd "gh" beginning-of-line
 bindkey -M vicmd "gl" end-of-line
@@ -155,11 +157,11 @@ mkcd() {
 # Syntax highlighting
 source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-color_command=green
+color_command=cyan
 color_path=default
-color_string=magenta
-color_option=cyan
-color_keyword=yellow
+color_string=green
+color_option=yellow
+color_keyword=blue
 
 ZSH_HIGHLIGHT_STYLES[reserved-word]=fg=$color_keyword,bold
 ZSH_HIGHLIGHT_STYLES[precommand]=fg=$color_keyword,bold

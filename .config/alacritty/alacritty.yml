@@ -14,22 +14,14 @@ env:
 
 # Window dimensions in character columns and lines
 # (changes require restart)
-dimensions:
-  columns: 100
-  lines: 36
+window:
+  dimensions:
+    columns: 100
+    lines: 36
 
-padding:
-  x: 0
-  y: 0
-
-# The FreeType rasterizer needs to know the device DPI for best results
-# (changes require restart)
-dpi:
-  x: 96.0
-  y: 96.0
-
-# Display tabs using this many cells (changes require restart)
-tabspaces: 8
+  padding:
+    x: 0
+    y: 0
 
 # When true, bold text is drawn using the bright variant of colors.
 draw_bold_text_with_bright_colors: true
@@ -58,12 +50,12 @@ font:
     # style: Italic
 
   # Point size of the font
-  size: 9.0
+  size: 8.0
   # Offset is the extra space around each character. offset.y can be thought of
   # as modifying the linespacing, and offset.x as modifying the letter spacing.
   offset:
-    x: 1.0
-    y: 1.0
+    x: 1
+    y: 2
 
   # OS X only: use thin stroke font rendering. Thin strokes are suitable
   # for retina displays, but for non-retina you probably want this set to
@@ -73,42 +65,57 @@ font:
 # Should display the render timer
 render_timer: false
 
-# Use custom cursor colors. If true, display the cursor in the cursor.foreground
-# and cursor.background colors, otherwise invert the colors of the cursor.
-custom_cursor_colors: false
+background_opacity: 0.90
 
-# Colors (Base16 Default Dark)
+# Colors (Nord)
 colors:
   primary:
-    background: '0x1d1f21'
-    foreground: '0xc5c8c6'
-
-  # Colors the cursor will use if `custom_cursor_colors` is true
+    background: '#2e3440'
+    foreground: '#d8dee9'
+    dim_foreground: '#a5abb6'
   cursor:
-    text: '0x1d1f21'
-    cursor: '0xc5c8c6'
-
-  # Normal colors
+    text: '#2e3440'
+    cursor: '#d8dee9'
+  vi_mode_cursor:
+    text: '#2e3440'
+    cursor: '#d8dee9'
+  selection:
+    text: CellForeground
+    background: '#4c566a'
+  search:
+    matches:
+      foreground: CellBackground
+      background: '#88c0d0'
+    bar:
+      background: '#434c5e'
+      foreground: '#d8dee9'
   normal:
-    black:   '0x1d1f21'
-    red:     '0xcc6666'
-    green:   '0xb5bd68'
-    yellow:  '0xf0c674'
-    blue:    '0x81a2be'
-    magenta: '0xb294bb'
-    cyan:    '0x8abeb7'
-    white:   '0xc5c8c6'
-
-  # Bright colors
+    black: '#3b4252'
+    red: '#bf616a'
+    green: '#a3be8c'
+    yellow: '#ebcb8b'
+    blue: '#81a1c1'
+    magenta: '#b48ead'
+    cyan: '#88c0d0'
+    white: '#e5e9f0'
   bright:
-    black:   '0x969896'
-    red:     '0xcc6666'
-    green:   '0xb5bd68'
-    yellow:  '0xf0c674'
-    blue:    '0x81a2be'
-    magenta: '0xb294bb'
-    cyan:    '0x8abeb7'
-    white: '0xc5c8c6'
+    black: '#4c566a'
+    red: '#bf616a'
+    green: '#a3be8c'
+    yellow: '#ebcb8b'
+    blue: '#81a1c1'
+    magenta: '#b48ead'
+    cyan: '#8fbcbb'
+    white: '#eceff4'
+  dim:
+    black: '#373e4d'
+    red: '#94545d'
+    green: '#809575'
+    yellow: '#b29e75'
+    blue: '#68809a'
+    magenta: '#8c738c'
+    cyan: '#6d96a5'
+    white: '#aeb3bb'
 
 # Visual Bell
 #
@@ -132,7 +139,7 @@ colors:
 #
 # To completely disable the visual bell, set its duration to 0.
 #
-visual_bell:
+bell:
   animation: EaseOutExpo
   duration: 0
 
@@ -243,12 +250,10 @@ mouse:
 selection:
   semantic_escape_chars: ",│`|:\"' ()[]{}<>"
 
-hide_cursor_when_typing: false
-
 # Shell
 #
 # You can set shell.program to the path of your favorite shell, e.g. /bin/fish.
 # Entries in shell.args are passed unmodified as arguments to the shell.
 shell:
-  program: /home/teyras/Util/tmux-tmp
+  program: tmux-tmp
   args: []

@@ -25,24 +25,85 @@ config.set('statusbar.widgets', ["keypress", "url", "progress"])
 config.set('fonts.tabs.selected', '10pt "Liberation Sans"')
 config.set('fonts.tabs.unselected', '10pt "Liberation Sans"')
 config.set('fonts.statusbar', '10pt "Liberation Sans"')
+config.set('fonts.completion.category', 'default_size "Liberation Sans"')
+config.set('fonts.completion.entry', 'default_size "Liberation Sans"')
 
 config.set("fonts.default_family", ["Liberation Mono", "DejaVu Sans Mono", "monospace"])
 
-config.set('colors.statusbar.normal.bg', '#eff0f1')
-config.set('colors.statusbar.normal.fg', '#000')
-config.set('colors.statusbar.insert.bg', '#27ae60')
-config.set('colors.statusbar.insert.fg', '#000')
-config.set('colors.statusbar.url.success.http.fg', '#000')
-config.set('colors.statusbar.url.success.https.fg', '#27ae60')
+palette = {
+    # Polar Night
+    'nord0': '#2e3440',
+    'nord1': '#3b4252',
+    'nord2': '#434c5e',
+    'nord3': '#4c566a',
+    # Snow Storm
+    'nord4': '#d8dee9',
+    'nord5': '#e5e9f0',
+    'nord6': '#eceff4',
+    # Frost
+    'nord7': '#8fbcbb',
+    'nord8': '#88c0d0',
+    'nord9': '#81a1c1',
+    'nord10': '#5e81ac',
+    # Aurora
+    'nord11': '#bf616a',
+    'nord12': '#d08770',
+    'nord13': '#ebcb8b',
+    'nord14': '#a3be8c',
+    'nord15': '#b48ead',
+    # Papirus Background
+    'papirus0': '#eff0f1',
+    'papirus1': '#e3e5e7',
+    # Papirus Foreground
+    'papirus2': '#000000',
+    'papirus3': '#31363b',
+    'papirus4': '#888888',
+    # Papirus Green
+    'papirus5': '#27ae60'
+}
 
-config.set('colors.tabs.even.fg', '#31363b')
-config.set('colors.tabs.odd.fg', '#31363b')
-config.set('colors.tabs.even.bg', '#e3e5e7')
-config.set('colors.tabs.odd.bg', '#eff0f1')
-config.set('colors.tabs.selected.odd.bg', '#888')
-config.set('colors.tabs.selected.even.bg', '#888')
+config.set('colors.statusbar.normal.bg', palette['papirus0'])
+config.set('colors.statusbar.normal.fg', palette['papirus2'])
+config.set('colors.statusbar.insert.bg', palette['papirus5'])
+config.set('colors.statusbar.insert.fg', palette['papirus2'])
+config.set('colors.statusbar.url.success.http.fg', palette['papirus2'])
+config.set('colors.statusbar.url.success.https.fg', palette['papirus5'])
+config.set('colors.statusbar.command.fg', palette['nord5'])
+config.set('colors.statusbar.command.bg', palette['nord2'])
+
+config.set('colors.tabs.even.fg', palette['papirus3'])
+config.set('colors.tabs.odd.fg', palette['papirus3'])
+config.set('colors.tabs.even.bg', palette['papirus1'])
+config.set('colors.tabs.odd.bg', palette['papirus0'])
+config.set('colors.tabs.selected.odd.bg', palette['papirus4'])
+config.set('colors.tabs.selected.even.bg', palette['papirus4'])
 config.set('colors.tabs.selected.odd.fg', '#fff')
 config.set('colors.tabs.selected.even.fg', '#fff')
+
+config.set('colors.downloads.bar.bg', palette['papirus0'])
+config.set('colors.downloads.stop.bg', palette['papirus5'])
+config.set('colors.downloads.stop.fg', '#fff')
+config.set('colors.downloads.start.bg', palette['papirus4'])
+config.set('colors.downloads.start.fg', '#fff')
+
+config.set('colors.prompts.bg', palette['nord2'])
+config.set('colors.prompts.fg', palette['nord5'])
+config.set('colors.prompts.border', f"1 px solid {palette['nord5']}")
+
+config.set('colors.completion.category.bg', palette['nord0'])
+config.set('colors.completion.category.fg', palette['nord5'])
+config.set('colors.completion.category.border.bottom', palette['nord0'])
+config.set('colors.completion.category.border.top', palette['nord0'])
+config.set('colors.completion.even.bg', palette['nord1'])
+config.set('colors.completion.odd.bg', palette['nord1'])
+config.set('colors.completion.fg', palette['nord4'])
+config.set('colors.completion.item.selected.bg', palette['nord3'])
+config.set('colors.completion.item.selected.fg', palette['nord6'])
+config.set('colors.completion.item.selected.border.bottom', palette['nord3'])
+config.set('colors.completion.item.selected.border.top', palette['nord3'])
+config.set('colors.completion.match.fg', palette['nord13'])
+config.set('colors.completion.scrollbar.fg', palette['nord5'])
+config.set('colors.completion.scrollbar.bg', palette['nord1'])
 
 config.set('url.searchengines', {
     'DEFAULT': 'https://www.google.com/search?q={}',

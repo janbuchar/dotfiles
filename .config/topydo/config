@@ -1,6 +1,6 @@
 [topydo]
-filename = ~/Dropbox/Todo/todo.txt
-archive_filename = ~/Dropbox/Todo/done.txt
+filename = ~/Todo/todo.txt
+archive_filename = ~/Todo/done.txt
 
 [colorscheme]
 priority_colors = A:light-yellow,B:cyan,C:light-blue

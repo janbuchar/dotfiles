@@ -1,7 +1,7 @@
 [Appearance]
 BoldIntense=true
-ColorScheme=base16-tomorrow
-Font=Liberation Mono,9,-1,5,50,0,0,0,0,0,Regular
+ColorScheme=nord
+Font=Liberation Mono,9,-1,5,50,0,0,0,0,0
 LineSpacing=2
 UseFontLineChararacters=true
 
