@@ -84,13 +84,16 @@ autocmd FocusGained,BufEnter * :silent! !
 autocmd FocusGained,BufEnter * :silent! :GitGutter
 
 " Gitgutter on YADM-managed files
-autocmd BufEnter * :call s:yadm_init()
+autocmd BufNewFile,BufRead * :call s:yadm_init()
 function! s:yadm_init() abort
 	call system('yadm ls-files --error-unmatch ' . expand('%:p'))
 	if v:shell_error == 0
 		let g:gitgutter_git_args = '--git-dir=$HOME/.config/yadm/repo.git'
 	endif
 endfunction
+
+" .envrc syntax
+autocmd BufNewFile,BufRead *.envrc set syntax=sh
 
 " Disable history management in vim-workspace (when enabled, it created empty
 " undo history items for some reason)
@@ -228,6 +231,18 @@ nnoremap <leader><bar> :vsplit<cr>
 "" Switching buffers
 nnoremap <silent> J :bprevious<CR>
 nnoremap <silent> K :bnext<CR>
+
+nnoremap gT <nop>
+nmap gt1 <Plug>lightline#bufferline#go(1)
+nmap gt2 <Plug>lightline#bufferline#go(2)
+nmap gt3 <Plug>lightline#bufferline#go(3)
+nmap gt4 <Plug>lightline#bufferline#go(4)
+nmap gt5 <Plug>lightline#bufferline#go(5)
+nmap gt6 <Plug>lightline#bufferline#go(6)
+nmap gt7 <Plug>lightline#bufferline#go(7)
+nmap gt8 <Plug>lightline#bufferline#go(8)
+nmap gt9 <Plug>lightline#bufferline#go(9)
+nmap gt0 <Plug>lightline#bufferline#go(10)
 
 "" Join/Split lines
 nnoremap <leader>j J
