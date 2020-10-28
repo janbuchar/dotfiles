@@ -1,5 +1,7 @@
 " Plugins
 let g:ale_disable_lsp = 1
+"let g:ale_lint_on_enter = 0
+let g:ale_lint_delay = 250
 call plug#begin(stdpath('data') . '/plugged')
 
 "" Editing/navigation stuff
@@ -55,12 +57,15 @@ let g:python3_host_prog = '/usr/bin/python'
 
 " Python settings
 let g:python_highlight_all = 1
-autocmd FileType python let b:coc_root_patterns = ['pyproject.toml',  'requirements.txt', '.git', '.env']
+augroup python_settings
+	autocmd!
+	autocmd FileType python let b:coc_root_patterns = ['pyproject.toml',  'requirements.txt', '.git', '.env']
+augroup end
 
 call coc#config('python.pythonPath', $VIRTUAL_ENV . '/bin/python')
 call coc#config('python.jediEnabled', '')
 
-" coc.nvim  settings
+" coc.nvim settings
 call coc#config('diagnostic.displayByAle', '1')
 call coc#config('list.source.files.excludePatterns', [
 			\ '**/node_modules/**',
@@ -75,16 +80,25 @@ call coc#config('list.source.files.excludePatterns', [
 colorscheme nord
 
 "" Defx cursor line
-autocmd BufEnter * highlight CursorLine ctermbg=0
-autocmd FileType defx setlocal cursorline
-autocmd FileType defx highlight CursorLine ctermbg=8
+augroup defx_cursor
+	autocmd!
+	autocmd BufEnter * highlight CursorLine ctermbg=0
+	autocmd FileType defx setlocal cursorline
+	autocmd FileType defx highlight CursorLine ctermbg=8
+augroup end
 
 " Autoreload
-autocmd FocusGained,BufEnter * :silent! !
-autocmd FocusGained,BufEnter * :silent! :GitGutter
+augroup autoreload
+	autocmd!
+	autocmd FocusGained,BufEnter * :checktime
+	autocmd FocusGained,BufEnter * :silent! :GitGutter
+augroup end
 
 " Gitgutter on YADM-managed files
-autocmd BufNewFile,BufRead * :call s:yadm_init()
+augroup yadm_gitgutter
+	autocmd!
+	autocmd BufNewFile,BufRead * :call s:yadm_init()
+augroup end
 function! s:yadm_init() abort
 	call system('yadm ls-files --error-unmatch ' . expand('%:p'))
 	if v:shell_error == 0
@@ -93,7 +107,10 @@ function! s:yadm_init() abort
 endfunction
 
 " .envrc syntax
-autocmd BufNewFile,BufRead *.envrc set syntax=sh
+augroup envrc_syntax
+	autocmd!
+	autocmd BufNewFile,BufRead *.envrc set syntax=sh
+augroup end
 
 " Disable history management in vim-workspace (when enabled, it created empty
 " undo history items for some reason)
@@ -251,7 +268,10 @@ nnoremap <leader>s i<CR><ESC>
 "" File browser
 nnoremap <silent> <leader>t :Defx `expand('.')` -columns=indent:git:filename:type -search=`expand('%:p')` -split=floating -wincol=0 -winrow=1 -winwidth=50 -winheight=`&lines - 3` -toggle=1 -buffer-name=defx<CR>
 
-autocmd FileType defx call s:defx_my_settings()
+augroup defx_setup
+	autocmd!
+	autocmd FileType defx call s:defx_my_settings()
+augroup end
 function! s:defx_my_settings() abort
 	nnoremap <silent><buffer><expr> o
 		\ defx#is_directory() ?
