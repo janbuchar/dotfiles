@@ -50,9 +50,9 @@ export KEYTIMEOUT=1
 # Start pyenv
 if which pyenv > /dev/null 2> /dev/null; then
 	export PYENV_VIRTUALENV_DISABLE_PROMPT=1
-	#eval "$(pyenv init -)"
-	#eval "$(pyenv virtualenv-init -)"
 fi
+
+export BAT_THEME="Nord"
 
 # Prompt
 source $HOME/.zsh/oh-my-zsh/plugins/shrink-path/shrink-path.plugin.zsh
@@ -62,6 +62,8 @@ if [ $EUID -ne 0 ]; then
 else
 	color="red"
 fi
+
+color2="black"
 
 if [ -n "$SSH_CLIENT" ]; then
         host="%F{default}@%F{$color}%m%f"
@@ -75,8 +77,8 @@ else
 	_PROMPT='%B%(!.%F{red}.%F{$color})%n%F{red}$host %F{default}$(shrink_path -l -t)%F{$color} %(!.#.$)%f%b '
 fi
 
-VI_NORMAL="%B[%F{default}N%f]%b "
-VI_INSERT="%B[%F{$color}I%f]%b "
+VI_NORMAL="%B%F{$color2}[%F{default}N%F{$color2}]%b "
+VI_INSERT="%B%F{$color2}[%F{$color}I%F{$color2}]%b "
 
 ZLE_RPROMPT_INDENT=0
 
@@ -132,6 +134,7 @@ bindkey -M vicmd "\033[4~" end-of-line
 # Delete
 bindkey "\033[3~" delete-char
 bindkey -M vicmd "\033[3~" delete-char
+bindkey -M vicmd '^?' delete-char
 
 # Clear screen with "K"
 bindkey -M vicmd "K" clear-screen
