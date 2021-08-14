@@ -1,7 +1,8 @@
 " Plugins
 let g:ale_disable_lsp = 1
-"let g:ale_lint_on_enter = 0
 let g:ale_lint_delay = 250
+let g:nvcode_termcolors=256
+
 call plug#begin(stdpath('data') . '/plugged')
 
 "" Editing/navigation stuff
@@ -9,9 +10,11 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'jiangmiao/auto-pairs'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'Shougo/defx.nvim'
-Plug 'kristijanhusak/defx-git'
 Plug 'moll/vim-bbye'
+Plug 'itchyny/vim-cursorword'
+Plug 'junegunn/fzf.vim'
+Plug 'AndrewRadev/tagalong.vim'
+Plug 'kevinhwang91/rnvimr'
 
 "" Sessions
 Plug 'thaerkh/vim-workspace'
@@ -22,7 +25,9 @@ Plug 'mengelbrecht/lightline-bufferline'
 Plug 'maximbaz/lightline-ale'
 
 "" Colors
-Plug 'arcticicestudio/nord-vim'
+Plug 'nvim-treesitter/nvim-treesitter', {'branch': '0.5-compat', 'do': ':TSUpdate'}
+Plug 'christianchiarulli/nvcode-color-schemes.vim'
+Plug 'ap/vim-css-color'
 
 "" Git support
 Plug 'airblade/vim-gitgutter'
@@ -30,26 +35,30 @@ Plug 'tpope/vim-fugitive'
 
 "" LSP
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'antoinemadec/coc-fzf'
 Plug 'dense-analysis/ale'
 
-"" JS/TS + React
-Plug 'pangloss/vim-javascript'
-Plug 'leafgarland/typescript-vim'
-Plug 'peitalin/vim-jsx-typescript'
-
-"" Python
-Plug 'vim-python/python-syntax'
-
 call plug#end()
+
+" Plugin management
+
+let g:plugin_lock = '~/.config/nvim/plugin.lock'
+
+command UpdatePlugins
+  \ PlugUpdate | execute 'PlugSnapshot!' . g:plugin_lock
+
+command SyncPlugins
+  \ source g:plugin_lock
+
 
 " LSP plugins
 let g:coc_global_extensions = [
   \ 'coc-tsserver',
-  \ 'coc-python',
-  \ 'coc-lists',
+  \ 'coc-pyright',
   \ 'coc-json',
   \ 'coc-css',
   \ 'coc-cssmodules',
+  \ 'coc-docker',
   \ ]
 
 " Python for defx
@@ -67,32 +76,25 @@ call coc#config('python.jediEnabled', '')
 
 " coc.nvim settings
 call coc#config('diagnostic.displayByAle', '1')
-call coc#config('list.source.files.excludePatterns', [
-			\ '**/node_modules/**',
-			\ '**/node_modules/**/.*', 
-			\ '**/node_modules/**/.*/**',
-			\ '**/build/**',
-			\ '**/build/**/.*', 
-			\ '**/build/**/.*/**',
-			\])
+
+" configure treesitter
+lua << EOF
+require'nvim-treesitter.configs'.setup {
+	ensure_installed = "all",
+	highlight = {
+		enable = true,
+	},
+}
+EOF
+
+" checks if your terminal has 24-bit color support
+if (has("termguicolors"))
+	set termguicolors
+	hi LineNr ctermbg=NONE guibg=NONE
+endif
 
 " Colors
 colorscheme nord
-
-"" Defx cursor line
-augroup defx_cursor
-	autocmd!
-	autocmd BufEnter * highlight CursorLine ctermbg=0
-	autocmd FileType defx setlocal cursorline
-	autocmd FileType defx highlight CursorLine ctermbg=8
-augroup end
-
-" Autoreload
-augroup autoreload
-	autocmd!
-	autocmd FocusGained,BufEnter * :checktime
-	autocmd FocusGained,BufEnter * :silent! :GitGutter
-augroup end
 
 " Gitgutter on YADM-managed files
 augroup yadm_gitgutter
@@ -112,6 +114,13 @@ augroup envrc_syntax
 	autocmd BufNewFile,BufRead *.envrc set syntax=sh
 augroup end
 
+" Splits should be equal-sized
+set equalalways
+augroup equal_splits
+	autocmd!
+	autocmd VimResized * wincmd =
+augroup end
+
 " Disable history management in vim-workspace (when enabled, it created empty
 " undo history items for some reason)
 let g:workspace_persist_undo_history = 0
@@ -129,6 +138,7 @@ set secure
 " Navigation
 set cursorline
 set scrolloff=10
+set mouse=a
 
 " Backup files
 set nobackup
@@ -148,60 +158,73 @@ set laststatus=2
 set showtabline=2
 set noshowmode
 
+" File browser settings
+let g:rnvimr_enable_bw = 1
+let g:rnvimr_enable_picker = 1
+let g:rnvimr_ranger_cmd = 'ranger --cmd="set vcs_aware true"'
+
+" Autoreload
+set autoread
+
 function! CocStatus()
 	return substitute(get(g:, 'coc_status', ''), '(.* venv)', '(venv)', '')
 endfunction
 
+function! WDRelativeFilename()
+	return expand('%')
+endfunction
+
 let g:lightline = {
-      \ 'colorscheme': 'nord',
-      \ 'mode_map': {
-      \   'n' : 'N',
-      \   'i' : 'I',
-      \   'R' : 'R',
-      \   'v' : 'V',
-      \   'V' : 'VL',
-      \   "\<C-v>": 'VB',
-      \   'c' : 'C',
-      \   's' : 'S',
-      \   'S' : 'SL',
-      \   "\<C-s>": 'SB',
-      \   't': 'T',
-      \ },
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ], [ 'readonly', 'filename', 'modified' ] ],
-      \   'right': [
-      \     [ 'cocstatus', 'fileencoding', 'filetype', 'percent' ],
-      \     [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos' ],
-      \   ]
-      \ },
-      \ 'inactive': {
-      \   'right': [ [ 'percent' ] ]
-      \ },
-      \ 'tabline': {
-      \   'left': [ ['buffers'] ],
-      \   'right': [ ]
-      \ },
-      \ 'component_expand': {
-      \   'buffers': 'lightline#bufferline#buffers',
-      \   'linter_checking': 'lightline#ale#checking',
-      \   'linter_infos': 'lightline#ale#infos',
-      \   'linter_warnings': 'lightline#ale#warnings',
-      \   'linter_errors': 'lightline#ale#errors',
-      \   'linter_ok': 'lightline#ale#ok',
-      \ },
-      \ 'component_type': {
-      \   'buffers': 'tabsel',
-      \   'linter_checking': 'right',
-      \   'linter_infos': 'right',
-      \   'linter_warnings': 'warning',
-      \   'linter_errors': 'error',
-      \   'linter_ok': 'right',
-      \ },
-      \ 'component_function': {
-      \   'cocstatus': 'CocStatus',
-      \ },
-      \ 'tabline_subseparator': {'left': '', 'right': ''}
-      \ }
+	\ 'colorscheme': 'nord',
+	\ 'mode_map': {
+	\   'n' : 'N',
+	\   'i' : 'I',
+	\   'R' : 'R',
+	\   'v' : 'V',
+	\   'V' : 'VL',
+	\   "\<C-v>": 'VB',
+	\   'c' : 'C',
+	\   's' : 'S',
+	\   'S' : 'SL',
+	\   "\<C-s>": 'SB',
+	\   't': 'T',
+	\ },
+	\ 'active': {
+	\   'left': [ [ 'mode', 'paste' ], [ 'readonly', 'filename', 'modified' ] ],
+	\   'right': [
+	\     [ 'cocstatus', 'fileencoding', 'filetype', 'percent' ],
+	\     [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos' ],
+	\   ]
+	\ },
+	\ 'inactive': {
+	\   'right': [ [ 'percent' ] ]
+	\ },
+	\ 'tabline': {
+	\   'left': [ ['buffers'] ],
+	\   'right': [ ]
+	\ },
+	\ 'component_expand': {
+	\   'buffers': 'lightline#bufferline#buffers',
+	\   'linter_checking': 'lightline#ale#checking',
+	\   'linter_infos': 'lightline#ale#infos',
+	\   'linter_warnings': 'lightline#ale#warnings',
+	\   'linter_errors': 'lightline#ale#errors',
+	\   'linter_ok': 'lightline#ale#ok',
+	\ },
+	\ 'component_type': {
+	\   'buffers': 'tabsel',
+	\   'linter_checking': 'right',
+	\   'linter_infos': 'right',
+	\   'linter_warnings': 'warning',
+	\   'linter_errors': 'error',
+	\   'linter_ok': 'right',
+	\ },
+	\ 'component_function': {
+	\   'cocstatus': 'CocStatus',
+	\   'filename': 'WDRelativeFilename'
+	\ },
+	\ 'tabline_subseparator': {'left': '', 'right': ''}
+	\ }
 let g:lightline#bufferline#show_number = 2
 
 " Key bindings
@@ -212,35 +235,6 @@ let mapleader = " "
 "" F10 to toggle paste mode
 set pastetoggle=<F10>
 
-"" CZ keyboard adaptation
-""" Number keys
-nnoremap + 1
-vnoremap + 1
-nnoremap ě 2
-vnoremap ě 2
-nnoremap š 3
-vnoremap š 3
-nnoremap č 4
-vnoremap č 4
-nnoremap ř 5
-vnoremap ř 5
-nnoremap ž 6
-vnoremap ž 6
-nnoremap ý 7
-vnoremap ý 7
-nnoremap á 8
-vnoremap á 8
-nnoremap í 9
-vnoremap í 9
-nnoremap é 0
-vnoremap é 0
-
-""" Search
-nnoremap - /
-
-""" ftFT next match
-nnoremap ů ;
-
 "" Making splits
 nnoremap <leader>- :split<cr>
 nnoremap <leader><bar> :vsplit<cr>
@@ -249,51 +243,25 @@ nnoremap <leader><bar> :vsplit<cr>
 nnoremap <silent> J :bprevious<CR>
 nnoremap <silent> K :bnext<CR>
 
+function Bufnumbers() abort
+	return filter(range(1, bufnr('$')), {k, v -> bufexists(v) && buflisted(v) && !(getbufvar(v, '&filetype') ==# 'qf')})
+endfunction
+
 nnoremap gT <nop>
-nmap gt1 <Plug>lightline#bufferline#go(1)
-nmap gt2 <Plug>lightline#bufferline#go(2)
-nmap gt3 <Plug>lightline#bufferline#go(3)
-nmap gt4 <Plug>lightline#bufferline#go(4)
-nmap gt5 <Plug>lightline#bufferline#go(5)
-nmap gt6 <Plug>lightline#bufferline#go(6)
-nmap gt7 <Plug>lightline#bufferline#go(7)
-nmap gt8 <Plug>lightline#bufferline#go(8)
-nmap gt9 <Plug>lightline#bufferline#go(9)
-nmap gt0 <Plug>lightline#bufferline#go(10)
+nmap gt :Buffers<CR>
+nmap <silent> gt :call fzf#run(fzf#wrap({
+	\ 'source': map(Bufnumbers(), {k, v -> printf('[%s] %s', lightline#bufferline#get_ordinal_number_for_buffer(v), bufname(v))}),
+	\ 'sink': {line -> lightline#bufferline#go(substitute(line, '^\[\([0-9]*\)\].*', '\1', ''))},
+	\ 'options': ['--prompt', 'Buffers> ', '--preview', stdpath('data') . '/plugged/fzf.vim/bin/preview.sh $(echo {} \| cut -d" " -f 2-)']}
+	\ ))<CR>
 
 "" Join/Split lines
-nnoremap <leader>j J
-nnoremap <leader>s i<CR><ESC>
+nnoremap gj J
+nnoremap gs i<CR><ESC>
 
 "" File browser
-nnoremap <silent> <leader>t :Defx `expand('.')` -columns=indent:git:filename:type -search=`expand('%:p')` -split=floating -wincol=0 -winrow=1 -winwidth=50 -winheight=`&lines - 3` -toggle=1 -buffer-name=defx<CR>
-
-augroup defx_setup
-	autocmd!
-	autocmd FileType defx call s:defx_my_settings()
-augroup end
-function! s:defx_my_settings() abort
-	nnoremap <silent><buffer><expr> o
-		\ defx#is_directory() ?
-		\ defx#do_action('open_or_close_tree') :
-		\ defx#do_action('multi', ['drop', 'quit'])
-	nnoremap <silent><buffer><expr> <CR>
-		\ defx#is_directory() ?
-		\ defx#do_action('open_or_close_tree') :
-		\ defx#do_action('multi', ['drop', 'quit'])
-	nnoremap <silent><buffer><expr> h
-		\ defx#do_action('search', fnamemodify(defx#get_candidate().action__path, ':h'))
-	nnoremap <silent><buffer><expr> q
-		\ defx#do_action('quit')
-	nnoremap <silent><buffer><expr> <C-n>
-		\ defx#do_action('new_file')
-	nnoremap <silent><buffer><expr> <C-f>
-		\ defx#do_action('new_directory')
-	nnoremap <silent><buffer><expr> dd
-		\ defx#do_action('remove')
-	nnoremap <silent><buffer><expr> cc
-		\ defx#do_action('rename')
-endfunction
+nnoremap <silent> <leader>t :RnvimrToggle<CR>
+tnoremap <silent> <M-o> <C-\><C-n>:RnvimrToggle<CR>
 
 "" Start/end of line
 nnoremap gh ^
@@ -302,17 +270,20 @@ nnoremap gl $
 vnoremap gl $
 
 "" Cancel highlight
-nnoremap <Esc> :noh<CR>
+nnoremap <silent> <Esc> :noh<CR>
 
 "" Close buffer
-nnoremap <leader>q :Bdelete<CR>
+nnoremap <silent> <leader>q :Bdelete<CR>
 
 "" IDE actions
 nmap <silent> <leader>rn <Plug>(coc-rename)
+nmap <silent> <leader>a <Plug>(coc-codeaction-selected)
+vmap <silent> <leader>a <Plug>(coc-codeaction-selected)
 nmap <silent> <leader>do <Plug>(coc-codeaction)
 nmap <silent> <leader>k :call CocAction('doHover')<CR>
-nmap <silent> <leader>y :CocList symbols<CR>
-nmap <silent> <leader>n :CocList files<CR>
+nmap <silent> <leader>y :CocFzfList symbols<CR>
+nmap <silent> <leader>n :call fzf#run(fzf#wrap(fzf#vim#with_preview({'source': 'ag -g ""', 'options': ['--prompt', 'Files> ']})))<CR>
+nmap <silent> <leader>N :Files<CR>
 nmap <silent> <leader>f <Plug>(ale_fix)
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
@@ -321,21 +292,21 @@ nmap <silent> gr <Plug>(coc-references)
 
 "" Browse completion lists with Tab
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
+	\ pumvisible() ? "\<C-n>" :
+	\ <SID>check_back_space() ? "\<TAB>" :
+	\ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
+	let col = col('.') - 1
+	return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
 "" Accept completion with Enter
 if exists('*complete_info')
-  inoremap <expr> <CR> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+	inoremap <expr> <CR> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
 else
-  inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+	inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 endif
 
 "" Accept first completion on text with Ctrl+space
