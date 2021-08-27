@@ -1,6 +1,4 @@
 " Plugins
-let g:ale_disable_lsp = 1
-let g:ale_lint_delay = 250
 let g:nvcode_termcolors=256
 
 call plug#begin(stdpath('data') . '/plugged')
@@ -22,7 +20,6 @@ Plug 'thaerkh/vim-workspace'
 "" Lightline
 Plug 'itchyny/lightline.vim'
 Plug 'mengelbrecht/lightline-bufferline'
-Plug 'maximbaz/lightline-ale'
 
 "" Colors
 Plug 'nvim-treesitter/nvim-treesitter', {'branch': '0.5-compat', 'do': ':TSUpdate'}
@@ -34,10 +31,14 @@ Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 
 "" LSP
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'antoinemadec/coc-fzf'
-Plug 'dense-analysis/ale'
+Plug 'neovim/nvim-lspconfig'
+Plug 'josa42/nvim-lightline-lsp'
+Plug 'gfanto/fzf-lsp.nvim'
+Plug 'hrsh7th/nvim-compe'
+Plug 'glepnir/lspsaga.nvim'
 
+" Formatting
+Plug 'mhartington/formatter.nvim'
 call plug#end()
 
 " Plugin management
@@ -47,35 +48,15 @@ let g:plugin_lock = '~/.config/nvim/plugin.lock'
 command UpdatePlugins
   \ PlugUpdate | execute 'PlugSnapshot!' . g:plugin_lock
 
+command SnapshotPlugins
+  \ execute 'PlugSnapshot!' . g:plugin_lock
+
 command SyncPlugins
   \ source g:plugin_lock
 
 
-" LSP plugins
-let g:coc_global_extensions = [
-  \ 'coc-tsserver',
-  \ 'coc-pyright',
-  \ 'coc-json',
-  \ 'coc-css',
-  \ 'coc-cssmodules',
-  \ 'coc-docker',
-  \ ]
-
 " Python for defx
 let g:python3_host_prog = '/usr/bin/python'
-
-" Python settings
-let g:python_highlight_all = 1
-augroup python_settings
-	autocmd!
-	autocmd FileType python let b:coc_root_patterns = ['pyproject.toml',  'requirements.txt', '.git', '.env']
-augroup end
-
-call coc#config('python.pythonPath', $VIRTUAL_ENV . '/bin/python')
-call coc#config('python.jediEnabled', '')
-
-" coc.nvim settings
-call coc#config('diagnostic.displayByAle', '1')
 
 " configure treesitter
 lua << EOF
@@ -163,15 +144,28 @@ let g:rnvimr_enable_bw = 1
 let g:rnvimr_enable_picker = 1
 let g:rnvimr_ranger_cmd = 'ranger --cmd="set vcs_aware true"'
 
+" Completion options
+set completeopt=menuone,noselect
+
 " Autoreload
 set autoread
 
-function! CocStatus()
-	return substitute(get(g:, 'coc_status', ''), '(.* venv)', '(venv)', '')
-endfunction
-
+" Lightline
 function! WDRelativeFilename()
 	return expand('%')
+endfunction
+
+function! LspDiagnosticCount(label, type)
+  if luaeval('#vim.lsp.buf_get_clients() > 0')
+    let count = luaeval('vim.lsp.diagnostic.get_count(0, "' . a:type . '")')
+    if (count > 0)
+      return a:label . ': ' . count
+    else
+      return ''
+    end
+  else
+    return ''
+  end
 endfunction
 
 let g:lightline = {
@@ -192,8 +186,8 @@ let g:lightline = {
 	\ 'active': {
 	\   'left': [ [ 'mode', 'paste' ], [ 'readonly', 'filename', 'modified' ] ],
 	\   'right': [
-	\     [ 'cocstatus', 'fileencoding', 'filetype', 'percent' ],
-	\     [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos' ],
+	\     [ 'lsp_status', 'fileencoding', 'filetype', 'percent' ],
+	\     [ 'lsp_errors', 'lsp_warnings', 'lsp_infos', 'lsp_hints' ],
 	\   ]
 	\ },
 	\ 'inactive': {
@@ -205,27 +199,30 @@ let g:lightline = {
 	\ },
 	\ 'component_expand': {
 	\   'buffers': 'lightline#bufferline#buffers',
-	\   'linter_checking': 'lightline#ale#checking',
-	\   'linter_infos': 'lightline#ale#infos',
-	\   'linter_warnings': 'lightline#ale#warnings',
-	\   'linter_errors': 'lightline#ale#errors',
-	\   'linter_ok': 'lightline#ale#ok',
+	\   'lsp_errors': 'lightline#lsp#errors',
+	\   'lsp_warnings': 'lightline#lsp#warnings',
+	\   'lsp_infos': 'lightline#lsp#info',
+	\   'lsp_hints': 'lightline#lsp#hints',
+	\   'lsp_status': 'lightline#lsp#status',
 	\ },
 	\ 'component_type': {
 	\   'buffers': 'tabsel',
-	\   'linter_checking': 'right',
-	\   'linter_infos': 'right',
-	\   'linter_warnings': 'warning',
-	\   'linter_errors': 'error',
-	\   'linter_ok': 'right',
+        \   'lsp_errors': 'error',
+        \   'lsp_warnings': 'warning',
+        \   'lsp_infos': 'middle',
+        \   'lsp_hints': 'middle',
 	\ },
 	\ 'component_function': {
-	\   'cocstatus': 'CocStatus',
-	\   'filename': 'WDRelativeFilename'
+	\   'filename': 'WDRelativeFilename',
 	\ },
 	\ 'tabline_subseparator': {'left': '', 'right': ''}
 	\ }
+
 let g:lightline#bufferline#show_number = 2
+let g:lightline#lsp#indicator_errors = 'E: '
+let g:lightline#lsp#indicator_warnings = 'W: '
+let g:lightline#lsp#indicator_info = 'I: '
+let g:lightline#lsp#indicator_hints = 'H: '
 
 " Key bindings
 
@@ -276,39 +273,47 @@ nnoremap <silent> <Esc> :noh<CR>
 nnoremap <silent> <leader>q :Bdelete<CR>
 
 "" IDE actions
-nmap <silent> <leader>rn <Plug>(coc-rename)
-nmap <silent> <leader>a <Plug>(coc-codeaction-selected)
-vmap <silent> <leader>a <Plug>(coc-codeaction-selected)
-nmap <silent> <leader>do <Plug>(coc-codeaction)
-nmap <silent> <leader>k :call CocAction('doHover')<CR>
-nmap <silent> <leader>y :CocFzfList symbols<CR>
+nmap <silent> <leader>rn <Cmd>Lspsaga rename<CR>
+nmap <silent> <leader>a :CodeActions<CR>
+vmap <silent> <leader>a :<C-U>RangeCodeActions<CR>
+nmap <silent> <leader>k <Cmd>Lspsaga hover_doc<CR>
+nmap <silent> <leader>d <Cmd>Lspsaga show_line_diagnostics<CR>
+nmap <silent> <leader>y :WorkspaceSymbols<CR>
 nmap <silent> <leader>n :call fzf#run(fzf#wrap(fzf#vim#with_preview({'source': 'ag -g ""', 'options': ['--prompt', 'Files> ']})))<CR>
 nmap <silent> <leader>N :Files<CR>
-nmap <silent> <leader>f <Plug>(ale_fix)
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
+nmap <silent> <leader>f :FormatWrite<CR>
+nmap <silent> <leader>d :Diagnostics<CR>
+nmap <silent> gd :Definitions<CR>
+nmap <silent> gy :TypeDefinitions<CR>
+nmap <silent> gi :Implementations<CR>
+nmap <silent> gr :References<CR>
 
-"" Browse completion lists with Tab
-inoremap <silent><expr> <TAB>
-	\ pumvisible() ? "\<C-n>" :
-	\ <SID>check_back_space() ? "\<TAB>" :
-	\ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+"" Code completion menu
+inoremap <silent><expr> <C-Space> pumvisible() ? compe#confirm({'keys': '<CR>', 'select': v:true}) : compe#complete()
+inoremap <silent><expr> <CR>      compe#confirm({'keys': '<CR>', 'select': v:true})
+inoremap <silent><expr> <C-e>     compe#close('<C-e>')
+inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
+inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
 
+""" Browse completions with TAB
 function! s:check_back_space() abort
 	let col = col('.') - 1
 	return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-"" Accept completion with Enter
-if exists('*complete_info')
-	inoremap <expr> <CR> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-else
-	inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-endif
+inoremap <silent><expr> <TAB>
+	\ pumvisible() ? "\<C-n>" :
+	\ <SID>check_back_space() ? "\<TAB>" :
+	\ compe#complete()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
-"" Accept first completion on text with Ctrl+space
-inoremap <silent><expr> <c-space> pumvisible() ? coc#_select_confirm() : coc#refresh()
+" Formatting
+lua << EOF
+formatters = require("formatters")
 
+require("formatter").setup({
+  filetype = {
+    lua = {formatters.luafmt}
+  }
+})
+EOF
