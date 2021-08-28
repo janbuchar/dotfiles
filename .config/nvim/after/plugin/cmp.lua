@@ -2,6 +2,11 @@ local cmp = require("cmp")
 
 cmp.setup {
   completeopt = "menu,menuone,noinsert",
+  snippet = {
+    expand = function(args)
+      vim.fn["vsnip#anonymous"](args.body)
+    end
+  },
   mapping = {
     ["<C-p>"] = cmp.mapping.select_prev_item(),
     ["<C-n>"] = cmp.mapping.select_next_item(),
@@ -18,6 +23,7 @@ cmp.setup {
   },
   sources = {
     {name = "buffer"},
-    {name = "nvim_lsp"}
+    {name = "nvim_lsp"},
+    {name = "vsnip"}
   }
 }
