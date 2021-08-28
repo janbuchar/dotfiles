@@ -34,8 +34,12 @@ Plug 'tpope/vim-fugitive'
 Plug 'neovim/nvim-lspconfig'
 Plug 'josa42/nvim-lightline-lsp'
 Plug 'gfanto/fzf-lsp.nvim'
-Plug 'hrsh7th/nvim-compe'
 Plug 'glepnir/lspsaga.nvim'
+
+"" Completions
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-nvim-lsp'
 
 " Formatting
 Plug 'mhartington/formatter.nvim'
@@ -45,15 +49,11 @@ call plug#end()
 
 let g:plugin_lock = '~/.config/nvim/plugin.lock'
 
-command UpdatePlugins
-  \ PlugUpdate | execute 'PlugSnapshot!' . g:plugin_lock
-
 command SnapshotPlugins
   \ execute 'PlugSnapshot!' . g:plugin_lock
 
 command SyncPlugins
   \ source g:plugin_lock
-
 
 " Python for defx
 let g:python3_host_prog = '/usr/bin/python'
@@ -144,28 +144,12 @@ let g:rnvimr_enable_bw = 1
 let g:rnvimr_enable_picker = 1
 let g:rnvimr_ranger_cmd = 'ranger --cmd="set vcs_aware true"'
 
-" Completion options
-set completeopt=menuone,noselect
-
 " Autoreload
 set autoread
 
 " Lightline
 function! WDRelativeFilename()
 	return expand('%')
-endfunction
-
-function! LspDiagnosticCount(label, type)
-  if luaeval('#vim.lsp.buf_get_clients() > 0')
-    let count = luaeval('vim.lsp.diagnostic.get_count(0, "' . a:type . '")')
-    if (count > 0)
-      return a:label . ': ' . count
-    else
-      return ''
-    end
-  else
-    return ''
-  end
 endfunction
 
 let g:lightline = {
@@ -288,23 +272,9 @@ nmap <silent> gy :TypeDefinitions<CR>
 nmap <silent> gi :Implementations<CR>
 nmap <silent> gr :References<CR>
 
-"" Code completion menu
-inoremap <silent><expr> <C-Space> pumvisible() ? compe#confirm({'keys': '<CR>', 'select': v:true}) : compe#complete()
-inoremap <silent><expr> <CR>      compe#confirm({'keys': '<CR>', 'select': v:true})
-inoremap <silent><expr> <C-e>     compe#close('<C-e>')
-inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
-inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
-
-""" Browse completions with TAB
-function! s:check_back_space() abort
-	let col = col('.') - 1
-	return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
+"" Browse code completions with TAB
 inoremap <silent><expr> <TAB>
-	\ pumvisible() ? "\<C-n>" :
-	\ <SID>check_back_space() ? "\<TAB>" :
-	\ compe#complete()
+	\ pumvisible() ? "\<C-n>" : "\<TAB>"
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 " Formatting
