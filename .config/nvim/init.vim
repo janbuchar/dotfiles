@@ -27,7 +27,7 @@ Plug 'christianchiarulli/nvcode-color-schemes.vim'
 Plug 'ap/vim-css-color'
 
 "" Git support
-Plug 'airblade/vim-gitgutter'
+Plug 'mhinz/vim-signify'
 Plug 'tpope/vim-fugitive'
 
 "" LSP
@@ -78,18 +78,6 @@ endif
 
 " Colors
 colorscheme nord
-
-" Gitgutter on YADM-managed files
-augroup yadm_gitgutter
-	autocmd!
-	autocmd BufNewFile,BufRead * :call s:yadm_init()
-augroup end
-function! s:yadm_init() abort
-	call system('yadm ls-files --error-unmatch ' . expand('%:p'))
-	if v:shell_error == 0
-		let g:gitgutter_git_args = '--git-dir=$HOME/.config/yadm/repo.git'
-	endif
-endfunction
 
 " .envrc syntax
 augroup envrc_syntax
@@ -257,6 +245,10 @@ nnoremap <silent> <Esc> :noh<CR>
 
 "" Close buffer
 nnoremap <silent> <leader>q :Bdelete<CR>
+
+"" VCS hunk actions
+nnoremap <silent> <leader>hp :SignifyHunkDiff<CR>
+nnoremap <silent> <leader>hu :SignifyHunkUndo<CR>
 
 "" IDE actions
 nmap <silent> <leader>rn <Cmd>Lspsaga rename<CR>
