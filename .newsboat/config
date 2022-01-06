@@ -39,6 +39,7 @@ unbind-key G
 bind-key G end
 
 show-keymap-hint no
+confirm-mark-feed-read no
 
 feed-sort-order firsttag
 feedlist-format "%11u %t"
