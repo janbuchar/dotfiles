@@ -74,7 +74,7 @@
 	path = .tmux/plugins/tmux-sensible
 	url = https://github.com/tmux-plugins/tmux-sensible.git
 [submodule ".tmux/plugins/tmux-pain-control"]
-	path = /home/teyras/.tmux/plugins/tmux-pain-control
+	path = .tmux/plugins/tmux-pain-control
 	url = https://github.com/tmux-plugins/tmux-pain-control.git
 [submodule ".tmux/plugins/tmux-yank"]
 	path = .tmux/plugins/tmux-yank
