@@ -6,12 +6,12 @@ call plug#begin(stdpath('data') . '/plugged')
 "" Editing/navigation stuff
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
-Plug 'jiangmiao/auto-pairs'
+Plug 'windwp/nvim-autopairs'
+Plug 'windwp/nvim-ts-autotag'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'moll/vim-bbye'
 Plug 'itchyny/vim-cursorword'
 Plug 'junegunn/fzf.vim'
-Plug 'AndrewRadev/tagalong.vim'
 Plug 'kevinhwang91/rnvimr'
 
 "" Sessions
@@ -22,7 +22,7 @@ Plug 'itchyny/lightline.vim'
 Plug 'mengelbrecht/lightline-bufferline'
 
 "" Colors
-Plug 'nvim-treesitter/nvim-treesitter', {'branch': '0.5-compat', 'do': ':TSUpdate'}
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'christianchiarulli/nvcode-color-schemes.vim'
 Plug 'ap/vim-css-color'
 
@@ -34,7 +34,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'neovim/nvim-lspconfig'
 Plug 'josa42/nvim-lightline-lsp'
 Plug 'gfanto/fzf-lsp.nvim'
-Plug 'glepnir/lspsaga.nvim'
+Plug 'tami5/lspsaga.nvim'
 
 "" Completions
 Plug 'hrsh7th/nvim-cmp'
@@ -42,6 +42,8 @@ Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'andersevenrud/cmp-tmux'
+Plug 'ray-x/cmp-treesitter'
 
 " Formatting
 Plug 'mhartington/formatter.nvim'
@@ -132,10 +134,13 @@ set noshowmode
 " File browser settings
 let g:rnvimr_enable_bw = 1
 let g:rnvimr_enable_picker = 1
-let g:rnvimr_ranger_cmd = 'ranger --cmd="set vcs_aware true"'
+let g:rnvimr_ranger_cmd = ['ranger', '--cmd="set vcs_aware true"']
 
 " Autoreload
 set autoread
+
+" Completions
+set completeopt=menu,menuone,noselect
 
 " Lightline
 function! WDRelativeFilename()
@@ -210,6 +215,8 @@ set pastetoggle=<F10>
 nnoremap <leader>- :split<cr>
 nnoremap <leader><bar> :vsplit<cr>
 
+nmap <silent> <C-h> :TmuxNavigateLeft<cr>
+
 "" Switching buffers
 nnoremap <silent> J :bprevious<CR>
 nnoremap <silent> K :bnext<CR>
@@ -265,11 +272,6 @@ nmap <silent> gd :Definitions<CR>
 nmap <silent> gy :TypeDefinitions<CR>
 nmap <silent> gi :Implementations<CR>
 nmap <silent> gr :References<CR>
-
-"" Browse code completions with TAB
-inoremap <silent><expr> <TAB>
-	\ pumvisible() ? "\<C-n>" : "\<TAB>"
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 " Formatting
 lua << EOF
