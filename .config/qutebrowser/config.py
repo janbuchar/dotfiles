@@ -1,5 +1,7 @@
 import os
 
+config.load_autoconfig(False)
+
 config.bind('d', 'scroll-page 0 0.5')
 config.bind('u', 'scroll-page 0 -0.5')
 config.bind('-', 'set-cmd-text /')
@@ -16,6 +18,8 @@ config.bind('M', 'hint links spawn vlc {hint-url}')
 
 config.set('auto_save.session', True)
 config.set('downloads.location.directory', os.path.expanduser("~/Downloads"))
+
+config.set('content.register_protocol_handler', False)
 
 config.set('tabs.padding', {"top": 3, "bottom": 4, "left": 5, "right": 5})
 config.set('tabs.indicator.width', 0)
@@ -51,40 +55,31 @@ palette = {
     'nord13': '#ebcb8b',
     'nord14': '#a3be8c',
     'nord15': '#b48ead',
-    # Papirus Background
-    'papirus0': '#eff0f1',
-    'papirus1': '#e3e5e7',
-    # Papirus Foreground
-    'papirus2': '#000000',
-    'papirus3': '#31363b',
-    'papirus4': '#888888',
-    # Papirus Green
-    'papirus5': '#27ae60'
 }
 
-config.set('colors.statusbar.normal.bg', palette['papirus0'])
-config.set('colors.statusbar.normal.fg', palette['papirus2'])
-config.set('colors.statusbar.insert.bg', palette['papirus5'])
-config.set('colors.statusbar.insert.fg', palette['papirus2'])
-config.set('colors.statusbar.url.success.http.fg', palette['papirus2'])
-config.set('colors.statusbar.url.success.https.fg', palette['papirus5'])
+config.set('colors.statusbar.normal.bg', palette['nord1'])
+config.set('colors.statusbar.normal.fg', palette['nord6'])
+config.set('colors.statusbar.insert.bg', palette['nord14'])
+config.set('colors.statusbar.insert.fg', palette['nord0'])
+config.set('colors.statusbar.url.success.http.fg', palette['nord6'])
+config.set('colors.statusbar.url.success.https.fg', palette['nord14'])
 config.set('colors.statusbar.command.fg', palette['nord5'])
 config.set('colors.statusbar.command.bg', palette['nord2'])
 
-config.set('colors.tabs.even.fg', palette['papirus3'])
-config.set('colors.tabs.odd.fg', palette['papirus3'])
-config.set('colors.tabs.even.bg', palette['papirus1'])
-config.set('colors.tabs.odd.bg', palette['papirus0'])
-config.set('colors.tabs.selected.odd.bg', palette['papirus4'])
-config.set('colors.tabs.selected.even.bg', palette['papirus4'])
-config.set('colors.tabs.selected.odd.fg', '#fff')
-config.set('colors.tabs.selected.even.fg', '#fff')
+config.set('colors.tabs.even.fg', palette['nord6'])
+config.set('colors.tabs.odd.fg', palette['nord6'])
+config.set('colors.tabs.even.bg', palette['nord0'])
+config.set('colors.tabs.odd.bg', palette['nord2'])
+config.set('colors.tabs.selected.even.bg', palette['nord8'])
+config.set('colors.tabs.selected.odd.bg', palette['nord8'])
+config.set('colors.tabs.selected.even.fg', palette['nord0'])
+config.set('colors.tabs.selected.odd.fg', palette['nord0'])
 
-config.set('colors.downloads.bar.bg', palette['papirus0'])
-config.set('colors.downloads.stop.bg', palette['papirus5'])
-config.set('colors.downloads.stop.fg', '#fff')
-config.set('colors.downloads.start.bg', palette['papirus4'])
-config.set('colors.downloads.start.fg', '#fff')
+config.set('colors.downloads.bar.bg', palette['nord0'])
+config.set('colors.downloads.stop.bg', palette['nord14'])
+config.set('colors.downloads.stop.fg', palette['nord0'])
+config.set('colors.downloads.start.bg', palette['nord6'])
+config.set('colors.downloads.start.fg', palette['nord0'])
 
 config.set('colors.prompts.bg', palette['nord2'])
 config.set('colors.prompts.fg', palette['nord5'])
@@ -102,7 +97,7 @@ config.set('colors.completion.item.selected.fg', palette['nord6'])
 config.set('colors.completion.item.selected.border.bottom', palette['nord3'])
 config.set('colors.completion.item.selected.border.top', palette['nord3'])
 config.set('colors.completion.match.fg', palette['nord13'])
-config.set('colors.completion.scrollbar.fg', palette['nord5'])
+config.set('colors.completion.scrollbar.fg', palette['nord8'])
 config.set('colors.completion.scrollbar.bg', palette['nord1'])
 
 config.set('url.searchengines', {
@@ -121,3 +116,7 @@ config.set('url.searchengines', {
     'cpp': 'https://en.cppreference.com/mwiki/index.php?search={}',
     'py': 'https://docs.python.org/3/search.html?q={}',
 })
+
+config.set('content.blocking.whitelist', [
+    'https://online.mbank.cz'
+])
