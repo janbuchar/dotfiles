@@ -54,10 +54,10 @@ call plug#end()
 let g:plugin_lock = '~/.config/nvim/plugin.lock'
 
 command SnapshotPlugins
-  \ execute 'PlugSnapshot!' . g:plugin_lock
+  \ execute 'PlugSnapshot! ' . g:plugin_lock
 
 command SyncPlugins
-  \ source g:plugin_lock
+  \ execute 'source ' . g:plugin_lock
 
 " Python for defx
 let g:python3_host_prog = '/usr/bin/python'
@@ -262,7 +262,7 @@ nmap <silent> <leader>rn <Cmd>Lspsaga rename<CR>
 nmap <silent> <leader>a :CodeActions<CR>
 vmap <silent> <leader>a :<C-U>RangeCodeActions<CR>
 nmap <silent> <leader>k <Cmd>Lspsaga hover_doc<CR>
-nmap <silent> <leader>d <Cmd>Lspsaga show_line_diagnostics<CR>
+nmap <silent> <leader>e <Cmd>Lspsaga show_line_diagnostics<CR>
 nmap <silent> <leader>y :WorkspaceSymbols<CR>
 nmap <silent> <leader>n :call fzf#run(fzf#wrap(fzf#vim#with_preview({'source': 'ag -g ""', 'options': ['--prompt', 'Files> ']})))<CR>
 nmap <silent> <leader>N :Files<CR>
