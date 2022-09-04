@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 config.load_autoconfig(False)
 
@@ -20,6 +21,8 @@ config.set('auto_save.session', True)
 config.set('downloads.location.directory', os.path.expanduser("~/Downloads"))
 
 config.set('content.register_protocol_handler', False)
+config.set('content.javascript.clipboard', 'access-paste')
+config.set('content.notifications.enabled', False)
 
 config.set('tabs.padding', {"top": 3, "bottom": 4, "left": 5, "right": 5})
 config.set('tabs.indicator.width', 0)
@@ -99,6 +102,41 @@ config.set('colors.completion.item.selected.border.top', palette['nord3'])
 config.set('colors.completion.match.fg', palette['nord13'])
 config.set('colors.completion.scrollbar.fg', palette['nord8'])
 config.set('colors.completion.scrollbar.bg', palette['nord1'])
+
+user_css_path = Path(__file__).parent / "user.css"
+user_css_path.write_text(f"""
+::-webkit-scrollbar {{
+  width: 10px;
+  height: 8px;
+}}
+::-webkit-scrollbar-track:vertical {{
+  background: {palette['nord2']};
+}}
+
+::-webkit-scrollbar-thumb:vertical {{
+  background: {palette['nord0']};
+}}
+::-webkit-scrollbar-thumb:vertical:hover {{
+  background: {palette['nord8']};
+}}
+
+::-webkit-scrollbar-track:horizontal {{
+  background: {palette['nord2']};
+}}
+
+::-webkit-scrollbar-thumb:horizontal {{
+  background: {palette['nord0']};
+}}
+::-webkit-scrollbar-thumb:horizontal:hover {{
+  background: {palette['nord8']};
+}}
+
+::-webkit-scrollbar-corner {{
+  background: {palette['nord0']};
+}}
+""")
+
+config.set('content.user_stylesheets', [str(user_css_path)])
 
 config.set('url.searchengines', {
     'DEFAULT': 'https://www.google.com/search?q={}',
