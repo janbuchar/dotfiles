@@ -10,7 +10,7 @@ saga.init_lsp_saga {
   infor_sign = "",
   hint_sign = "",
   border_style = "round",
-  dianostic_header_icon = "",
+  diagnostic_header_icon = "",
   code_action_icon = "",
   finder_definition_icon = "",
   finder_reference_icon = "",
