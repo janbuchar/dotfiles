@@ -7,6 +7,8 @@ local nvim_lsp = require('lspconfig')
 local protocol = require('vim.lsp.protocol')
 local cmp_nvim = require('cmp_nvim_lsp')
 
+local rt = require("rust-tools")
+
 local capabilities = cmp_nvim.update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 local on_attach = function(client, bufnr)
@@ -17,6 +19,12 @@ local config = {
   on_attach = on_attach,
   capabilities = capabilities,
 }
+
+rt.setup({
+  server = {
+    on_attach = on_attach,
+  },
+})
 
 nvim_lsp.tsserver.setup(config)
 nvim_lsp.pyright.setup(config)

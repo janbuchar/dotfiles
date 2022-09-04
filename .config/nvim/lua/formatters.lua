@@ -40,4 +40,12 @@ M.luafmt = function()
   }
 end
 
+M.rustfmt = function()
+  return {
+    exe = "rustfmt",
+    args = {"--edition", "2021"},
+    stdin = true
+  }
+end
+
 return M

@@ -3,23 +3,24 @@ let g:nvcode_termcolors=256
 
 call plug#begin(stdpath('data') . '/plugged')
 
+Plug 'nvim-lua/plenary.nvim'
+
 "" Editing/navigation stuff
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'windwp/nvim-autopairs'
 Plug 'windwp/nvim-ts-autotag'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'moll/vim-bbye'
+Plug 'famiu/bufdelete.nvim'
 Plug 'itchyny/vim-cursorword'
-Plug 'junegunn/fzf.vim'
+Plug 'ibhagwan/fzf-lua', {'branch': 'main'}
 Plug 'kevinhwang91/rnvimr'
 
 "" Sessions
 Plug 'thaerkh/vim-workspace'
 
-"" Lightline
-Plug 'itchyny/lightline.vim'
-Plug 'mengelbrecht/lightline-bufferline'
+"" Statusline
+Plug 'nvim-lualine/lualine.nvim'
 
 "" Colors
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -27,14 +28,13 @@ Plug 'christianchiarulli/nvcode-color-schemes.vim'
 Plug 'ap/vim-css-color'
 
 "" Git support
-Plug 'mhinz/vim-signify'
+Plug 'lewis6991/gitsigns.nvim'
 Plug 'tpope/vim-fugitive'
 
 "" LSP
 Plug 'neovim/nvim-lspconfig'
-Plug 'josa42/nvim-lightline-lsp'
-Plug 'gfanto/fzf-lsp.nvim'
 Plug 'tami5/lspsaga.nvim'
+Plug 'simrat39/rust-tools.nvim'
 
 "" Completions
 Plug 'hrsh7th/nvim-cmp'
@@ -58,9 +58,6 @@ command SnapshotPlugins
 
 command SyncPlugins
   \ execute 'source ' . g:plugin_lock
-
-" Python for defx
-let g:python3_host_prog = '/usr/bin/python'
 
 " configure treesitter
 lua << EOF
@@ -142,67 +139,6 @@ set autoread
 " Completions
 set completeopt=menu,menuone,noselect
 
-" Lightline
-function! WDRelativeFilename()
-	return expand('%')
-endfunction
-
-let g:lightline = {
-	\ 'colorscheme': 'nord',
-	\ 'mode_map': {
-	\   'n' : 'N',
-	\   'i' : 'I',
-	\   'R' : 'R',
-	\   'v' : 'V',
-	\   'V' : 'VL',
-	\   "\<C-v>": 'VB',
-	\   'c' : 'C',
-	\   's' : 'S',
-	\   'S' : 'SL',
-	\   "\<C-s>": 'SB',
-	\   't': 'T',
-	\ },
-	\ 'active': {
-	\   'left': [ [ 'mode', 'paste' ], [ 'readonly', 'filename', 'modified' ] ],
-	\   'right': [
-	\     [ 'lsp_status', 'fileencoding', 'filetype', 'percent' ],
-	\     [ 'lsp_errors', 'lsp_warnings', 'lsp_infos', 'lsp_hints' ],
-	\   ]
-	\ },
-	\ 'inactive': {
-	\   'right': [ [ 'percent' ] ]
-	\ },
-	\ 'tabline': {
-	\   'left': [ ['buffers'] ],
-	\   'right': [ ]
-	\ },
-	\ 'component_expand': {
-	\   'buffers': 'lightline#bufferline#buffers',
-	\   'lsp_errors': 'lightline#lsp#errors',
-	\   'lsp_warnings': 'lightline#lsp#warnings',
-	\   'lsp_infos': 'lightline#lsp#info',
-	\   'lsp_hints': 'lightline#lsp#hints',
-	\   'lsp_status': 'lightline#lsp#status',
-	\ },
-	\ 'component_type': {
-	\   'buffers': 'tabsel',
-        \   'lsp_errors': 'error',
-        \   'lsp_warnings': 'warning',
-        \   'lsp_infos': 'middle',
-        \   'lsp_hints': 'middle',
-	\ },
-	\ 'component_function': {
-	\   'filename': 'WDRelativeFilename',
-	\ },
-	\ 'tabline_subseparator': {'left': '', 'right': ''}
-	\ }
-
-let g:lightline#bufferline#show_number = 2
-let g:lightline#lsp#indicator_errors = 'E: '
-let g:lightline#lsp#indicator_warnings = 'W: '
-let g:lightline#lsp#indicator_info = 'I: '
-let g:lightline#lsp#indicator_hints = 'H: '
-
 " Key bindings
 
 "" Space bar is the leader
@@ -221,17 +157,8 @@ nmap <silent> <C-h> :TmuxNavigateLeft<cr>
 nnoremap <silent> J :bprevious<CR>
 nnoremap <silent> K :bnext<CR>
 
-function Bufnumbers() abort
-	return filter(range(1, bufnr('$')), {k, v -> bufexists(v) && buflisted(v) && !(getbufvar(v, '&filetype') ==# 'qf')})
-endfunction
-
 nnoremap gT <nop>
-nmap gt :Buffers<CR>
-nmap <silent> gt :call fzf#run(fzf#wrap({
-	\ 'source': map(Bufnumbers(), {k, v -> printf('[%s] %s', lightline#bufferline#get_ordinal_number_for_buffer(v), bufname(v))}),
-	\ 'sink': {line -> lightline#bufferline#go(substitute(line, '^\[\([0-9]*\)\].*', '\1', ''))},
-	\ 'options': ['--prompt', 'Buffers> ', '--preview', stdpath('data') . '/plugged/fzf.vim/bin/preview.sh $(echo {} \| cut -d" " -f 2-)']}
-	\ ))<CR>
+nmap <silent> gt :lua _G.buffers()<CR>
 
 "" Join/Split lines
 nnoremap gj J
@@ -253,25 +180,25 @@ nnoremap <silent> <Esc> :noh<CR>
 "" Close buffer
 nnoremap <silent> <leader>q :Bdelete<CR>
 
-"" VCS hunk actions
-nnoremap <silent> <leader>hp :SignifyHunkDiff<CR>
-nnoremap <silent> <leader>hu :SignifyHunkUndo<CR>
-
 "" IDE actions
+nmap <silent> <leader>r :FzfLua resume<CR>
+nmap <silent> <leader>n :FzfLua git_files<CR>
+nmap <silent> <leader>N :FzfLua files<CR>
+
+nmap <silent> <leader>f :FormatWrite<CR>
+
 nmap <silent> <leader>rn <Cmd>Lspsaga rename<CR>
-nmap <silent> <leader>a :CodeActions<CR>
-vmap <silent> <leader>a :<C-U>RangeCodeActions<CR>
 nmap <silent> <leader>k <Cmd>Lspsaga hover_doc<CR>
 nmap <silent> <leader>e <Cmd>Lspsaga show_line_diagnostics<CR>
-nmap <silent> <leader>y :WorkspaceSymbols<CR>
-nmap <silent> <leader>n :call fzf#run(fzf#wrap(fzf#vim#with_preview({'source': 'ag -g ""', 'options': ['--prompt', 'Files> ']})))<CR>
-nmap <silent> <leader>N :Files<CR>
-nmap <silent> <leader>f :FormatWrite<CR>
-nmap <silent> <leader>d :Diagnostics<CR>
-nmap <silent> gd :Definitions<CR>
-nmap <silent> gy :TypeDefinitions<CR>
-nmap <silent> gi :Implementations<CR>
-nmap <silent> gr :References<CR>
+
+nmap <silent> <leader>y :FzfLua lsp_live_workspace_symbols<CR>
+nmap <silent> <leader>d :FzfLua diagnostics_document<CR>
+nmap <silent> <leader>a :FzfLua lsp_code_actions<CR>
+
+nmap <silent> gd :FzfLua lsp_definitions<CR>
+nmap <silent> gy :FzfLua lsp_typedefs<CR>
+nmap <silent> gi :FzfLua lsp_implementations<CR>
+nmap <silent> gr :FzfLua lsp_references<CR>
 
 " Formatting
 lua << EOF
