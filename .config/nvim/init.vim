@@ -6,8 +6,7 @@ call plug#begin(stdpath('data') . '/plugged')
 Plug 'nvim-lua/plenary.nvim'
 
 "" Editing/navigation stuff
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-repeat'
+Plug 'kylechui/nvim-surround'
 Plug 'windwp/nvim-autopairs'
 Plug 'windwp/nvim-ts-autotag'
 Plug 'christoomey/vim-tmux-navigator'
@@ -182,7 +181,7 @@ nnoremap <silent> <leader>q :Bdelete<CR>
 
 "" IDE actions
 nmap <silent> <leader>r :FzfLua resume<CR>
-nmap <silent> <leader>n :FzfLua git_files<CR>
+nmap <silent> <leader>n <cmd>lua require("fzf-lua").git_files({cwd=vim.loop.cwd()})<CR>
 nmap <silent> <leader>N :FzfLua files<CR>
 
 nmap <silent> <leader>f :FormatWrite<CR>
