@@ -182,6 +182,7 @@ nnoremap <silent> <leader>q :Bdelete<CR>
 "" IDE actions
 nmap <silent> <leader>r :FzfLua resume<CR>
 nmap <silent> <leader>n <cmd>lua require("fzf-lua").git_files({cwd=vim.loop.cwd()})<CR>
+nmap <silent> <leader>m <cmd>lua require("fzf-lua").git_files({cwd=vim.loop.cwd(), cmd="git ls-files --modified"})<CR>
 nmap <silent> <leader>N :FzfLua files<CR>
 
 nmap <silent> <leader>f :FormatWrite<CR>
