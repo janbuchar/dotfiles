@@ -3,7 +3,7 @@ BoldIntense=true
 ColorScheme=nord
 Font=Liberation Mono,9,-1,5,50,0,0,0,0,0
 LineSpacing=2
-UseFontLineChararacters=true
+UseFontLineChararacters=false
 
 [General]
 Command=~/Util/tmux-tmp

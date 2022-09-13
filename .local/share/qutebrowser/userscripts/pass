@@ -78,8 +78,10 @@ def fill_form(login, password):
             for attr_value in ("login", "mail", "user", "name"):
                 selector = f"'{input_selector}[{attr_name}*={attr_value} i]'"
                 send_command(f"jseval -q document.querySelector({selector}).value = '{login}';")
+                send_command(f"jseval -q document.querySelector({selector}).dispatchEvent(new Event('input'));")
 
     send_command(f"jseval -q document.querySelector('input[type=password]').value = '{password}';")
+    send_command(f"jseval -q document.querySelector('input[type=password]').dispatchEvent(new Event('input'));")
     send_command(f"jseval -q document.querySelector('input[type=password]').focus();")
 
 @click.group()

@@ -47,10 +47,7 @@ setopt autopushd
 setopt auto_cd
 export KEYTIMEOUT=1
 
-# Start pyenv
-if which pyenv > /dev/null 2> /dev/null; then
-	export PYENV_VIRTUALENV_DISABLE_PROMPT=1
-fi
+export PYENV_VIRTUALENV_DISABLE_PROMPT=1
 
 export BAT_THEME="Nord"
 
