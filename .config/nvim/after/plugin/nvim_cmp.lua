@@ -78,16 +78,16 @@ cmp.setup(
   }
 )
 
--- Set configuration for specific filetype.
-cmp.setup.filetype(
-  "gitcommit",
+cmp.setup.cmdline(
+  ":",
   {
+    mapping = cmp.mapping.preset.cmdline(),
     sources = cmp.config.sources(
       {
-        {name = "cmp_git"} -- You can specify the `cmp_git` source if you were installed it.
+        {name = "path"}
       },
       {
-        {name = "buffer"}
+        {name = "cmdline"}
       }
     )
   }
