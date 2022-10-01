@@ -127,6 +127,10 @@ set laststatus=2
 set showtabline=2
 set noshowmode
 
+if (has('nvim-0.8'))
+	set cmdheight=0
+endif
+
 " File browser settings
 let g:rnvimr_enable_bw = 1
 let g:rnvimr_enable_picker = 1

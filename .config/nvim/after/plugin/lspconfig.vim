@@ -12,7 +12,7 @@ local rt = require("rust-tools")
 local capabilities = cmp_nvim.update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 local on_attach = function(client, bufnr)
-  client.resolved_capabilities.document_formatting = false
+  client.server_capabilities.document_formatting = false
 end
 
 local config = {
