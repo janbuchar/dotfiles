@@ -3,6 +3,7 @@ let g:nvcode_termcolors=256
 
 call plug#begin(stdpath('data') . '/plugged')
 
+"" Dependencies
 Plug 'nvim-lua/plenary.nvim'
 
 "" Editing/navigation stuff
@@ -14,6 +15,7 @@ Plug 'famiu/bufdelete.nvim'
 Plug 'itchyny/vim-cursorword'
 Plug 'ibhagwan/fzf-lua', {'branch': 'main'}
 Plug 'kevinhwang91/rnvimr'
+Plug 'stevearc/aerial.nvim'
 
 "" Sessions
 Plug 'thaerkh/vim-workspace'
