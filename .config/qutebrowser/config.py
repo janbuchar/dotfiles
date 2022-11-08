@@ -16,6 +16,7 @@ config.bind('[', 'navigate prev')
 config.bind('pw', 'spawn --userscript pass autofill')
 config.bind('m', 'spawn vlc {url}')
 config.bind('M', 'hint links spawn vlc {hint-url}')
+config.bind('<Ctrl-r>', 'reload')
 
 config.set('auto_save.session', True)
 config.set('downloads.location.directory', os.path.expanduser("~/Downloads"))
