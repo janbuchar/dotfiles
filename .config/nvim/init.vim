@@ -16,6 +16,7 @@ Plug 'itchyny/vim-cursorword'
 Plug 'ibhagwan/fzf-lua', {'branch': 'main'}
 Plug 'kevinhwang91/rnvimr'
 Plug 'stevearc/aerial.nvim'
+Plug 'jinh0/eyeliner.nvim'
 
 "" Sessions
 Plug 'thaerkh/vim-workspace'
