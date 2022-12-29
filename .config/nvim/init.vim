@@ -10,6 +10,7 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'kylechui/nvim-surround'
 Plug 'windwp/nvim-autopairs'
 Plug 'windwp/nvim-ts-autotag'
+Plug 'ThePrimeagen/refactoring.nvim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'famiu/bufdelete.nvim'
 Plug 'itchyny/vim-cursorword'
@@ -193,6 +194,8 @@ nmap <silent> <leader>m :FzfLua git_status<CR>
 nmap <silent> <leader>N :FzfLua files<CR>
 
 nmap <silent> <leader>f :FormatWrite<CR>
+nmap <silent> <leader>c <cmd>lua require('refactoring').select_refactor()<CR>
+vmap <silent> <leader>c <cmd>lua require('refactoring').select_refactor()<CR>
 
 nmap <silent> <leader>rn <Cmd>Lspsaga rename<CR>
 nmap <silent> <leader>k <Cmd>Lspsaga hover_doc<CR>
