@@ -20,6 +20,10 @@ Plug 'stevearc/aerial.nvim'
 Plug 'jinh0/eyeliner.nvim'
 Plug 'numToStr/Comment.nvim'
 
+"" UI
+Plug 'folke/noice.nvim'
+Plug 'MunifTanjim/nui.nvim'
+
 "" Sessions
 Plug 'thaerkh/vim-workspace'
 
