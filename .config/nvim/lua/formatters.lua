@@ -11,7 +11,7 @@ end
 M.eslint = function()
   return {
     exe = "eslint",
-    args = {"--fix", "--no-ignore", "--stdin-filename", vim.fn.fnameescape(vim.api.nvim_buf_get_name(0))},
+    args = {"--fix", "--no-ignore", vim.fn.fnameescape(vim.api.nvim_buf_get_name(0))},
     stdin = false
   }
 end

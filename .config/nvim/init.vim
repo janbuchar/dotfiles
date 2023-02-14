@@ -1,6 +1,4 @@
 " Plugins
-let g:nvcode_termcolors=256
-
 call plug#begin(stdpath('data') . '/plugged')
 
 "" Dependencies
@@ -32,7 +30,7 @@ Plug 'nvim-lualine/lualine.nvim'
 
 "" Colors
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'christianchiarulli/nvcode-color-schemes.vim'
+Plug 'EdenEast/nightfox.nvim'
 Plug 'ap/vim-css-color'
 
 "" Git support
@@ -84,7 +82,7 @@ if (has("termguicolors"))
 endif
 
 " Colors
-colorscheme nord
+colorscheme nordfox
 
 " .envrc syntax
 augroup envrc_syntax
@@ -130,11 +128,6 @@ set hidden
 set timeoutlen=1000
 set ttimeoutlen=50
 set updatetime=250
-
-"" Lightline
-set laststatus=2
-set showtabline=2
-set noshowmode
 
 if (has('nvim-0.8'))
 	set cmdheight=0
