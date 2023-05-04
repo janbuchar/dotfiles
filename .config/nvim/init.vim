@@ -17,6 +17,7 @@ Plug 'kevinhwang91/rnvimr'
 Plug 'stevearc/aerial.nvim'
 Plug 'jinh0/eyeliner.nvim'
 Plug 'numToStr/Comment.nvim'
+Plug 'nmac427/guess-indent.nvim'
 
 "" UI
 Plug 'folke/noice.nvim'
@@ -44,6 +45,7 @@ Plug 'simrat39/rust-tools.nvim'
 
 "" Completions
 Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/vim-vsnip'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-vsnip'
@@ -201,6 +203,7 @@ nmap <silent> <leader>e <Cmd>Lspsaga show_line_diagnostics<CR>
 
 nmap <silent> <leader>y :FzfLua lsp_live_workspace_symbols<CR>
 nmap <silent> <leader>d :FzfLua diagnostics_document<CR>
+nmap <silent> <leader>D :FzfLua diagnostics_workspace<CR>
 nmap <silent> <leader>a :FzfLua lsp_code_actions<CR>
 
 nmap <silent> gd :FzfLua lsp_definitions<CR>
