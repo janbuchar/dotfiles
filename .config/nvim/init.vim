@@ -20,6 +20,7 @@ Plug 'numToStr/Comment.nvim'
 Plug 'nmac427/guess-indent.nvim'
 
 "" UI
+Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'folke/noice.nvim'
 Plug 'MunifTanjim/nui.nvim'
 
