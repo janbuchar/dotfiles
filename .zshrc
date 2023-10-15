@@ -98,8 +98,8 @@ precmd() {
 }
 
 function zle-line-init zle-keymap-select {
-	PREFIX="${${KEYMAP/vicmd/$VI_NORMAL}/(main|viins)/$VI_INSERT}"
-	PROMPT=$PREFIX$_PROMPT
+	_PREFIX="${${KEYMAP/vicmd/$VI_NORMAL}/(main|viins)/$VI_INSERT}"
+	PROMPT=$_PREFIX$_PROMPT
 	right-prompt
 	zle reset-prompt
 }
