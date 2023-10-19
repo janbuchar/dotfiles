@@ -29,6 +29,7 @@ Plug 'thaerkh/vim-workspace'
 
 "" Statusline
 Plug 'nvim-lualine/lualine.nvim'
+Plug 'willothy/nvim-cokeline'
 
 "" Colors
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -174,7 +175,7 @@ nnoremap gs i<CR><ESC>
 
 "" File browser
 nnoremap <silent> <leader>t :RnvimrToggle<CR>
-tnoremap <silent> <M-o> <C-\><C-n>:RnvimrToggle<CR>
+tnoremap <silent> <ESC> <cmd>RnvimrToggle<CR>
 
 "" Start/end of line
 nnoremap gh ^

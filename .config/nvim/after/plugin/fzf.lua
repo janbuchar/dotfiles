@@ -1,7 +1,7 @@
 local fzf = require("fzf-lua")
 local fzf_actions = require("fzf-lua.actions")
 local make_entry = require("fzf-lua.make_entry")
-local buffers = require("lualine.components.buffers")
+local buffers = require("cokeline.buffers")
 local builtin_previewer = require("fzf-lua.previewer.builtin")
 local bufdelete = require("bufdelete")
 
@@ -11,20 +11,15 @@ _G.buffers = function(opts)
   local entries = {}
   local entry2element = {}
 
-  -- Bail out if lualine buffers are not initialized
-  if buffers.bufpos2nr == nil then
-    return
-  end
-
   -- Gather information about buffers
-  for index, bufnr in ipairs(buffers.bufpos2nr) do
+  for _, buffer in ipairs(buffers.get_visible()) do
     local element = {
-      index = index,
-      bufnr = bufnr,
-      file = fzf.path.relative(vim.api.nvim_buf_get_name(bufnr), vim.loop.cwd()),
-      info = vim.fn.getbufinfo(bufnr)[1]
+      index = buffer.index,
+      bufnr = buffer.number,
+      file = fzf.path.relative(vim.api.nvim_buf_get_name(buffer.number), vim.loop.cwd()),
+      info = vim.fn.getbufinfo(buffer.number)[1]
     }
-    local entry = ("[%d] %s"):format(index, element.file)
+    local entry = ("[%d] %s"):format(buffer.index, element.file)
     table.insert(entries, entry)
     entry2element[entry] = element
   end

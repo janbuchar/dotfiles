@@ -46,20 +46,7 @@ require("lualine").setup {
     lualine_y = {},
     lualine_z = {}
   },
-  tabline = {
-    lualine_b = {
-      {
-        "buffers",
-        mode = 2,
-        symbols = {modified = " +", alternate_file = "", directory = ""},
-        max_length = vim.o.columns,
-        buffers_color = {
-          active = "lualine_a_normal",
-          inactive = "lualine_c_normal"
-        }
-      }
-    }
-  },
+  tabline = {},
   winbar = {},
   inactive_winbar = {},
   extensions = {}
