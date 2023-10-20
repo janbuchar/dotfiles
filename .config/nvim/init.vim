@@ -163,8 +163,8 @@ nnoremap <leader><bar> :vsplit<cr>
 nmap <silent> <C-h> :TmuxNavigateLeft<cr>
 
 "" Switching buffers
-nnoremap <silent> J :bprevious<CR>
-nnoremap <silent> K :bnext<CR>
+nnoremap <silent> J <Plug>(cokeline-focus-prev)
+nnoremap <silent> K <Plug>(cokeline-focus-next)
 
 nnoremap gT <nop>
 nmap <silent> gt :lua _G.buffers()<CR>

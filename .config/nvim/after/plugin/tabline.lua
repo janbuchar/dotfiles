@@ -24,11 +24,6 @@ require("cokeline").setup(
       },
       {
         text = function(buffer)
-          return buffer.filename .. " "
-        end
-      },
-      {
-        text = function(buffer)
           local status = ""
           if buffer.is_modified then
             status = status .. "[+]"
@@ -36,7 +31,10 @@ require("cokeline").setup(
           if buffer.is_readonly then
             status = status .. "[-]"
           end
-          return status .. " "
+          if #status > 0 then
+            status = status .. " "
+          end
+          return buffer.filename .. " " .. status
         end
       }
     },
