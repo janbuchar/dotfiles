@@ -159,3 +159,5 @@ config.set('url.searchengines', {
 config.set('content.blocking.whitelist', [
     'https://online.mbank.cz'
 ])
+
+config.set('qt.args', ['disable-accelerated-2d-canvas'])
