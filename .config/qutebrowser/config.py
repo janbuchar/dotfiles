@@ -1,4 +1,5 @@
 import os
+import platformdirs
 from pathlib import Path
 
 config.load_autoconfig(False)
@@ -19,7 +20,12 @@ config.bind('M', 'hint links spawn vlc {hint-url}')
 config.bind('<Ctrl-r>', 'reload')
 
 config.set('auto_save.session', True)
-config.set('downloads.location.directory', os.path.expanduser("~/Downloads"))
+config.set(
+    'downloads.location.directory', 
+    os.path.expanduser("~/Downloads") 
+    if os.path.exists(os.path.expanduser("~/Downloads"))
+    else platformdirs.user_downloads_dir()
+)
 
 config.set('content.register_protocol_handler', False)
 config.set('content.javascript.clipboard', 'access-paste')
