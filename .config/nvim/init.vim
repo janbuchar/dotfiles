@@ -4,6 +4,9 @@ call plug#begin(stdpath('data') . '/plugged')
 "" Dependencies
 Plug 'nvim-lua/plenary.nvim'
 
+"" Neovim config helper
+Plug 'folke/neodev.nvim'
+
 "" Editing/navigation stuff
 Plug 'kylechui/nvim-surround'
 Plug 'windwp/nvim-autopairs'

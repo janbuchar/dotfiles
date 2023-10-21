@@ -3,6 +3,8 @@ if !exists('g:lspconfig')
 endif
 
 lua << EOF
+require("neodev").setup {}
+
 local nvim_lsp = require('lspconfig')
 local protocol = require('vim.lsp.protocol')
 local cmp_nvim = require('cmp_nvim_lsp')
@@ -31,5 +33,6 @@ nvim_lsp.pyright.setup(config)
 nvim_lsp.jsonls.setup(config)
 nvim_lsp.cssls.setup(config)
 nvim_lsp.dockerls.setup(config)
+nvim_lsp.lua_ls.setup(config)
 
 EOF
