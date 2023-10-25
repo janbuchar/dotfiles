@@ -1,5 +1,6 @@
 local theme_name = require("lualine").get_config().options.theme
 local theme = require("lualine.themes." .. theme_name)
+local Color = require("nightfox.lib.color")
 
 local buffers = require("cokeline.buffers")
 local compute_unique_prefixes = buffers.compute_unique_prefixes
@@ -15,11 +16,16 @@ require("cokeline").setup(
       {
         text = function(buffer)
           return " " .. buffer.index
-        end
+        end,
+        bold = true
       },
       {
         text = function(buffer)
           return " " .. buffer.unique_prefix
+        end,
+        fg = function(buffer)
+          return buffer.is_focused and theme.normal.a.fg or
+            Color.from_hex(theme.normal.b.fg):blend(Color.from_hex(theme.normal.c.bg), 0.3):to_css()
         end
       },
       {
@@ -40,7 +46,7 @@ require("cokeline").setup(
     },
     default_hl = {
       bg = function(buffer)
-        return buffer.is_focused and theme.normal.a.bg or theme.normal.b.bg
+        return buffer.is_focused and theme.normal.a.bg or theme.normal.c.bg
       end,
       fg = function(buffer)
         return buffer.is_focused and theme.normal.a.fg or theme.normal.b.fg
@@ -52,4 +58,4 @@ require("cokeline").setup(
   }
 )
 
-vim.api.nvim_set_hl(0, "TabLineFill", {bg = theme.normal.c.bg})
+vim.api.nvim_set_hl(0, "TabLineFill", {bg = theme.normal.b.bg})
