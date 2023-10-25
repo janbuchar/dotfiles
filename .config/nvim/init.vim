@@ -209,6 +209,7 @@ nmap <silent> <leader>y :FzfLua lsp_live_workspace_symbols<CR>
 nmap <silent> <leader>d :FzfLua diagnostics_document<CR>
 nmap <silent> <leader>D :FzfLua diagnostics_workspace<CR>
 nmap <silent> <leader>a :FzfLua lsp_code_actions<CR>
+nmap <silent> <leader>l :FzfLua git_commits<CR>
 
 nmap <silent> gd :FzfLua lsp_definitions<CR>
 nmap <silent> gy :FzfLua lsp_typedefs<CR>
