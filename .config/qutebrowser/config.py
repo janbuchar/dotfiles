@@ -1,6 +1,9 @@
 import os
 import platformdirs
 from pathlib import Path
+from typing import Any
+
+config: Any = config
 
 config.load_autoconfig(False)
 
@@ -30,6 +33,7 @@ config.set(
 config.set('content.register_protocol_handler', False)
 config.set('content.javascript.clipboard', 'access-paste')
 config.set('content.notifications.enabled', False)
+config.set('content.local_content_can_access_remote_urls', True)
 
 config.set('tabs.padding', {"top": 3, "bottom": 4, "left": 5, "right": 5})
 config.set('tabs.indicator.width', 0)
