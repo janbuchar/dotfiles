@@ -1,0 +1,8 @@
+directory: ~/Music
+library: ~/Music/library.db
+paths:
+        default: $albumartist/[$year] $album%aunique{}/$track - $title
+        comp: Various Artists/[$year] $album%aunique{}/$track - $title
+plugins: [discogs, lyrics]
+lyrics:
+  auto: false
