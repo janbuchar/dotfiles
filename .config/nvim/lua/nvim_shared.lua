@@ -1,6 +1,15 @@
-local M = {}
+local M = {formatters = {}}
 
-M.prettier = function()
+M.create_lsp_config = function()
+  return {
+    on_attach = function(client, bufnr)
+      client.server_capabilities.document_formatting = false
+    end,
+    capabilities = require("cmp_nvim_lsp").default_capabilities()
+  }
+end
+
+M.formatters.prettier = function()
   return {
     exe = "prettier",
     args = {"--stdin-filepath", vim.fn.fnameescape(vim.api.nvim_buf_get_name(0))},
@@ -8,7 +17,7 @@ M.prettier = function()
   }
 end
 
-M.eslint = function()
+M.formatters.eslint = function()
   return {
     exe = "eslint",
     args = {"--fix", "--no-ignore", vim.fn.fnameescape(vim.api.nvim_buf_get_name(0))},
@@ -16,7 +25,7 @@ M.eslint = function()
   }
 end
 
-M.black = function()
+M.formatters.black = function()
   return {
     exe = "black",
     args = {"-"},
@@ -24,7 +33,7 @@ M.black = function()
   }
 end
 
-M.isort = function()
+M.formatters.isort = function()
   return {
     exe = "isort",
     args = {"-"},
@@ -32,7 +41,7 @@ M.isort = function()
   }
 end
 
-M.luafmt = function()
+M.formatters.luafmt = function()
   return {
     exe = "luafmt",
     args = {"--indent-count", 2, "--stdin"},
@@ -40,7 +49,7 @@ M.luafmt = function()
   }
 end
 
-M.rustfmt = function()
+M.formatters.rustfmt = function()
   return {
     exe = "rustfmt",
     args = {"--edition", "2021"},
