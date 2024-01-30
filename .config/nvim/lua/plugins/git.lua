@@ -48,8 +48,22 @@ return {
         )
 
         -- Actions
-        bufmap({"n", "v"}, "<leader>hs", ":Gitsigns stage_hunk<CR>")
-        bufmap({"n", "v"}, "<leader>hr", ":Gitsigns reset_hunk<CR>")
+        bufmap({"n", "v"}, "<leader>hs", gs.stage_hunk)
+        bufmap({"n", "v"}, "<leader>hr", gs.reset_hunk)
+        bufmap(
+          "v",
+          "<leader>hs",
+          function()
+            gs.stage_hunk {vim.fn.line("."), vim.fn.line("v")}
+          end
+        )
+        bufmap(
+          "v",
+          "<leader>hr",
+          function()
+            gs.reset_hunk {vim.fn.line("."), vim.fn.line("v")}
+          end
+        )
         bufmap("n", "<leader>hS", gs.stage_buffer)
         bufmap("n", "<leader>hu", gs.reset_hunk)
         bufmap("n", "<leader>hR", gs.reset_buffer)
