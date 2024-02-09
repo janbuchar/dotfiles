@@ -20,6 +20,9 @@ map(
   {silent = true}
 )
 
+-- Open commandline
+map("n", "<leader><leader>", ":")
+
 -- Join/Split lines
 map("n", "gj", "J")
 map("n", "gs", "i<CR><ESC>")
