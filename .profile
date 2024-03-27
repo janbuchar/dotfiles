@@ -1,6 +1,9 @@
 # Add Utils path
 export PATH=$PATH:$HOME/Util:$HOME/.local/bin
 
+# Set web browser
+export BROWSER=$( which qb-open )
+
 # Set editor
 export EDITOR=$( which nvim )
 
