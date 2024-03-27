@@ -74,9 +74,6 @@ else
 	_PROMPT='%B%(!.%F{red}.%F{$color})%n%F{red}$host %F{default}$(shrink_path -l -t)%F{$color} %(!.#.$)%f%b '
 fi
 
-VI_NORMAL="%B%F{$color2}[%F{default}N%F{$color2}]%b "
-VI_INSERT="%B%F{$color2}[%F{$color}I%F{$color2}]%b "
-
 ZLE_RPROMPT_INDENT=0
 
 function right-prompt {
@@ -98,8 +95,6 @@ precmd() {
 }
 
 function zle-line-init zle-keymap-select {
-	_PREFIX="${${KEYMAP/vicmd/$VI_NORMAL}/(main|viins)/$VI_INSERT}"
-	PROMPT=$_PREFIX$_PROMPT
 	right-prompt
 	zle reset-prompt
 }
@@ -109,29 +104,40 @@ zle -N zle-keymap-select
 
 alias vim=nvim
 
+# Vim mode
+source ~/.zsh/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+
+VI_NORMAL="%B%F{$color2}[%F{default}N%F{$color2}]%b "
+VI_INSERT="%B%F{$color2}[%F{$color}I%F{$color2}]%b "
+VI_VISUAL="%B%F{$color2}[%F{$color}V%F{$color2}]%b "
+VI_VISUAL_LINE="%B%F{$color2}[%F{$color}VL%F{$color2}]%b "
+VI_REPLACE="%B%F{$color2}[%F{$color}R%F{$color2}]%b "
+
+ZVM_LINE_INIT_MODE=$ZVM_MODE_INSERT
+PROMPT=$VI_INSERT$_PROMPT
+
+function zvm_after_select_vi_mode() {
+	case $ZVM_MODE in
+		$ZVM_MODE_NORMAL)
+			PROMPT=$VI_NORMAL$_PROMPT
+		;;
+		$ZVM_MODE_INSERT)
+			PROMPT=$VI_INSERT$_PROMPT
+		;;
+		$ZVM_MODE_VISUAL)
+			PROMPT=$VI_VISUAL$_PROMPT
+		;;
+		$ZVM_MODE_VISUAL_LINE)
+			PROMPT=$VI_VISUAL_LINE$_PROMPT
+		;;
+		$ZVM_MODE_REPLACE)
+			PROMPT=$VI_REPLACE$_PROMPT
+		;;
+	esac
+}
+
 bindkey -M vicmd "gh" beginning-of-line
 bindkey -M vicmd "gl" end-of-line
-
-# Page Up/Down
-bindkey "\033[5~" beginning-of-line
-bindkey -M vicmd "\033[5~" beginning-of-line
-bindkey "\033[6~" end-of-line
-bindkey -M vicmd "\033[6~" end-of-line
-
-# Ctrl+arrow bindings
-bindkey "^[[1;5C" forward-word
-bindkey "^[[1;5D" backward-word
-
-# Home/End
-bindkey "\033[1~" beginning-of-line
-bindkey -M vicmd "\033[1~" beginning-of-line
-bindkey "\033[4~" end-of-line
-bindkey -M vicmd "\033[4~" end-of-line
-
-# Delete
-bindkey "\033[3~" delete-char
-bindkey -M vicmd "\033[3~" delete-char
-bindkey -M vicmd '^?' delete-char
 
 # Clear screen with "K"
 bindkey -M vicmd "K" clear-screen
