@@ -27,6 +27,9 @@ map("n", "<leader><leader>", ":")
 map("n", "gj", "J")
 map("n", "gs", "i<CR><ESC>")
 
+-- Folds
+map("n", "<TAB>", "za")
+
 -- File browser
 map("n", "<leader>t", "<cmd>RnvimrToggle<cr>", {silent = true})
 map("t", "<esc>", "<cmd>RnvimrToggle<cr>", {silent = true})
