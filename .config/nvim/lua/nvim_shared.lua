@@ -41,6 +41,14 @@ M.formatters.isort = function()
   }
 end
 
+M.formatters.ruff = function()
+  return {
+    exe = "ruff",
+    args = {"format", "-q", "-"},
+    stdin = true
+  }
+end
+
 M.formatters.luafmt = function()
   return {
     exe = "luafmt",

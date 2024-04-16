@@ -21,7 +21,7 @@ return {
           local element = {
             index = buffer.index,
             bufnr = buffer.number,
-            file = fzf.path.relative(vim.api.nvim_buf_get_name(buffer.number), vim.loop.cwd()),
+            file = fzf.path.relative_to(vim.api.nvim_buf_get_name(buffer.number), vim.loop.cwd()),
             info = vim.fn.getbufinfo(buffer.number)[1]
           }
           local entry = ("[%d] %s"):format(buffer.index, element.file)
