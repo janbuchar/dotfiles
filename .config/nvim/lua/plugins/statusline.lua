@@ -1,3 +1,11 @@
+local function recording_status()
+  local reg = vim.fn.reg_recording()
+  if reg == "" then
+    return ""
+  end
+  return "REC @" .. reg .. ""
+end
+
 return {
   {
     "nvim-lualine/lualine.nvim",
@@ -36,7 +44,7 @@ return {
           }
         },
         lualine_b = {{"filename", path = 1}, "diff"},
-        lualine_c = {},
+        lualine_c = {recording_status},
         lualine_x = {"diagnostics"},
         lualine_y = {"encoding", "filetype", "progress"},
         lualine_z = {}
