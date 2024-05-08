@@ -58,6 +58,23 @@ return {
 
         fzf.fzf_exec(entries, opts)
       end
+
+      _G.macros = function(opts)
+        opts = opts or {}
+        opts.prompt = "Macros> "
+
+        local entries = {}
+
+        local get_macro = function(reg)
+          return vim.api.nvim_replace_termcodes(vim.fn.keytrans(vim.fn.getreg(reg)), true, true, true)
+        end
+
+        for i = 97, 122 do
+          table.insert(entries, ("[%s] %s"):format(string.char(i), get_macro(string.char(i))))
+        end
+
+        fzf.fzf_exec(entries, opts)
+      end
     end
   }
 }

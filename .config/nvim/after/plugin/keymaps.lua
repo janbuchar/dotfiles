@@ -73,6 +73,7 @@ map("n", "<leader>d", "<cmd>FzfLua diagnostics_document<cr>", {silent = true})
 map("n", "<leader>D", "<cmd>FzfLua diagnostics_workspace<cr>", {silent = true})
 map("n", "<leader>a", "<cmd>FzfLua lsp_code_actions<cr>", {silent = true})
 map("n", "<leader>l", "<cmd>FzfLua git_commits<cr>", {silent = true})
+map("n", "<leader>M", function() _G.macros() end, {silent = true})
 
 map("n", "gd", "<cmd>FzfLua lsp_definitions<cr>", {silent = true})
 map("n", "gy", "<cmd>FzfLua lsp_typedefs<cr>", {silent = true})
