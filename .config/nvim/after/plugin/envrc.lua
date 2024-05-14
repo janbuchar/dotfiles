@@ -1,4 +1,5 @@
-vim.api.nvim_create_user_command("Envrc", ":edit $DIRENV_FILE", {nargs = 0})
+local direnv_file = os.getenv("DIRENV_FILE") or ".envrc"
+vim.api.nvim_create_user_command("Envrc", ":edit " .. direnv_file, {nargs = 0})
 
 vim.api.nvim_create_autocmd(
   {"BufNewFile", "BufRead"},

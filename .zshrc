@@ -77,16 +77,19 @@ fi
 ZLE_RPROMPT_INDENT=0
 
 function right-prompt {
-	if ! which pyenv > /dev/null 2> /dev/null; then
-		RPROMPT=""
-		return 0
-	fi
-	if [ $( pyenv version-name ) = system ]; then
-		RPROMPT=""
-		return 0
-	fi
+	RPROMPT=""
 
-	RPROMPT="%F{cyan}[py: $( pyenv version-name )]"
+	if which mise > /dev/null 2> /dev/null && which jq > /dev/null 2> /dev/null; then
+		version_count=$(mise ls --current --json | jq --raw-output 'length')
+		versions=$(mise ls --current --json | jq --raw-output 'to_entries | map("\(.key): \(.value[0].requested_version)") | join(", ")')
+		if [ $version_count -gt 0 ]; then
+			RPROMPT="%F{cyan}[$versions]"
+		fi
+	elif which pyenv > /dev/null 2> /dev/null; then
+		if [ $( pyenv version-name ) != system ]; then
+			RPROMPT="%F{cyan}[py: $( pyenv version-name )]"
+		fi
+	fi
 }
 
 precmd() { 
@@ -195,4 +198,9 @@ bindkey "^ " autosuggest-execute
 # Start direnv
 if which direnv > /dev/null 2>&1; then
 	eval "$(direnv hook zsh)"
+fi
+
+# Start mise
+if which mise > /dev/null 2>&1; then
+	eval "$(mise activate zsh)"
 fi
