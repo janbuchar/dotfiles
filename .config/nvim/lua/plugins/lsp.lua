@@ -30,7 +30,7 @@ return {
       )
 
       nvim_lsp.tsserver.setup(config)
-      nvim_lsp.pyright.setup(config)
+      nvim_lsp.basedpyright.setup(config)
       nvim_lsp.jsonls.setup(config)
       nvim_lsp.cssls.setup(config)
       nvim_lsp.dockerls.setup(config)
