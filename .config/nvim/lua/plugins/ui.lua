@@ -28,13 +28,25 @@ return {
     }
   },
   {
-    "kevinhwang91/rnvimr",
-    enabled = not vim.g.vscode,
-    init = function()
-      vim.g.rnvimr_enable_bw = 1
-      vim.g.rnvimr_enable_picker = 1
-      vim.g.rnvimr_ranger_cmd = {"ranger", "--cmd=set vcs_aware true"}
-    end
+    "mikavilpas/yazi.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim"
+    },
+    event = "VeryLazy",
+    keys = {
+      {
+        "<leader>t",
+        function()
+          require("yazi").yazi()
+        end,
+        desc = "Open the file manager"
+      }
+    },
+    ---@type YaziConfig
+    opts = {
+      open_for_directories = false,
+      floating_window_scaling_factor = 0.75
+    }
   },
   {
     "kevinhwang91/nvim-ufo",

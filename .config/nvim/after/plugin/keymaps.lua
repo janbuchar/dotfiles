@@ -31,8 +31,8 @@ map("n", "gs", "i<CR><ESC>")
 map("n", "<TAB>", "za")
 
 -- File browser
-map("n", "<leader>t", "<cmd>RnvimrToggle<cr>", {silent = true})
-map("t", "<esc>", "<cmd>RnvimrToggle<cr>", {silent = true})
+-- map("n", "<leader>t", "<cmd>RnvimrToggle<cr>", {silent = true})
+-- map("t", "<esc>", "<cmd>RnvimrToggle<cr>", {silent = true})
 
 -- Start/end of line
 map({"n", "v"}, "gh", "^")
