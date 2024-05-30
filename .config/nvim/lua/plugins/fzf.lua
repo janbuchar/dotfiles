@@ -10,8 +10,6 @@ return {
       local builtin_previewer = require("fzf-lua.previewer.builtin")
       local bufdelete = require("bufdelete")
 
-      fzf.setup {}
-
       _G.buffers = function(opts)
         local entries = {}
         local entry2element = {}
