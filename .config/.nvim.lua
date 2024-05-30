@@ -19,7 +19,7 @@ map(
   "n",
   "<leader>n",
   function()
-    fzf.git_files(vim.tbl_deep_extend("keep", {cwd = vim.loop.cwd()}, git_dirs))
+    fzf.git_files(git_dirs)
   end,
   {silent = true}
 )
