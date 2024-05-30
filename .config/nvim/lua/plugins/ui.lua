@@ -4,14 +4,25 @@ return {
     enabled = not vim.g.vscode
   },
   {
-    "thaerkh/vim-workspace",
+    "rmagatti/auto-session",
     enabled = not vim.g.vscode,
-    init = function()
-      -- Disable history management (when enabled, it created empty undo history items for some reason)
-      vim.g.workspace_persist_undo_history = 0
-      vim.g.workspace_autosave_untrailspaces = 0
-      vim.g.workspace_autosave_untrailtabs = 0
-    end
+    opts = {
+      auto_session_create_enabled = false
+    }
+  },
+  {
+    "https://git.sr.ht/~nedia/auto-save.nvim",
+    enabled = not vim.g.vscode,
+    event = {"BufReadPre"},
+    opts = {
+      events = {"InsertLeave", "BufLeave", "TextChanged"},
+      save_fn = function()
+        -- If there is a session, we autosave - like vim-workspace did
+        if (require("auto-session.lib").current_session_name ~= nil) then
+          vim.cmd("silent! w")
+        end
+      end
+    }
   },
   {
     "stevearc/aerial.nvim",

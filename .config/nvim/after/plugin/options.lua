@@ -34,6 +34,9 @@ vim.opt.autoread = true
 -- Completions
 vim.opt.completeopt = "menu,menuone,noselect"
 
+-- Sessions
+vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+
 -- Splits should be equal-sized
 vim.opt.equalalways = true
 vim.api.nvim_create_autocmd(
@@ -46,4 +49,3 @@ vim.api.nvim_create_autocmd(
     end
   }
 )
-
