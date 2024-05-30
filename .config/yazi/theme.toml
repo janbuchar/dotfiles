@@ -1,0 +1,6 @@
+[manager]
+border_style  = { fg = "#4c566a" }
+
+[status]
+separator_open  = ""
+separator_close = ""
