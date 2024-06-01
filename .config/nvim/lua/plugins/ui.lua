@@ -224,4 +224,10 @@ return {
     },
     dependencies = { "MunifTanjim/nui.nvim" },
   },
+  {
+    "shortcuts/no-neck-pain.nvim",
+    version = "*",
+    enabled = not vim.g.vscode,
+    opts = { width = 180 },
+  },
 }
