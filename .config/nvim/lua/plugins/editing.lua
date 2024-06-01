@@ -7,12 +7,12 @@ return {
     event = "VeryLazy",
     config = function()
       require("nvim-surround").setup()
-    end
+    end,
   },
   {
     "windwp/nvim-autopairs",
     event = "InsertEnter",
-    dependencies = {"windwp/nvim-ts-autotag"},
+    dependencies = { "windwp/nvim-ts-autotag" },
     config = function()
       local autotag = require("nvim-ts-autotag")
       autotag.setup()
@@ -27,37 +27,40 @@ return {
         return npairs.autopairs_cr()
       end
 
-      vim.keymap.set("i", "<CR>", "v:lua.MUtils.completion_confirm()", {expr = true, noremap = true})
-    end
+      vim.keymap.set(
+        "i",
+        "<CR>",
+        "v:lua.MUtils.completion_confirm()",
+        { expr = true, noremap = true }
+      )
+    end,
   },
   {
     "ThePrimeagen/refactoring.nvim",
     dependencies = {
       "nvim-lua/plenary.nvim",
-      "nvim-treesitter/nvim-treesitter"
+      "nvim-treesitter/nvim-treesitter",
     },
-    opts = {}
+    opts = {},
   },
-  {"itchyny/vim-cursorword"},
+  { "itchyny/vim-cursorword" },
   {
     "numToStr/Comment.nvim",
-    opts = {}
+    opts = {},
   },
   {
     "nmac427/guess-indent.nvim",
     main = "guess-indent",
-    opts = {}
+    opts = {},
   },
   {
     "mhartington/formatter.nvim",
     config = function()
-      require("formatter").setup(
-        {
-          filetype = {
-            lua = {shared.formatters.luafmt}
-          }
-        }
-      )
-    end
-  }
+      require("formatter").setup({
+        filetype = {
+          lua = { shared.formatters.stylua },
+        },
+      })
+    end,
+  },
 }

@@ -13,11 +13,11 @@ return {
       options = {
         icons_enabled = false,
         theme = "nord",
-        component_separators = {left = "", right = ""},
-        section_separators = {left = "", right = ""},
+        component_separators = { left = "", right = "" },
+        section_separators = { left = "", right = "" },
         disabled_filetypes = {
           statusline = {},
-          winbar = {}
+          winbar = {},
         },
         ignore_focus = {},
         always_divide_middle = true,
@@ -25,8 +25,8 @@ return {
         refresh = {
           statusline = 1000,
           tabline = 1000,
-          winbar = 1000
-        }
+          winbar = 1000,
+        },
       },
       sections = {
         lualine_a = {
@@ -40,27 +40,27 @@ return {
               else
                 return str:sub(1, 1)
               end
-            end
-          }
+            end,
+          },
         },
-        lualine_b = {{"filename", path = 1}, "diff"},
-        lualine_c = {recording_status},
-        lualine_x = {"diagnostics"},
-        lualine_y = {"encoding", "filetype", "progress"},
-        lualine_z = {}
+        lualine_b = { { "filename", path = 1 }, "diff" },
+        lualine_c = { recording_status },
+        lualine_x = { "diagnostics" },
+        lualine_y = { "encoding", "filetype", "progress" },
+        lualine_z = {},
       },
       inactive_sections = {
         lualine_a = {},
-        lualine_b = {{"filename", path = 1}, "diff"},
+        lualine_b = { { "filename", path = 1 }, "diff" },
         lualine_c = {},
         lualine_x = {},
         lualine_y = {},
-        lualine_z = {}
+        lualine_z = {},
       },
       tabline = {},
       winbar = {},
       inactive_winbar = {},
-      extensions = {}
-    }
-  }
+      extensions = {},
+    },
+  },
 }

@@ -24,7 +24,7 @@ vim.opt.timeoutlen = 1000
 vim.opt.ttimeoutlen = 50
 vim.opt.updatetime = 250
 
-if (vim.fn.has("nvim-0.8")) then
+if vim.fn.has("nvim-0.8") then
   vim.opt.cmdheight = 0
 end
 
@@ -35,17 +35,15 @@ vim.opt.autoread = true
 vim.opt.completeopt = "menu,menuone,noselect"
 
 -- Sessions
-vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+vim.o.sessionoptions =
+  "buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 
 -- Splits should be equal-sized
 vim.opt.equalalways = true
-vim.api.nvim_create_autocmd(
-  {"VimResized"},
-  {
-    pattern = "*",
-    group = vim.api.nvim_create_augroup("equal_splits", {clear = true}),
-    callback = function()
-      vim.cmd("wincmd =")
-    end
-  }
-)
+vim.api.nvim_create_autocmd({ "VimResized" }, {
+  pattern = "*",
+  group = vim.api.nvim_create_augroup("equal_splits", { clear = true }),
+  callback = function()
+    vim.cmd("wincmd =")
+  end,
+})

@@ -6,7 +6,7 @@ return {
     opts = {
       ensure_installed = "all",
       highlight = {
-        enable = true
+        enable = true,
       },
       incremental_selection = {
         enable = true,
@@ -14,9 +14,9 @@ return {
           init_selection = "<CR>",
           node_incremental = "<CR>",
           scope_incremental = "<S-CR>",
-          node_decremental = "<BS>"
-        }
-      }
-    }
-  }
+          node_decremental = "<BS>",
+        },
+      },
+    },
+  },
 }
