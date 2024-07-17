@@ -36,7 +36,7 @@ vim.opt.completeopt = "menu,menuone,noselect"
 
 -- Sessions
 vim.o.sessionoptions =
-  "buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+  "buffers,curdir,help,tabpages,winsize,winpos,terminal,localoptions"
 
 -- Splits should be equal-sized
 vim.opt.equalalways = true
