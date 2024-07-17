@@ -43,6 +43,7 @@ map("n", "<leader>n", function()
 end, { silent = true })
 map("n", "<leader>m", "<cmd>FzfLua git_status<cr>", { silent = true })
 map("n", "<leader>N", "<cmd>FzfLua files<cr>", { silent = true })
+map("n", "<leader>g", "<cmd>FzfLua live_grep<cr>", { silent = true })
 
 map("n", "<leader>f", "<cmd>FormatWrite<cr>", { silent = true })
 map({ "n", "v" }, "<leader>c", function()
