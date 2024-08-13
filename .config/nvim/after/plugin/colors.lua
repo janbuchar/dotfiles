@@ -3,4 +3,6 @@ if vim.fn.has("termguicolors") then
   vim.cmd("hi LineNr ctermbg=NONE guibg=NONE")
 end
 
-vim.cmd("colorscheme nordfox")
+if not vim.g.vscode then
+  vim.cmd("colorscheme nordfox")
+end

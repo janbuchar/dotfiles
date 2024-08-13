@@ -3,6 +3,7 @@ return {
     "ibhagwan/fzf-lua",
     branch = "main",
     dependencies = { "willothy/nvim-cokeline", "famiu/bufdelete.nvim" },
+    enabled = not vim.g.vscode,
     config = function()
       local fzf = require("fzf-lua")
       local make_entry = require("fzf-lua.make_entry")

@@ -1,6 +1,7 @@
 return {
   {
     "lewis6991/gitsigns.nvim",
+    enabled = not vim.g.vscode,
     opts = {
       yadm = { enable = true },
       on_attach = function(bufnr)

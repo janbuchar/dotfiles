@@ -3,6 +3,7 @@ local shared = require("nvim_shared")
 return {
   {
     "neovim/nvim-lspconfig",
+    enabled = not vim.g.vscode,
     dependencies = {
       "simrat39/rust-tools.nvim",
       "hrsh7th/cmp-nvim-lsp",

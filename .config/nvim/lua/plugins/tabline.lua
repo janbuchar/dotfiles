@@ -1,6 +1,7 @@
 return {
   {
     "willothy/nvim-cokeline",
+    enabled = not vim.g.vscode,
     config = function()
       local theme_name = require("lualine").get_config().options.theme
       local theme = require("lualine.themes." .. theme_name)
