@@ -125,10 +125,10 @@ user_css_path.write_text(f"""
 }}
 
 ::-webkit-scrollbar-thumb:vertical {{
-  background: {palette['nord0']};
+  background: {palette['nord8']};
 }}
 ::-webkit-scrollbar-thumb:vertical:hover {{
-  background: {palette['nord8']};
+  background: {palette['nord6']};
 }}
 
 ::-webkit-scrollbar-track:horizontal {{
@@ -136,10 +136,10 @@ user_css_path.write_text(f"""
 }}
 
 ::-webkit-scrollbar-thumb:horizontal {{
-  background: {palette['nord0']};
+  background: {palette['nord8']};
 }}
 ::-webkit-scrollbar-thumb:horizontal:hover {{
-  background: {palette['nord8']};
+  background: {palette['nord6']};
 }}
 
 ::-webkit-scrollbar-corner {{
