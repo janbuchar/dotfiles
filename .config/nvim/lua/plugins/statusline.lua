@@ -6,6 +6,17 @@ local function recording_status()
   return "REC @" .. reg .. ""
 end
 
+local function diff_source()
+  local gitsigns = vim.b.gitsigns_status_dict
+  if gitsigns then
+    return {
+      added = gitsigns.added,
+      modified = gitsigns.changed,
+      removed = gitsigns.removed,
+    }
+  end
+end
+
 return {
   {
     "nvim-lualine/lualine.nvim",
@@ -45,7 +56,7 @@ return {
             end,
           },
         },
-        lualine_b = { { "filename", path = 1 }, "diff" },
+        lualine_b = { { "filename", path = 1 }, { "diff", source = diff_source } },
         lualine_c = { recording_status },
         lualine_x = { "diagnostics" },
         lualine_y = { "encoding", "filetype", "progress" },

@@ -2,8 +2,11 @@ return {
   {
     "lewis6991/gitsigns.nvim",
     enabled = not vim.g.vscode,
+    dependencies = { "seanbreckenridge/gitsigns-yadm.nvim" },
     opts = {
-      yadm = { enable = true },
+      _on_attach_pre = function(_, callback)
+        require("gitsigns-yadm").yadm_signs(callback)
+      end,
       on_attach = function(bufnr)
         local gs = package.loaded.gitsigns
 
