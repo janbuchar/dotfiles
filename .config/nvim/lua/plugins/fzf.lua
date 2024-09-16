@@ -6,10 +6,19 @@ return {
     enabled = not vim.g.vscode,
     config = function()
       local fzf = require("fzf-lua")
+      local actions = require("fzf-lua.actions")
       local make_entry = require("fzf-lua.make_entry")
       local buffers = require("cokeline.buffers")
       local builtin_previewer = require("fzf-lua.previewer.builtin")
       local bufdelete = require("bufdelete")
+
+      fzf.setup({
+        actions = {
+          files = {
+            ["enter"] = actions.file_edit,
+          },
+        },
+      })
 
       _G.buffers = function(opts)
         local entries = {}
