@@ -6,21 +6,21 @@ return {
     enabled = not vim.g.vscode,
     dependencies = {
       "simrat39/rust-tools.nvim",
+      "pmizio/typescript-tools.nvim",
       "hrsh7th/cmp-nvim-lsp",
     },
     config = function()
-      local nvim_lsp = require("lspconfig")
-      local rt = require("rust-tools")
-
       local config = shared.create_lsp_config()
 
-      rt.setup({
+      require("rust-tools").setup({
         server = {
           on_attach = config.on_attach,
         },
       })
 
-      nvim_lsp.tsserver.setup(config)
+      require("typescript-tools").setup({ on_attach = config.on_attach })
+
+      local nvim_lsp = require("lspconfig")
       nvim_lsp.basedpyright.setup(config)
       nvim_lsp.jsonls.setup(config)
       nvim_lsp.cssls.setup(config)
