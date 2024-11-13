@@ -1,0 +1,4 @@
+#!/bin/sh
+
+mise toml set env._.python.venv.path '.venv'
+mise toml set -t bool env._.python.venv.create true
