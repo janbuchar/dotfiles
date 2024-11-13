@@ -1,0 +1,65 @@
+prSections:
+- title: My Pull Requests
+  filters: is:open archived:false author:@me
+- title: Needs My Review
+  filters: is:open archived:false review-requested:@me
+- title: Assigned
+  filters: is:open archived:false assignee:@me
+- title: Involved
+  filters: is:open archived:false involves:@me -author:@me
+issuesSections:
+- title: Assigned
+  filters: is:open archived:false assignee:@me
+- title: My Issues
+  filters: is:open archived:false author:@me
+- title: Involved
+  filters: is:open archived:false involves:@me -author:@me
+defaults:
+  preview:
+    open: true
+    width: 100
+  prsLimit: 20
+  issuesLimit: 20
+  view: prs
+  layout:
+    prs:
+      updatedAt:
+        width: 7
+      repo:
+        width: 15
+      author:
+        width: 15
+      assignees:
+        width: 20
+        hidden: true
+      base:
+        width: 15
+        hidden: true
+      lines:
+        width: 16
+    issues:
+      updatedAt:
+        width: 7
+      repo:
+        width: 15
+      creator:
+        width: 10
+      assignees:
+        width: 20
+        hidden: true
+  refetchIntervalMinutes: 30
+keybindings:
+  issues:
+    - key: tab
+      builtin: viewPrs
+  prs:
+    - key: tab
+      builtin: viewIssues
+repoPaths: {}
+theme:
+  ui:
+    table:
+      showSeparator: true
+pager:
+  diff: ""
+confirmQuit: false
