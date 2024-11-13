@@ -1,2 +1,3 @@
 [settings]
 experimental = true
+disable_hints = ["python_multi"]
