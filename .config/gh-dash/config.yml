@@ -1,19 +1,19 @@
 prSections:
-- title: My Pull Requests
-  filters: is:open archived:false author:@me
-- title: Needs My Review
-  filters: is:open archived:false review-requested:@me
 - title: Assigned
   filters: is:open archived:false assignee:@me
+- title: Needs My Review
+  filters: is:open archived:false review-requested:@me
 - title: Involved
   filters: is:open archived:false involves:@me -author:@me
+- title: My Pull Requests
+  filters: is:open archived:false author:@me
 issuesSections:
 - title: Assigned
   filters: is:open archived:false assignee:@me
-- title: My Issues
-  filters: is:open archived:false author:@me
 - title: Involved
   filters: is:open archived:false involves:@me -author:@me
+- title: My Issues
+  filters: is:open archived:false author:@me
 defaults:
   preview:
     open: true
