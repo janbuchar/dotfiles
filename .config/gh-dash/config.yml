@@ -9,7 +9,9 @@ prSections:
   filters: is:open archived:false author:@me
 issuesSections:
 - title: Assigned
-  filters: is:open archived:false assignee:@me
+  filters: is:open archived:false assignee:@me -linked:pr
+- title: In progress
+  filters: is:open archived:false assignee:@me linked:pr
 - title: Involved
   filters: is:open archived:false involves:@me -author:@me
 - title: My Issues
