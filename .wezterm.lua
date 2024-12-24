@@ -18,6 +18,14 @@ config.window_padding = {
   bottom = 0,
 }
 
+config.keys = {
+  {
+    key = ";",
+    mods = "CTRL",
+    action = wezterm.action.SendKey({ key = "b", mods = "CTRL" }),
+  },
+}
+
 wezterm.on("window-resized", function(window, pane)
   local overrides = window:get_config_overrides() or {}
 
