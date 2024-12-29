@@ -64,6 +64,10 @@ return {
       open_for_directories = false,
       floating_window_scaling_factor = 0.75,
       yazi_floating_window_winblend = 10,
+      integrations = {
+        grep_in_directory = "fzf-lua",
+        grep_in_selected_files = "fzf-lua",
+      },
     },
   },
   {

@@ -10,29 +10,10 @@ return {
     end,
   },
   {
-    "windwp/nvim-autopairs",
-    event = "InsertEnter",
-    dependencies = { "windwp/nvim-ts-autotag" },
+    "echasnovski/mini.pairs",
+    version = "*",
     config = function()
-      local autotag = require("nvim-ts-autotag")
-      autotag.setup()
-
-      local npairs = require("nvim-autopairs")
-
-      npairs.setup({})
-
-      _G.MUtils = {}
-
-      MUtils.completion_confirm = function()
-        return npairs.autopairs_cr()
-      end
-
-      vim.keymap.set(
-        "i",
-        "<CR>",
-        "v:lua.MUtils.completion_confirm()",
-        { expr = true, noremap = true }
-      )
+      require("mini.pairs").setup()
     end,
   },
   {
