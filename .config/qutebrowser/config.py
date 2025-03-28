@@ -7,6 +7,8 @@ config: Any = config
 
 config.load_autoconfig(False)
 
+QUTE_RBW = f'/usr/bin/pipx run {os.environ["HOME"]}/.local/share/qutebrowser/userscripts/qute-rbw'
+
 config.bind('d', 'scroll-page 0 0.5')
 config.bind('u', 'scroll-page 0 -0.5')
 config.bind('-', 'set-cmd-text /')
@@ -17,7 +19,7 @@ config.bind('J', 'tab-prev')
 config.bind('K', 'tab-next')
 config.bind(']', 'navigate next')
 config.bind('[', 'navigate prev')
-config.bind('pw', 'spawn --userscript pass autofill')
+config.bind('pw', f'spawn --userscript {QUTE_RBW}')
 config.bind('m', 'spawn vlc {url}')
 config.bind('M', 'hint links spawn vlc {hint-url}')
 config.bind('<Ctrl-r>', 'reload')

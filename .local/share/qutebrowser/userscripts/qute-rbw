@@ -1,0 +1,253 @@
+#!/usr/bin/env python
+
+# pyright: reportUnusedCallResult=false
+
+# /// script
+# dependencies = ["tldextract", "typer"]
+# ///
+
+# Copyright 2017 Chris Braun (cryzed) <cryzed@googlemail.com>
+# Adapted for rbw by Marek Bogusovsky (proxict) <marek.bogusovsky@protonmail.com>,
+# Jiri Kozusznik (JKPaladin) <jirkakozusznik@seznam.cz>
+# Further adapted by Jan Buchar <Honza.Buchar@seznam.cz>
+#
+# This file is part of qutebrowser.
+#
+# qutebrowser is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published bjy
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# qutebrowser is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with qutebrowser.  If not, see <https://www.gnu.org/licenses/>.
+
+"""
+Insert login information using rbw CLI and yad
+"""
+
+from __future__ import annotations
+
+import csv
+import json
+import os
+import re
+import subprocess
+
+from dataclasses import dataclass
+from io import TextIOWrapper
+from types import TracebackType
+from typing import Annotated, Literal
+
+import tldextract
+import typer
+
+
+class QuteFifo:
+    """Pipe for writing commands to qutebrowser"""
+
+    def __init__(self) -> None:
+        self.fifo: TextIOWrapper | None = None
+
+    def __enter__(self) -> QuteFifo:
+        self.fifo = open(os.environ["QUTE_FIFO"], "w")
+        return self
+
+    def __exit__(
+        self,
+        _exc_type: type[BaseException] | None,
+        _exc_val: BaseException | None,
+        _exc_tb: TracebackType | None,
+    ) -> None:
+        if self.fifo:
+            self.fifo.close()
+
+    def command(self, command: str) -> None:
+        """Executes the given command in qutebrowser"""
+        if not self.fifo:
+            raise RuntimeError("FIFO not open")
+        self.fifo.write(command + "\n")
+        self.fifo.flush()
+
+    def fake_key(self, text: str) -> None:
+        """Fakes a key-press in qutebrowser"""
+        for key in text:
+            # Escape all characters by default, space requires special handling
+            sequence = '" "' if key == " " else f"\\{key}"
+            self.command(f"fake-key {sequence}")
+
+    def show_message(
+        self, message: str, message_type: Literal["info", "warning", "error"]
+    ) -> None:
+        match message_type:
+            case "info":
+                self.command(f"message-info '{message}'")
+            case "warning":
+                self.command(f"message-warning '{message}'")
+            case "error":
+                self.command(f"message-error '{message}'")
+
+
+def show_selection(items: list[Credentials]) -> Credentials | None:
+    """Runs dmenu with given arguments."""
+
+    input = list[str]()
+    for index, item in enumerate(items, start=0):
+        input.extend([str(index), f"{item.user}@{item.name}", item.folder])
+
+    process = subprocess.run(
+        [
+            "yad",
+            "--width=600",
+            "--height=400",
+            "--list",
+            "--title=Select account",
+            "--column=#",
+            "--column=Account",
+            "--column=Folder",
+            "--print-column=1",
+            "--hide-column=1",
+            *input,
+        ],
+        check=False,
+        stdout=subprocess.PIPE,
+    )
+
+    if process.returncode != 0:
+        return None
+
+    output = process.stdout.decode()
+    if not (match := re.search(r"[0-9]+", output)):
+        raise RuntimeError()
+
+    return items[int(match[0])]
+
+
+@dataclass
+class Credentials:
+    id: str
+    name: str
+    user: str
+    folder: str
+
+
+def get_credentials_for_url(
+    *,
+    url: str,
+    username: str | None = None,
+    folder: str | None,
+) -> list[Credentials]:
+    """
+    Gets login credentials for the given URL.
+    """
+    extract_result = tldextract.extract(url)
+
+    uri_candidates = [
+        extract_result.fqdn,
+        extract_result.registered_domain,
+        extract_result.domain,
+    ]
+    targets = [candidate for candidate in uri_candidates if candidate]
+    if extract_result.ipv4:
+        targets.append(extract_result.ipv4)
+
+    process = subprocess.run(
+        ["rbw", "list", "--fields", "id,name,user,folder"],
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+
+    matches = list[Credentials]()
+
+    for row in csv.reader(
+        (line.decode() for line in process.stdout.splitlines()), delimiter="\t"
+    ):
+        credentials = Credentials(*row)
+        if credentials.name not in targets:
+            continue
+
+        if username is not None and credentials.user != username:
+            continue
+
+        if folder is not None and credentials.folder != folder:
+            continue
+
+        matches.append(credentials)
+
+    return matches
+
+
+def fill_password(
+    credentials: Credentials,
+    fifo: QuteFifo,
+    username_only: bool,
+    password_only: bool,
+    otp_only: bool,
+) -> None:
+    process = subprocess.run(
+        ["rbw", "get", "--raw", credentials.id],
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+
+    result = json.loads(process.stdout)
+    username = result.get("data", {}).get("username")
+    password = result.get("data", {}).get("password")
+
+    if username_only:
+        if username is not None:
+            fifo.fake_key(username)
+        else:
+            fifo.show_message("The entry does not contain a username", "error")
+    elif password_only:
+        fifo.fake_key(password)
+    else:
+        if username is not None:
+            fifo.fake_key(username)
+            fifo.command("fake-key <Tab>")
+            fifo.fake_key(password)
+        else:
+            fifo.show_message("The entry does not contain a username", "error")
+
+
+def main(
+    url: Annotated[str, typer.Option(envvar="QUTE_URL")],
+    username_only: bool = False,
+    password_only: bool = False,
+    otp_only: bool = False,
+    insert_mode: bool = True,
+    folder: str | None = None,
+):
+    with QuteFifo() as fifo:
+        matches = get_credentials_for_url(
+            url=url,
+            folder=folder,
+        )
+
+        if not matches:
+            fifo.show_message(f"No entry found for {url}", "error")
+
+        if len(matches) == 1:
+            fill_password(matches[0], fifo, username_only, password_only, otp_only)
+
+            if insert_mode:
+                fifo.command("mode-enter insert")
+        else:
+            choice = show_selection(matches)
+            if choice is not None:
+                fill_password(choice, fifo, username_only, password_only, otp_only)
+
+                if insert_mode:
+                    fifo.command("mode-enter insert")
+            else:
+                fifo.show_message(f"Selection interrupted", "warning")
+
+
+if __name__ == "__main__":
+    typer.run(main)

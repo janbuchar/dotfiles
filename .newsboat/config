@@ -3,7 +3,7 @@ browser qb-open
 urls-source     "ttrss"
 ttrss-url       "https://ttrss.bucharjan.cz"
 ttrss-login     "admin"
-ttrss-password	"`pass show Internet/ttrss.bucharjan.cz/admin | head -n 1`"
+ttrss-password	"`rbw get ttrss | head -n 1`"
 
 ttrss-flag-star    "s"
 ttrss-flag-publish "p"
