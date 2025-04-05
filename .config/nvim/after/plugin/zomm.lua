@@ -16,21 +16,29 @@ local state = vim.tbl_deep_extend("keep", {}, default_state)
 local calculate_zomm_geometry = function()
   local ui = vim.api.nvim_list_uis()[1]
 
-  local padding = ui.width / 2 - config.width / 2
+  local padding = (ui.width - config.width) / 2
   local col = (function()
     if state.side == "left" then
       return 0
     end
     if state.side == "right" then
-      return 2 * padding
+      return math.floor(padding)
     end
     if state.side == "center" then
       return padding
     end
   end)()
 
+  local width = (function()
+    if state.side == "center" then
+      return config.width
+    end
+
+    return config.width + math.ceil(padding)
+  end)()
+
   return {
-    width = config.width,
+    width = width,
     height = ui.height - 2,
     col = col,
     row = 1,
