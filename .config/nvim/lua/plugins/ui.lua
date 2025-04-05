@@ -28,14 +28,18 @@ return {
     "stevearc/aerial.nvim",
     enabled = not vim.g.vscode,
     opts = {
+      layout = { min_width = 30 },
       on_attach = function(bufnr)
-        vim.api.nvim_buf_set_keymap(
-          bufnr,
-          "n",
-          "<leader>o",
-          "<cmd>AerialToggle right<CR>",
-          {}
-        )
+        vim.keymap.set("n", "<leader>o", function()
+          local aerial_window = require("aerial.window")
+          if
+            aerial_window.is_open({ winid = vim.api.nvim_get_current_win() })
+          then
+            aerial_window.focus()
+          else
+            aerial_window.open(true, "right")
+          end
+        end, { buffer = bufnr })
         vim.api.nvim_buf_set_keymap(bufnr, "n", "{", "<cmd>AerialPrev<CR>", {})
         vim.api.nvim_buf_set_keymap(bufnr, "n", "}", "<cmd>AerialNext<CR>", {})
       end,

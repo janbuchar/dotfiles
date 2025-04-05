@@ -52,11 +52,7 @@ local calculate_zomm_geometry = function()
 end
 
 local set_background = function()
-  if
-    state.code_win ~= nil
-    and vim.api.nvim_win_is_valid(state.code_win)
-    and vim.api.nvim_get_current_win() == state.code_win
-  then
+  if state.code_win ~= nil and vim.api.nvim_win_is_valid(state.code_win) then
     vim.api.nvim_set_option_value(
       "winhl",
       "Normal:Normal,FloatBorder:Normal",
@@ -147,6 +143,18 @@ local function resize()
   end
 end
 
+local update_aerial_width = function()
+  local aerial_util = require("aerial.util")
+
+  if require("aerial.window").is_open({ winid = state.code_win }) then
+    state.aerial_width = vim.api.nvim_win_get_width(
+      aerial_util.get_aerial_win(state.code_win)
+    ) + 1
+  else
+    state.aerial_width = 0
+  end
+end
+
 local setup = function()
   -- When the code window is closed, close the tabpage
   vim.api.nvim_create_autocmd("WinClosed", {
@@ -172,7 +180,24 @@ local setup = function()
 
   -- Maintain window highlight when buffer changes in code_win
   vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
-    callback = set_background,
+    callback = function()
+      if vim.api.nvim_get_current_win() == state.code_win then
+        set_background()
+        vim.defer_fn(function()
+          if
+            require("aerial.window").is_open({
+              winid = state.code_win,
+            })
+          then
+            require("aerial").open({ focus = false })
+          end
+          vim.defer_fn(function()
+            update_aerial_width()
+            resize()
+          end, 100)
+        end, 100)
+      end
+    end,
   })
 
   -- Close the tabpage before exitting
@@ -189,15 +214,7 @@ local setup = function()
   vim.api.nvim_create_autocmd({ "WinEnter", "WinClosed" }, {
     callback = function()
       vim.defer_fn(function()
-        local aerial_util = require("aerial.util")
-
-        if require("aerial.window").is_open({ winid = state.code_win }) then
-          state.aerial_width = vim.api.nvim_win_get_width(
-            aerial_util.get_aerial_win(state.code_win)
-          ) + 1
-        else
-          state.aerial_width = 0
-        end
+        update_aerial_width()
         resize()
       end, 100)
     end,
