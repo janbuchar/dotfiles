@@ -64,13 +64,34 @@ local zomm = function(opts)
 
   vim.cmd("tabnew")
   state.tabpage = vim.api.nvim_get_current_tabpage()
-  state.backdrop_win = vim.api.nvim_get_current_win()
-  state.backdrop_buf = vim.api.nvim_get_current_buf()
+  state.backdrop_win = vim.api.nvim_tabpage_list_wins(state.tabpage)[1]
+  state.backdrop_buf = vim.api.nvim_win_get_buf(state.backdrop_win)
 
-  vim.wo[state.backdrop_win].number = false
-  vim.wo[state.backdrop_win].relativenumber = false
-  vim.wo[state.backdrop_win].cursorline = false
-  vim.bo[state.backdrop_buf].buflisted = false
+  if
+    state.backdrop_win ~= nil and vim.api.nvim_win_is_valid(state.backdrop_win)
+  then
+    vim.api.nvim_set_option_value(
+      "number",
+      false,
+      { scope = "local", win = state.backdrop_win }
+    )
+    vim.api.nvim_set_option_value(
+      "relativenumber",
+      false,
+      { scope = "local", win = state.backdrop_win }
+    )
+    vim.api.nvim_set_option_value(
+      "cursorline",
+      false,
+      { scope = "local", win = state.backdrop_win }
+    )
+  end
+
+  vim.api.nvim_set_option_value(
+    "buflisted",
+    false,
+    { scope = "local", buf = state.backdrop_buf }
+  )
 
   local geometry = calculate_zomm_geometry()
 
@@ -81,16 +102,23 @@ local zomm = function(opts)
     col = geometry.col,
     row = geometry.row,
     anchor = "NW",
+    zindex = 40,
   })
 
-  vim.wo[state.code_win].winhl = "Normal:Normal,FloatBorder:Normal"
+  vim.api.nvim_set_option_value(
+    "winhl",
+    "Normal:Normal,FloatBorder:Normal",
+    { scope = "local", win = state.code_win }
+  )
 end
 
 local unzomm = function()
   local tabpage = state.tabpage
-  if tabpage ~= nil then
+  if tabpage ~= nil and vim.api.nvim_tabpage_is_valid(tabpage) then
     state = vim.tbl_deep_extend("keep", {}, default_state)
-    pcall(vim.cmd("tabclose " .. tostring(tabpage)))
+    pcall(
+      vim.cmd("tabclose " .. tostring(vim.api.nvim_tabpage_get_number(tabpage)))
+    )
   end
 end
 
@@ -104,6 +132,7 @@ local function resize()
       col = geometry.col,
       row = geometry.row,
       anchor = "NW",
+      zindex = 40,
     })
   end
 end
