@@ -177,9 +177,7 @@ local setup = function()
 
   -- Close the tabpage before exitting
   vim.api.nvim_create_autocmd("VimLeavePre", {
-    callback = function()
-      unzomm()
-    end,
+    callback = unzomm,
   })
 
   -- Adjust window dimensions when terminal is resized
