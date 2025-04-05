@@ -110,6 +110,25 @@ local setup = function()
     end,
   })
 
+  -- Adjust window dimensions when terminal is resized
+  vim.api.nvim_create_autocmd("VimResized", {
+    callback = function()
+      if
+        state.code_win ~= nil and vim.api.nvim_win_is_valid(state.code_win)
+      then
+        local geometry = calculate_zomm_geometry()
+        vim.api.nvim_win_set_config(state.code_win, {
+          relative = "editor",
+          width = geometry.width,
+          height = geometry.height,
+          col = geometry.col,
+          row = geometry.row,
+          anchor = "NW",
+        })
+      end
+    end,
+  })
+
   vim.api.nvim_create_user_command("Zomm", zomm, {
     nargs = "?",
     complete = function(_, _, _)
@@ -122,4 +141,3 @@ end
 setup()
 
 -- TODO aerial?
--- TODO handle resizing
