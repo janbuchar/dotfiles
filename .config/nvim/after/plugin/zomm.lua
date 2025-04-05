@@ -4,6 +4,7 @@ local config = {
 }
 
 local default_state = {
+  side = "center",
   tabpage = nil,
   code_win = nil,
   backdrop_buf = nil,
@@ -12,15 +13,40 @@ local default_state = {
 
 local state = vim.tbl_deep_extend("keep", {}, default_state)
 
-local zomm = function(opts)
-  local code_buf = vim.api.nvim_get_current_buf()
+local calculate_zomm_geometry = function()
   local ui = vim.api.nvim_list_uis()[1]
 
+  local padding = ui.width / 2 - config.width / 2
+  local col = (function()
+    if state.side == "left" then
+      return 0
+    end
+    if state.side == "right" then
+      return 2 * padding
+    end
+    if state.side == "center" then
+      return padding
+    end
+  end)()
+
+  return {
+    width = config.width,
+    height = ui.height - 2,
+    col = col,
+    row = 1,
+  }
+end
+
+local zomm = function(opts)
   -- Apply option for side if provided
   local side = opts.args
   if not (side == "left" or side == "right" or side == "center") then
     side = config.side
   end
+
+  state.side = side
+
+  local code_buf = vim.api.nvim_get_current_buf()
 
   vim.cmd("tabnew")
   state.tabpage = vim.api.nvim_get_current_tabpage()
@@ -32,25 +58,14 @@ local zomm = function(opts)
   vim.wo[state.backdrop_win].cursorline = false
   vim.bo[state.backdrop_buf].buflisted = false
 
-  local padding = ui.width / 2 - config.width / 2
-  local col = (function()
-    if side == "left" then
-      return 0
-    end
-    if side == "right" then
-      return 2 * padding
-    end
-    if side == "center" then
-      return padding
-    end
-  end)()
+  local geometry = calculate_zomm_geometry()
 
   state.code_win = vim.api.nvim_open_win(code_buf, true, {
     relative = "editor",
-    width = config.width,
-    height = ui.height - 2,
-    col = col,
-    row = 1,
+    width = geometry.width,
+    height = geometry.height,
+    col = geometry.col,
+    row = geometry.row,
     anchor = "NW",
   })
 
