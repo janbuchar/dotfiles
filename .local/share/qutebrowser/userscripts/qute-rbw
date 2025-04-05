@@ -33,6 +33,7 @@ Insert login information using rbw CLI and yad
 from __future__ import annotations
 
 import csv
+from enum import Enum
 import json
 import os
 import re
@@ -182,13 +183,29 @@ def get_credentials_for_url(
     return matches
 
 
-def fill_password(
-    credentials: Credentials,
-    fifo: QuteFifo,
-    username_only: bool,
-    password_only: bool,
-    otp_only: bool,
-) -> None:
+def fill_otp(credentials: Credentials, fifo: QuteFifo) -> None:
+    process = subprocess.run(
+        ["rbw", "code", credentials.id],
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    if process.returncode == 0:
+        otp_code = process.stdout.decode().strip()
+        fifo.fake_key(otp_code)
+    else:
+        error_msg = process.stderr.decode().strip()
+        fifo.show_message(f"Failed to get OTP code: {error_msg}", "error")
+
+
+class Mode(str, Enum):
+    username_and_password = "username-and-password"
+    username_only = "username-only"
+    password_only = "password-only"
+    otp = "otp"
+
+
+def fill_password(credentials: Credentials, fifo: QuteFifo, mode: Mode) -> None:
     process = subprocess.run(
         ["rbw", "get", "--raw", credentials.id],
         check=False,
@@ -200,14 +217,14 @@ def fill_password(
     username = result.get("data", {}).get("username")
     password = result.get("data", {}).get("password")
 
-    if username_only:
+    if mode == Mode.username_only:
         if username is not None:
             fifo.fake_key(username)
         else:
             fifo.show_message("The entry does not contain a username", "error")
-    elif password_only:
+    elif mode == Mode.password_only:
         fifo.fake_key(password)
-    else:
+    elif mode == Mode.username_and_password:
         if username is not None:
             fifo.fake_key(username)
             fifo.command("fake-key <Tab>")
@@ -218,9 +235,7 @@ def fill_password(
 
 def main(
     url: Annotated[str, typer.Option(envvar="QUTE_URL")],
-    username_only: bool = False,
-    password_only: bool = False,
-    otp_only: bool = False,
+    mode: Mode = Mode.username_and_password,
     insert_mode: bool = True,
     folder: str | None = None,
 ):
@@ -232,21 +247,22 @@ def main(
 
         if not matches:
             fifo.show_message(f"No entry found for {url}", "error")
-
-        if len(matches) == 1:
-            fill_password(matches[0], fifo, username_only, password_only, otp_only)
-
-            if insert_mode:
-                fifo.command("mode-enter insert")
+            return
+        elif len(matches) == 1:
+            choice = matches[0]
         else:
             choice = show_selection(matches)
-            if choice is not None:
-                fill_password(choice, fifo, username_only, password_only, otp_only)
-
-                if insert_mode:
-                    fifo.command("mode-enter insert")
-            else:
+            if choice is None:
                 fifo.show_message(f"Selection interrupted", "warning")
+                return
+
+        if mode == Mode.otp:
+            fill_otp(choice, fifo)
+        else:
+            fill_password(choice, fifo, mode)
+
+        if insert_mode:
+            fifo.command("mode-enter insert")
 
 
 if __name__ == "__main__":
