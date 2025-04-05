@@ -57,34 +57,54 @@ local zomm = function(opts)
   vim.wo[state.code_win].winhl = "Normal:Normal,FloatBorder:Normal"
 end
 
-vim.api.nvim_create_autocmd("WinClosed", {
-  callback = function(args)
-    if tonumber(args.match) == state.code_win then
-      local tabpage = state.tabpage
-      if tabpage ~= nil then
-        state = vim.tbl_deep_extend("keep", {}, default_state)
-        vim.cmd("tabclose " .. tostring(tabpage))
+local unzomm = function()
+  local tabpage = state.tabpage
+  if tabpage ~= nil then
+    state = vim.tbl_deep_extend("keep", {}, default_state)
+    pcall(vim.cmd("tabclose " .. tostring(tabpage)))
+  end
+end
+
+local setup = function()
+  -- When the code window is closed, close the tabpage
+  vim.api.nvim_create_autocmd("WinClosed", {
+    callback = function(args)
+      if tonumber(args.match) == state.code_win then
+        unzomm()
       end
-    end
-  end,
-})
+    end,
+  })
 
-vim.api.nvim_create_autocmd("WinEnter", {
-  callback = function(args)
-    if
-      state.backdrop_win ~= nil
-      and vim.api.nvim_get_current_win() == state.backdrop_win
-      and state.code_win ~= nil
-    then
-      vim.api.nvim_set_current_win(state.code_win)
-    end
-  end,
-})
+  -- When the backdrop window is entered, switch focus back to the code window
+  vim.api.nvim_create_autocmd("WinEnter", {
+    callback = function(args)
+      if
+        state.backdrop_win ~= nil
+        and vim.api.nvim_get_current_win() == state.backdrop_win
+        and state.code_win ~= nil
+      then
+        vim.api.nvim_set_current_win(state.code_win)
+      end
+    end,
+  })
 
-vim.api.nvim_create_user_command("Zomm", zomm, {
-  nargs = "?",
-  complete = function(_, _, _)
-    return { "left", "center", "right" }
-  end,
-  desc = "Open current buffer in a zoomed window (optional position: left, center, right)",
-})
+  -- Close the tabpage before exitting
+  vim.api.nvim_create_autocmd("VimLeavePre", {
+    callback = function()
+      unzomm()
+    end,
+  })
+
+  vim.api.nvim_create_user_command("Zomm", zomm, {
+    nargs = "?",
+    complete = function(_, _, _)
+      return { "left", "center", "right" }
+    end,
+    desc = "Open current buffer in a zoomed window (optional position: left, center, right)",
+  })
+end
+
+setup()
+
+-- TODO aerial?
+-- TODO handle resizing
