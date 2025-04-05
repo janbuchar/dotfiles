@@ -51,6 +51,20 @@ local calculate_zomm_geometry = function()
   }
 end
 
+local set_background = function()
+  if
+    state.code_win ~= nil
+    and vim.api.nvim_win_is_valid(state.code_win)
+    and vim.api.nvim_get_current_win() == state.code_win
+  then
+    vim.api.nvim_set_option_value(
+      "winhl",
+      "Normal:Normal,FloatBorder:Normal",
+      { scope = "local", win = state.code_win }
+    )
+  end
+end
+
 local zomm = function(opts)
   -- Apply option for side if provided
   local side = opts.args
@@ -105,11 +119,7 @@ local zomm = function(opts)
     zindex = 40,
   })
 
-  vim.api.nvim_set_option_value(
-    "winhl",
-    "Normal:Normal,FloatBorder:Normal",
-    { scope = "local", win = state.code_win }
-  )
+  set_background()
 end
 
 local unzomm = function()
@@ -158,6 +168,11 @@ local setup = function()
         vim.api.nvim_set_current_win(state.code_win)
       end
     end,
+  })
+
+  -- Maintain window highlight when buffer changes in code_win
+  vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
+    callback = set_background,
   })
 
   -- Close the tabpage before exitting
