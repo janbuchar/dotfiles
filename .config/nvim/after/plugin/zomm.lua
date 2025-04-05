@@ -9,6 +9,7 @@ local default_state = {
   code_win = nil,
   backdrop_buf = nil,
   backdrop_win = nil,
+  aerial_width = 0,
 }
 
 local state = vim.tbl_deep_extend("keep", {}, default_state)
@@ -16,7 +17,9 @@ local state = vim.tbl_deep_extend("keep", {}, default_state)
 local calculate_zomm_geometry = function()
   local ui = vim.api.nvim_list_uis()[1]
 
-  local padding = (ui.width - config.width) / 2
+  local width = config.width
+  local padding = (ui.width - width) / 2
+
   local col = (function()
     if state.side == "left" then
       return 0
@@ -29,16 +32,19 @@ local calculate_zomm_geometry = function()
     end
   end)()
 
-  local width = (function()
+  local final_width = (function()
     if state.side == "center" then
-      return config.width
+      return width
+    end
+    if state.side == "right" then
+      return width + math.ceil(padding) - state.aerial_width
     end
 
-    return config.width + math.ceil(padding)
+    return width + math.ceil(padding)
   end)()
 
   return {
-    width = width,
+    width = final_width,
     height = ui.height - 2,
     col = col,
     row = 1,
@@ -88,6 +94,20 @@ local unzomm = function()
   end
 end
 
+local function resize()
+  if state.code_win and vim.api.nvim_win_is_valid(state.code_win) then
+    local geometry = calculate_zomm_geometry()
+    vim.api.nvim_win_set_config(state.code_win, {
+      relative = "editor",
+      width = geometry.width,
+      height = geometry.height,
+      col = geometry.col,
+      row = geometry.row,
+      anchor = "NW",
+    })
+  end
+end
+
 local setup = function()
   -- When the code window is closed, close the tabpage
   vim.api.nvim_create_autocmd("WinClosed", {
@@ -120,20 +140,24 @@ local setup = function()
 
   -- Adjust window dimensions when terminal is resized
   vim.api.nvim_create_autocmd("VimResized", {
+    callback = resize,
+  })
+
+  -- Detect when aerial opens and shrink the code window
+  vim.api.nvim_create_autocmd({ "WinEnter", "WinClosed" }, {
     callback = function()
-      if
-        state.code_win ~= nil and vim.api.nvim_win_is_valid(state.code_win)
-      then
-        local geometry = calculate_zomm_geometry()
-        vim.api.nvim_win_set_config(state.code_win, {
-          relative = "editor",
-          width = geometry.width,
-          height = geometry.height,
-          col = geometry.col,
-          row = geometry.row,
-          anchor = "NW",
-        })
-      end
+      vim.defer_fn(function()
+        local aerial_util = require("aerial.util")
+
+        if require("aerial.window").is_open({ winid = state.code_win }) then
+          state.aerial_width = vim.api.nvim_win_get_width(
+            aerial_util.get_aerial_win(state.code_win)
+          ) + 1
+        else
+          state.aerial_width = 0
+        end
+        resize()
+      end, 100)
     end,
   })
 
@@ -147,5 +171,3 @@ local setup = function()
 end
 
 setup()
-
--- TODO aerial?
