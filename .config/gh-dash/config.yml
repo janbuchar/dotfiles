@@ -2,7 +2,7 @@ prSections:
 - title: Assigned
   filters: is:open archived:false assignee:@me
 - title: Needs My Review
-  filters: is:open archived:false review-requested:@me
+  filters: is:open archived:false draft:false review-requested:@me
 - title: Involved
   filters: is:open archived:false involves:@me -author:@me
 - title: My Pull Requests
