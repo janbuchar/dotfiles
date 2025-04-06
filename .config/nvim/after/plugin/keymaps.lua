@@ -25,10 +25,6 @@ map("n", "gs", "i<CR><ESC>")
 -- Folds
 map("n", "<TAB>", "za")
 
--- File browser
--- map("n", "<leader>t", "<cmd>RnvimrToggle<cr>", {silent = true})
--- map("t", "<esc>", "<cmd>RnvimrToggle<cr>", {silent = true})
-
 -- Start/end of line
 map({ "n", "v" }, "gh", "^")
 map({ "n", "v" }, "gl", "$")
@@ -39,11 +35,12 @@ map("n", "<Esc>", "<cmd>noh<CR>", { silent = true })
 -- IDE actions
 map("n", "<leader>r", "<cmd>FzfLua resume<cr>", { silent = true })
 map("n", "<leader>n", function()
-  require("fzf-lua").git_files({ cwd = vim.loop.cwd() })
+  require("fzf-lua").git_files({ cwd = vim.fn.getcwd() })
 end, { silent = true })
 map("n", "<leader>m", "<cmd>FzfLua git_status<cr>", { silent = true })
 map("n", "<leader>N", "<cmd>FzfLua files<cr>", { silent = true })
 map("n", "<leader>g", "<cmd>FzfLua live_grep<cr>", { silent = true })
+map("n", "<leader>z", "<cmd>FzfLua<cr>", { silent = true })
 
 map("n", "<leader>f", "<cmd>FormatWrite<cr>", { silent = true })
 map({ "n", "v" }, "<leader>c", function()
@@ -52,12 +49,9 @@ end, { silent = true })
 
 map("n", "<leader>rn", "<cmd>Lspsaga rename<cr>", { silent = true })
 map("n", "<leader>k", "<cmd>Lspsaga hover_doc<cr>", { silent = true })
-map(
-  "n",
-  "<leader>e",
-  "<cmd>Lspsaga show_line_diagnostics<cr>",
-  { silent = true }
-)
+map("n", "<leader>e", function()
+  vim.diagnostic.open_float()
+end, { silent = true })
 
 map(
   "n",

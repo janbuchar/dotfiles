@@ -2,7 +2,7 @@ return {
   {
     "ibhagwan/fzf-lua",
     branch = "main",
-    dependencies = { "willothy/nvim-cokeline", "famiu/bufdelete.nvim" },
+    dependencies = { "willothy/nvim-cokeline" },
     enabled = not vim.g.vscode,
     config = function()
       local fzf = require("fzf-lua")
@@ -10,7 +10,6 @@ return {
       local make_entry = require("fzf-lua.make_entry")
       local buffers = require("cokeline.buffers")
       local builtin_previewer = require("fzf-lua.previewer.builtin")
-      local bufdelete = require("bufdelete")
 
       fzf.setup({
         actions = {
@@ -63,7 +62,7 @@ return {
             vim.api.nvim_set_current_buf(entry2element[selected[1]].bufnr)
           end,
           ["ctrl-x"] = function(selected)
-            bufdelete.bufdelete(entry2element[selected[1]].bufnr)
+            Snacks.bufdelete(entry2element[selected[1]].bufnr)
           end,
         }
 

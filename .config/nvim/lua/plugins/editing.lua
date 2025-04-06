@@ -24,10 +24,19 @@ return {
     },
     opts = {},
   },
-  { "itchyny/vim-cursorword" },
   {
-    "numToStr/Comment.nvim",
-    opts = {},
+    "echasnovski/mini.cursorword",
+    version = "*",
+    config = function()
+      require("mini.cursorword").setup()
+    end,
+  },
+  {
+    "echasnovski/mini.comment",
+    version = "*",
+    config = function()
+      require("mini.comment").setup()
+    end,
   },
   {
     "nmac427/guess-indent.nvim",

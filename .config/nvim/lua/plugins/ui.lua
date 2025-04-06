@@ -52,6 +52,7 @@ return {
     "mikavilpas/yazi.nvim",
     dependencies = {
       "nvim-lua/plenary.nvim",
+      "folke/snacks.nvim",
     },
     event = "VeryLazy",
     keys = {
@@ -163,27 +164,6 @@ return {
     end,
     dependencies = {
       "nvim-treesitter/nvim-treesitter",
-    },
-  },
-  {
-    "famiu/bufdelete.nvim",
-    enabled = not vim.g.vscode,
-    keys = {
-      {
-        "<leader>q",
-        "<cmd>Bdelete<CR>",
-        silent = true,
-      },
-    },
-  },
-  {
-    "lukas-reineke/indent-blankline.nvim",
-    main = "ibl",
-    enabled = not vim.g.vscode,
-    opts = {
-      scope = {
-        enabled = false,
-      },
     },
   },
   {
