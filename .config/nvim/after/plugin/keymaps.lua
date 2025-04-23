@@ -4,7 +4,10 @@ local map = vim.keymap.set
 map("n", "<leader>-", "<cmd>split<cr>")
 map("n", "<leader><bar>", "<cmd>vsplit<cr>")
 
-map("n", "<C-h>", "<cmd>TmuxNavigateLeft<cr>", { silent = true })
+map({"n", "v"}, "<C-h>", "<cmd>TmuxNavigateLeft<cr>", { silent = true })
+map({"n", "v"}, "<C-j>", "<cmd>TmuxNavigateDown<cr>", { silent = true })
+map({"n", "v"}, "<C-k>", "<cmd>TmuxNavigateUp<cr>", { silent = true })
+map({"n", "v"}, "<C-l>", "<cmd>TmuxNavigateRight<cr>", { silent = true })
 
 -- Switching buffers
 map("n", "J", "<Plug>(cokeline-focus-prev)", { silent = true })

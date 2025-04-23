@@ -156,6 +156,10 @@ local update_aerial_width = function()
 end
 
 local setup = function()
+  if vim.g.vscode then
+    return
+  end
+
   -- When the code window is closed, close the tabpage
   vim.api.nvim_create_autocmd("WinClosed", {
     callback = function(args)
