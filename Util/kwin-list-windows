@@ -1,0 +1,81 @@
+#!/usr/bin/env python3
+
+import sys
+import subprocess
+import json
+
+
+def run(*cmd):
+    process = subprocess.run(cmd, stdout=subprocess.PIPE, check=True)
+    return process.stdout.decode().splitlines()
+
+
+def get_kwin_windows_in_activity(activity_id):
+    """Get window info from KWin using busctl with JSON output"""
+    try:
+        # Use busctl to call the Match method - returns JSON
+        result = subprocess.run(
+            ['busctl', '--user', '--json=short', 'call', 
+             'org.kde.KWin', '/WindowsRunner', 'org.kde.krunner1', 'Match', 's', ''],
+            capture_output=True, text=True, timeout=2, check=True
+        )
+        
+        data = json.loads(result.stdout)
+        windows = []
+        seen_uuids = set()
+        
+        # The data is an array of tuples: (id, caption, icon, priority, relevance, properties)
+        for item in data['data'][0]:
+            window_id = item[0]  # Format: "0_{uuid}"
+            
+            # Skip non-window entries (e.g., desktop switchers that start with "8_")
+            if not window_id.startswith('0_{'):
+                continue
+                
+            # Deduplicate (UUIDs appear multiple times with different priorities)
+            if window_id in seen_uuids:
+                continue
+            seen_uuids.add(window_id)
+            
+            # Extract UUID from format like "0_{uuid}"
+            uuid = window_id.split('_{', 1)[1].rstrip('}')
+            uuid = '{' + uuid + '}'
+            
+            # Get detailed window info including activities
+            try:
+                win_info = run("qdbus", "org.kde.KWin", "/KWin", "org.kde.KWin.getWindowInfo", uuid)
+                info_dict = {}
+                for info_line in win_info:
+                    if ': ' in info_line:
+                        key, value = info_line.split(': ', 1)
+                        info_dict[key] = value
+                
+                # Check if window is on current activity
+                win_activities = info_dict.get('activities', '')
+                # If activities is empty, window is on all activities
+                if win_activities == '' or activity_id in win_activities:
+                    windows.append({
+                        "resourceName": info_dict.get('resourceName', ''),
+                        "resourceClass": info_dict.get('resourceClass', ''),
+                        "caption": info_dict.get('caption', '')
+                    })
+            except:
+                pass
+        
+        return windows
+    except Exception as e:
+        print(f"Error: {e}", file=sys.stderr)
+        return []
+
+
+if __name__ == "__main__":
+    # Get current activity if not specified
+    if len(sys.argv) > 1:
+        activity_id = sys.argv[1]
+    else:
+        activity_id = run("qdbus", "org.kde.ActivityManager", "/ActivityManager/Activities", "CurrentActivity")[0]
+    
+    windows = get_kwin_windows_in_activity(activity_id)
+    
+    for win in windows:
+        print(f"{win['resourceName']}\t{win['resourceClass']}\t{win['caption']}")
