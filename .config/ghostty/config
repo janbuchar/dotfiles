@@ -1,0 +1,30 @@
+# Use built-in Nord theme
+theme = Nord
+
+# Window and appearance settings
+background-opacity = 0.97
+font-size = 9
+adjust-cell-height = 15%
+adjust-underline-position = 2
+font-shaping-break = cursor
+shell-integration-features = no-cursor
+cursor-style-blink = false
+confirm-close-surface = false
+
+# Font settings
+font-family = Monaspace Neon Frozen
+
+# Keybindings
+keybind = ctrl+semicolon=text:\x02
+
+# Disable bell features
+bell-features = no-system,no-audio,no-attention,no-title,no-border
+
+# Notifications
+app-notifications = no-clipboard-copy
+
+# Center window content
+window-padding-x = 0
+window-padding-y = 0
+window-padding-balance = true
+
