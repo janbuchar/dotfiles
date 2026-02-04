@@ -8,6 +8,6 @@ return {
       or #active.selected > 0
       or current.files.filter
       or current.cwd.is_search
-    ya.manager_emit(esc and "escape" or "quit", {})
+    ya.mgr_emit(esc and "escape" or "quit", {})
   end,
 }
