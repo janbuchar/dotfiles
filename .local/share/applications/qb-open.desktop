@@ -1,6 +1,6 @@
 [Desktop Entry]
 Exec=qb-open
-MimeType=application/x-extension-html;
 Name=qb-open
 NoDisplay=true
 Type=Application
+MimeType=x-scheme-handler/unknown;x-scheme-handler/about;x-scheme-handler/https;x-scheme-handler/http;text/html;application/x-extension-html;
