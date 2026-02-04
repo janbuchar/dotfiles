@@ -17,25 +17,22 @@ def run_bg(*cmd):
     subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
-def window_props(win_id):
-    result = {
-        "activities": [],
-        "title": ""
-    }
-
-    sep = " = "
-    for line in run("xprop", "-id", win_id):
-        if sep not in line:
-            continue
-
-        name, value = line.split(sep, 1)
-
-        if name == "_KDE_NET_WM_ACTIVITIES(STRING)":
-            result["activities"] = value.strip('"').split(",")
-        elif name == "WM_NAME(STRING)":
-            result["title"] = value.strip('"')
-
-    return result
+def get_kwin_windows_in_activity():
+    """Get window info from KWin using kwin-list-windows helper"""
+    try:
+        output = run(os.path.join(os.path.dirname(__file__), "kwin-list-windows"))
+        windows = []
+        for line in output:
+            parts = line.split("\t", 2)
+            if len(parts) >= 3:
+                windows.append({
+                    "resourceName": parts[0],
+                    "resourceClass": parts[1],
+                    "caption": parts[2]
+                })
+        return windows
+    except:
+        return []
 
 
 def extract_session(title):
@@ -63,22 +60,33 @@ def open_through_socket(session, url):
     }).encode() + b"\n")
 
 
+def get_glide_profiles():
+    """Get available Glide profiles via gl --list-profiles."""
+    try:
+        gl_path = os.path.join(os.path.dirname(__file__), "gl")
+        return run(gl_path, "--list-profiles")
+    except:
+        return []
+
+
 if __name__ == "__main__":
     url = sys.argv[1]
-    windows = run("wmctrl", "-l")
     current_activity = run("qdbus", "org.kde.ActivityManager", "/ActivityManager/Activities", "CurrentActivity")[0]
-
-    for line in windows:
-        win_id, *_ = line.split()
-        props = window_props(win_id)
-
-        if current_activity in props["activities"]:
-            session = extract_session(props["title"])
-
-            if session is not None:
-                open_through_socket(session, url)
-                sys.exit(0)
-
     activity_name = run("qdbus", "org.kde.ActivityManager", "/ActivityManager/Activities", "ActivityName", current_activity)[0]
+
+    # Check if current activity matches a Glide profile
+    glide_profiles = get_glide_profiles()
+    if activity_name.lower() in glide_profiles:
+        run_bg(os.path.join(os.path.dirname(__file__), "gl"), activity_name, url)
+        sys.exit(0)
+
+    # Fall back to qutebrowser
+    kwin_windows = get_kwin_windows_in_activity()
+    for win in kwin_windows:
+        session = extract_session(win["caption"])
+        if session is not None:
+            open_through_socket(session, url)
+            sys.exit(0)
+
     run_bg("qb", activity_name.replace(" ", ""), url)
 

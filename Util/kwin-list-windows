@@ -3,6 +3,7 @@
 import sys
 import subprocess
 import json
+import argparse
 
 
 def run(*cmd):
@@ -67,11 +68,22 @@ def get_kwin_windows_in_activity(activity_id):
         print(f"Error: {e}", file=sys.stderr)
         return []
 
+parser = argparse.ArgumentParser(
+    description="List KWin windows in a specific activity"
+)
+parser.add_argument(
+    "activity_id",
+    nargs="?",
+    help="Activity ID (defaults to current activity if not specified)"
+)
 
 if __name__ == "__main__":
+    
+    args = parser.parse_args()
+    
     # Get current activity if not specified
-    if len(sys.argv) > 1:
-        activity_id = sys.argv[1]
+    if args.activity_id:
+        activity_id = args.activity_id
     else:
         activity_id = run("qdbus", "org.kde.ActivityManager", "/ActivityManager/Activities", "CurrentActivity")[0]
     
