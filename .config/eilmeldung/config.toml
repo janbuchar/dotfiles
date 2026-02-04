@@ -1,0 +1,35 @@
+article_list_focused_height = "50%"
+keep_articles_days = 120
+
+article_scope = "all"
+feed_list_scope = "all"
+
+startup_commands = ["sync"]
+sync_every_minutes = 5
+
+[theme.color_palette]
+background = "black"
+foreground = "white"
+muted = "dark_gray"
+highlight = "yellow"
+accent_primary = "blue"
+accent_secondary = "cyan"
+accent_tertiary = "green"
+accent_quaternary = "yellow"
+info = "blue"
+warning = "yellow"
+error = "red"
+
+[input_config.mappings]
+"q"       = ["quit"]
+"A"       = ["confirm read %"]
+"m"       = ["read", "nextunread"]
+"n"       = ["nextunread"]
+"r"       = ["sync"]
+
+[login_setup]
+login_type = "direct_password"
+provider = "freshrss"
+url = "https://ttrss.bucharjan.cz/plugins.local/freshapi/api/greader.php/"
+user = "admin"
+password = "cmd:rbw get ttrss"
