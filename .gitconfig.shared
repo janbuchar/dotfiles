@@ -1,0 +1,23 @@
+# vim: set filetype=gitconfig:
+[push]
+	default = current
+	autosetupremote = true
+
+[branch]
+	autosetupmerge = always
+
+[core]
+	autocrlf = input
+	excludesfile = ~/.gitignore.global
+
+[diff]
+        tool = difftastic
+
+[difftool]
+        prompt = false
+
+[difftool "difftastic"]
+        cmd = difft "$LOCAL" "$REMOTE"
+
+[pager]
+        difftool = true
