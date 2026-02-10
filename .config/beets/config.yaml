@@ -3,6 +3,6 @@ library: ~/Music/library.db
 paths:
         default: $albumartist/[$year] $album%aunique{}/$track - $title
         comp: Various Artists/[$year] $album%aunique{}/$track - $title
-plugins: [discogs, lyrics]
+plugins: [discogs, lyrics, musicbrainz]
 lyrics:
   auto: false
