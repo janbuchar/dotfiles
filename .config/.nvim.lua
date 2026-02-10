@@ -1,3 +1,4 @@
+local shared = require("nvim_shared")
 local fzf = require("fzf-lua")
 local map = vim.keymap.set
 
@@ -19,3 +20,13 @@ end, { silent = true })
 map("n", "<leader>l", function()
   fzf.git_commits(git_dirs)
 end, { silent = true })
+
+require("formatter").setup({
+  filetype = {
+    typescript = { shared.formatters.npx_prettier },
+    json = { shared.formatters.npx_prettier },
+    html = { shared.formatters.npx_prettier },
+    scss = { shared.formatters.npx_prettier },
+    css = { shared.formatters.npx_prettier },
+  },
+})
