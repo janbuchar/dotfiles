@@ -6,7 +6,6 @@ After=plasma-workspace-wayland.target
 Type=forking
 ExecStart=/usr/bin/tmux new-session -d
 
-ExecStop=%h/.tmux/plugins/tmux-resurrect/scripts/save.sh
 ExecStop=/usr/bin/tmux kill-server
 
 RestartSec=2
