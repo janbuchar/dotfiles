@@ -1,10 +1,9 @@
 [Unit]
 Description=tmux default session (detached)
 Documentation=man:tmux(1)
-
+After=plasma-workspace-wayland.target
 [Service]
 Type=forking
-Environment=DISPLAY=:0
 ExecStart=/usr/bin/tmux new-session -d
 
 ExecStop=%h/.tmux/plugins/tmux-resurrect/scripts/save.sh
@@ -13,4 +12,4 @@ ExecStop=/usr/bin/tmux kill-server
 RestartSec=2
 
 [Install]
-WantedBy=default.target
+WantedBy=plasma-workspace-wayland.target
