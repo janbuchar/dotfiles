@@ -36,12 +36,6 @@ setopt correct # spelling correction for commands
 bindkey -v
 # End of lines configured by zsh-newuser-install
 
-autoload -Uz vcs_info
-zstyle ':vcs_info:*' enable git
-precmd() {
-    vcs_info
-}
-
 setopt prompt_subst
 setopt autopushd
 setopt auto_cd
@@ -51,91 +45,47 @@ export PYENV_VIRTUALENV_DISABLE_PROMPT=1
 
 export BAT_THEME="Nord"
 
-# Prompt
-source $HOME/.zsh/oh-my-zsh/plugins/shrink-path/shrink-path.plugin.zsh
-
-if [ $EUID -ne 0 ]; then
-	color="cyan"
-else
-	color="red"
-fi
-
-color2="black"
-
-if [ -n "$SSH_CLIENT" ]; then
-        host="%F{default}@%F{$color}%m%f"
-else
-        host=""
-fi
-
-if [ -n "$TMUX" ]; then
-	_PROMPT='%B%F{default}$(shrink_path -l -t)%F{$color} %(!.#.$)%f%b '
-else
-	_PROMPT='%B%(!.%F{red}.%F{$color})%n%F{red}$host %F{default}$(shrink_path -l -t)%F{$color} %(!.#.$)%f%b '
-fi
-
 ZLE_RPROMPT_INDENT=0
-
-function right-prompt {
-	RPROMPT=""
-
-	if which mise > /dev/null 2> /dev/null && which jq > /dev/null 2> /dev/null; then
-		tool_versions=$(mise ls --current --json | jq 'to_entries | map(select(.value[0].source.path | startswith(env.HOME + "/.config/mise/") | not)) | from_entries')
-		version_count=$(echo $tool_versions | jq --raw-output 'length')
-		versions=$(echo $tool_versions | jq --raw-output 'to_entries | map("\(.key): \(.value[0].requested_version)") | join(", ")')
-		if [ $version_count -gt 0 ]; then
-			RPROMPT="%F{cyan}[$versions]"
-		fi
-	elif which pyenv > /dev/null 2> /dev/null; then
-		if [ $( pyenv version-name ) != system ]; then
-			RPROMPT="%F{cyan}[py: $( pyenv version-name )]"
-		fi
-	fi
-}
-
-precmd() { 
-	PROMPT=$VI_INSERT$_PROMPT
-	right-prompt
-}
-
-function zle-line-init zle-keymap-select {
-	right-prompt
-	zle reset-prompt
-}
-
-zle -N zle-line-init
-zle -N zle-keymap-select
 
 alias vim=nvim
 
 # Vim mode
 source ~/.zsh/zsh-vi-mode/zsh-vi-mode.plugin.zsh
 
-VI_NORMAL="%B%F{$color2}[%F{default}N%F{$color2}]%b "
-VI_INSERT="%B%F{$color2}[%F{$color}I%F{$color2}]%b "
-VI_VISUAL="%B%F{$color2}[%F{$color}V%F{$color2}]%b "
-VI_VISUAL_LINE="%B%F{$color2}[%F{$color}VL%F{$color2}]%b "
-VI_REPLACE="%B%F{$color2}[%F{$color}R%F{$color2}]%b "
-
 ZVM_LINE_INIT_MODE=$ZVM_MODE_INSERT
-PROMPT=$VI_INSERT$_PROMPT
 
+# Initialize starship inside zvm_after_init so zsh-vi-mode doesn't clobber it
+function zvm_after_init() {
+	if command -v starship > /dev/null 2>&1; then
+		eval "$(starship init zsh)"
+	else
+		PROMPT='%B%F{cyan}%n %F{default}%~ %F{cyan}$%f%b '
+	fi
+}
+
+# Update vi mode indicator for starship's env_var modules
+# STARSHIP_VI_INSERT (cyan) is set for insert mode, STARSHIP_VI_OTHER (white) for everything else
+# Only one is non-empty at a time so only one renders
+export STARSHIP_VI_INSERT='I'
+export STARSHIP_VI_OTHER=''
 function zvm_after_select_vi_mode() {
+	STARSHIP_VI_INSERT=''
+	STARSHIP_VI_OTHER=''
 	case $ZVM_MODE in
-		$ZVM_MODE_NORMAL)
-			PROMPT=$VI_NORMAL$_PROMPT
-		;;
 		$ZVM_MODE_INSERT)
-			PROMPT=$VI_INSERT$_PROMPT
+			STARSHIP_VI_INSERT='I'
+		;;
+		$ZVM_MODE_NORMAL)
+			STARSHIP_VI_OTHER='N'
 		;;
 		$ZVM_MODE_VISUAL)
-			PROMPT=$VI_VISUAL$_PROMPT
+			STARSHIP_VI_OTHER='V'
 		;;
 		$ZVM_MODE_VISUAL_LINE)
-			PROMPT=$VI_VISUAL_LINE$_PROMPT
+			STARSHIP_VI_OTHER='VL'
 		;;
 		$ZVM_MODE_REPLACE)
-			PROMPT=$VI_REPLACE$_PROMPT
+			STARSHIP_VI_OTHER='R'
 		;;
 	esac
 }

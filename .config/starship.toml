@@ -1,0 +1,79 @@
+# Starship prompt config — migrated from custom zsh prompt
+"$schema" = 'https://starship.rs/config-schema.json'
+
+add_newline = false
+
+# Prompt format: [vi_mode] user@host path $
+format = """
+${env_var.STARSHIP_VI_INSERT}\
+${env_var.STARSHIP_VI_OTHER}\
+$username\
+$hostname\
+${custom.directory}\
+$character"""
+
+# Right prompt: mise tool versions
+right_format = '${custom.mise_tools}'
+
+# Vi mode indicator — populated by zvm_after_select_vi_mode in .zshrc
+# Two env vars: one cyan (insert), one white (everything else)
+[env_var.STARSHIP_VI_INSERT]
+format = '([\[](bold black)[$env_value](bold cyan)[\] ](bold black))'
+disabled = false
+
+[env_var.STARSHIP_VI_OTHER]
+format = '([\[](bold black)[$env_value](bold)[\] ](bold black))'
+disabled = false
+
+# Username: only show if root or SSH, cyan for normal, red for root
+[username]
+format = '[$user]($style)'
+style_user = 'bold cyan'
+style_root = 'bold red'
+show_always = false # only show for root or SSH
+
+# Hostname: only show over SSH
+[hostname]
+format = '[@$hostname](bold cyan) '
+ssh_only = true
+
+# Directory: shrink-path with shortest distinctive prefix
+[directory]
+disabled = true
+
+[custom.directory]
+command = 'shrink-path'
+when = true
+format = '[$output](bold) '
+shell = ['zsh', '-c']
+use_stdin = false
+
+# Character: $ for user, # for root
+[character]
+success_symbol = '[\$](bold cyan)'
+error_symbol = '[\$](bold red)'
+vimcmd_symbol = '[\$](bold cyan)'
+
+# Mise tool versions via custom command
+[custom.mise_tools]
+command = "mise ls --current --json | jq --raw-output 'to_entries | map(select(.value[0].source.path | startswith(env.HOME + \"/.config/mise/\") | not)) | to_entries | map(\"\\(.value.key): \\(.value.value[0].requested_version)\") | join(\", \")'"
+when = "mise ls --current --json | jq -e 'to_entries | map(select(.value[0].source.path | startswith(env.HOME + \"/.config/mise/\") | not)) | length > 0' > /dev/null 2>&1"
+format = '[$output](cyan)'
+shell = ['bash', '-c']
+use_stdin = false
+
+# Disable modules we don't want
+[git_branch]
+disabled = true
+
+[git_status]
+disabled = true
+
+[package]
+disabled = true
+
+[cmd_duration]
+disabled = true
+
+[line_break]
+disabled = true
