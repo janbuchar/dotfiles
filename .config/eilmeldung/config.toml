@@ -22,7 +22,7 @@ error = "red"
 
 [input_config.mappings]
 "q"       = ["quit"]
-"A"       = ["confirm read %"]
+"A"       = ["confirm read articles %"]
 "m"       = ["read", "nextunread"]
 "n"       = ["nextunread"]
 "r"       = ["sync"]
