@@ -80,8 +80,9 @@ function right-prompt {
 	RPROMPT=""
 
 	if which mise > /dev/null 2> /dev/null && which jq > /dev/null 2> /dev/null; then
-		version_count=$(mise ls --current --json | jq --raw-output 'length')
-		versions=$(mise ls --current --json | jq --raw-output 'to_entries | map("\(.key): \(.value[0].requested_version)") | join(", ")')
+		tool_versions=$(mise ls --current --json | jq 'to_entries | map(select(.value[0].source.path | startswith(env.HOME + "/.config/mise/") | not)) | from_entries')
+		version_count=$(echo $tool_versions | jq --raw-output 'length')
+		versions=$(echo $tool_versions | jq --raw-output 'to_entries | map("\(.key): \(.value[0].requested_version)") | join(", ")')
 		if [ $version_count -gt 0 ]; then
 			RPROMPT="%F{cyan}[$versions]"
 		fi
