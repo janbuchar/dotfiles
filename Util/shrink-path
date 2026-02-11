@@ -1,0 +1,3 @@
+#!/usr/bin/env zsh
+source "$HOME/.zsh/oh-my-zsh/plugins/shrink-path/shrink-path.plugin.zsh"
+shrink_path -l -t
