@@ -7,6 +7,7 @@ return {
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-vsnip",
       "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-emoji",
       "andersevenrud/cmp-tmux",
       "ray-x/cmp-treesitter",
     },
@@ -68,6 +69,7 @@ return {
           { name = "treesitter" },
           { name = "tmux" },
           { name = "vsnip" },
+          { name = "emoji" },
         }, {
           {
             name = "buffer",
