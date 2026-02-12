@@ -8,6 +8,7 @@
   "cmp-tmux": { "branch": "main", "commit": "95b1b921802e6f60627b3e76afb9380fddd87f9a" },
   "cmp-treesitter": { "branch": "master", "commit": "958fcfa0d8ce46d215e19cc3992c542f576c4123" },
   "cmp-vsnip": { "branch": "main", "commit": "989a8a73c44e926199bfd05fa7a516d51f2d2752" },
+  "dev-tools.nvim": { "branch": "main", "commit": "96cf12d605f4f2cee0a0b844f8df5d1e8b33db38" },
   "formatter.nvim": { "branch": "master", "commit": "eb89a1f3e079f1b9680bc7293b75fffccb5e1598" },
   "fzf-lua": { "branch": "main", "commit": "0fcb12538f1d0c32330327e0e10b3cd85dda0e38" },
   "gitsigns-yadm.nvim": { "branch": "main", "commit": "3b8ede03dbd4ea04c17a0b1b241ffb19ca597427" },
