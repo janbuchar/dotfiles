@@ -4,7 +4,7 @@ keep_articles_days = 120
 article_scope = "all"
 feed_list_scope = "all"
 
-startup_commands = ["sync"]
+startup_commands = ["sync", "expandcategories all"]
 sync_every_minutes = 5
 
 [theme.color_palette]
@@ -23,7 +23,7 @@ error = "red"
 [input_config.mappings]
 "q"       = ["quit"]
 "A"       = ["confirm read articles %"]
-"m"       = ["read", "nextunread"]
+"m"       = ["read articles", "nextunread"]
 "n"       = ["nextunread"]
 "r"       = ["sync"]
 
