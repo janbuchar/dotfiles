@@ -1,31 +1,30 @@
-local shared = require("nvim_shared")
-
 return {
   {
     "neovim/nvim-lspconfig",
     enabled = not vim.g.vscode,
     dependencies = {
-      "simrat39/rust-tools.nvim",
       "pmizio/typescript-tools.nvim",
       "hrsh7th/cmp-nvim-lsp",
     },
     config = function()
-      local config = shared.create_lsp_config()
-
-      require("rust-tools").setup({
-        server = {
-          on_attach = config.on_attach,
-        },
+      vim.lsp.config("*", {
+        on_attach = function(client, bufnr)
+          client.server_capabilities.document_formatting = false
+        end,
+        capabilities = require("cmp_nvim_lsp").default_capabilities(),
       })
 
-      require("typescript-tools").setup({ on_attach = config.on_attach })
+      vim.lsp.enable({
+        "basedpyright",
+        "ts_ls",
+        "jsonls",
+        "cssls",
+        "dockerls",
+        "lua_ls",
+        "yamlls",
+      })
 
-      local nvim_lsp = require("lspconfig")
-      nvim_lsp.basedpyright.setup(config)
-      nvim_lsp.jsonls.setup(config)
-      nvim_lsp.cssls.setup(config)
-      nvim_lsp.dockerls.setup(config)
-      nvim_lsp.lua_ls.setup(config)
+      -- require("typescript-tools").setup({ on_attach = config.on_attach })
     end,
   },
   {
