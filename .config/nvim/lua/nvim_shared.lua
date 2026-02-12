@@ -20,6 +20,18 @@ M.formatters.prettier = function()
   }
 end
 
+M.formatters.npx_prettier = function()
+  return {
+    exe = "npx",
+    args = {
+      "prettier",
+      "--stdin-filepath",
+      vim.fn.fnameescape(vim.api.nvim_buf_get_name(0)),
+    },
+    stdin = true,
+  }
+end
+
 M.formatters.biome = function()
   return {
     exe = "biome",
