@@ -108,8 +108,11 @@ mkcd() {
 	cd "$@"
 }
 
-# Syntax highlighting
-source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# Deferred plugin loading
+source ~/.zsh/zsh-defer/zsh-defer.plugin.zsh
+
+# Syntax highlighting (deferred)
+zsh-defer source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 color_command=cyan
 color_path=default
@@ -117,28 +120,30 @@ color_string=green
 color_option=yellow
 color_keyword=blue
 
-ZSH_HIGHLIGHT_STYLES[reserved-word]=fg=$color_keyword,bold
-ZSH_HIGHLIGHT_STYLES[precommand]=fg=$color_keyword,bold
-ZSH_HIGHLIGHT_STYLES[builtin]=fg=$color_command,bold
-ZSH_HIGHLIGHT_STYLES[command]=fg=$color_command,bold
-ZSH_HIGHLIGHT_STYLES[alias]=fg=$color_command,bold
-ZSH_HIGHLIGHT_STYLES[function]=fg=$color_command,bold
-ZSH_HIGHLIGHT_STYLES[path]=fg=$color_path
-ZSH_HIGHLIGHT_STYLES[wildcard]=fg=$color_path,bold
-ZSH_HIGHLIGHT_STYLES[globbing]=fg=$color_path,bold
-ZSH_HIGHLIGHT_STYLES[double-quoted-argument]=fg=$color_string
-ZSH_HIGHLIGHT_STYLES[single-quoted-argument]=fg=$color_string
-ZSH_HIGHLIGHT_STYLES[single-hyphen-option]=fg=$color_option
-ZSH_HIGHLIGHT_STYLES[double-hyphen-option]=fg=$color_option
+zsh-defer -c '
+ZSH_HIGHLIGHT_STYLES[reserved-word]=fg='$color_keyword',bold
+ZSH_HIGHLIGHT_STYLES[precommand]=fg='$color_keyword',bold
+ZSH_HIGHLIGHT_STYLES[builtin]=fg='$color_command',bold
+ZSH_HIGHLIGHT_STYLES[command]=fg='$color_command',bold
+ZSH_HIGHLIGHT_STYLES[alias]=fg='$color_command',bold
+ZSH_HIGHLIGHT_STYLES[function]=fg='$color_command',bold
+ZSH_HIGHLIGHT_STYLES[path]=fg='$color_path'
+ZSH_HIGHLIGHT_STYLES[wildcard]=fg='$color_path',bold
+ZSH_HIGHLIGHT_STYLES[globbing]=fg='$color_path',bold
+ZSH_HIGHLIGHT_STYLES[double-quoted-argument]=fg='$color_string'
+ZSH_HIGHLIGHT_STYLES[single-quoted-argument]=fg='$color_string'
+ZSH_HIGHLIGHT_STYLES[single-hyphen-option]=fg='$color_option'
+ZSH_HIGHLIGHT_STYLES[double-hyphen-option]=fg='$color_option'
+'
 
-# Auto-add matching braces
-source ~/.zsh/zsh-autopair/autopair.zsh
+# Auto-add matching braces (deferred)
+zsh-defer source ~/.zsh/zsh-autopair/autopair.zsh
 
-# Suggestions
-source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+# Suggestions (deferred)
+zsh-defer source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # Accepting suggestions
-bindkey "^ " autosuggest-execute
+zsh-defer -c 'bindkey "^ " autosuggest-execute'
 
 # Start direnv
 if command -v direnv > /dev/null 2>&1; then
