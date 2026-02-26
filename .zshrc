@@ -19,7 +19,6 @@ compinit
 HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=1000
-setopt appendhistory
 setopt histignorespace
 setopt inc_append_history # Add commands as they are typed, do not wait until shell exit
 setopt hist_ignore_dups # Do not write events to history that are duplicates of previous events
@@ -33,15 +32,10 @@ unsetopt menu_complete # do not autoselect the first completion entry
 # ===== Correction
 setopt correct # spelling correction for commands
 #setopt correctall # spelling correction for arguments
-bindkey -v
 # End of lines configured by zsh-newuser-install
 
-setopt prompt_subst
 setopt autopushd
 setopt auto_cd
-export KEYTIMEOUT=1
-
-export PYENV_VIRTUALENV_DISABLE_PROMPT=1
 
 export BAT_THEME="Nord"
 
@@ -147,11 +141,11 @@ source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 bindkey "^ " autosuggest-execute
 
 # Start direnv
-if which direnv > /dev/null 2>&1; then
+if command -v direnv > /dev/null 2>&1; then
 	eval "$(direnv hook zsh)"
 fi
 
 # Start mise
-if which mise > /dev/null 2>&1; then
+if command -v mise > /dev/null 2>&1; then
 	eval "$(mise activate zsh)"
 fi
