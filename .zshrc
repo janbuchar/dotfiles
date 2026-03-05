@@ -12,7 +12,11 @@ zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p
 zstyle :compinstall filename '~/.zshrc'
 
 autoload -Uz compinit
-compinit
+if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
+	compinit
+else
+	compinit -C
+fi
 # End of lines added by compinstall
 
 # Lines configured by zsh-newuser-install
@@ -153,4 +157,9 @@ fi
 # Start mise
 if command -v mise > /dev/null 2>&1; then
 	eval "$(mise activate zsh)"
+fi
+
+# Start atuin
+if command -v atuin > /dev/null 2>&1; then
+	eval "$(atuin init zsh)"
 fi
