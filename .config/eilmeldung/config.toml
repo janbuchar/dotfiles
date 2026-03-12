@@ -1,4 +1,6 @@
 article_list_focused_height = "50%"
+show_top_bar = false
+
 keep_articles_days = 120
 
 article_scope = "all"
@@ -22,8 +24,8 @@ error = "red"
 
 [input_config.mappings]
 "q"       = ["quit"]
-"A"       = ["confirm read articles %"]
-"m"       = ["read articles", "nextunread"]
+"A"       = ["confirm in articles read %"]
+"m"       = ["in articles read", "in articles nextunread"]
 "n"       = ["nextunread"]
 "r"       = ["sync"]
 
