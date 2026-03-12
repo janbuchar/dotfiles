@@ -44,7 +44,7 @@ def get_kwin_windows_in_activity(activity_id):
             
             # Get detailed window info including activities
             try:
-                win_info = run("qdbus", "org.kde.KWin", "/KWin", "org.kde.KWin.getWindowInfo", uuid)
+                win_info = run("qdbus6", "org.kde.KWin", "/KWin", "org.kde.KWin.getWindowInfo", uuid)
                 info_dict = {}
                 for info_line in win_info:
                     if ': ' in info_line:
@@ -85,7 +85,7 @@ if __name__ == "__main__":
     if args.activity_id:
         activity_id = args.activity_id
     else:
-        activity_id = run("qdbus", "org.kde.ActivityManager", "/ActivityManager/Activities", "CurrentActivity")[0]
+        activity_id = run("qdbus6", "org.kde.ActivityManager", "/ActivityManager/Activities", "CurrentActivity")[0]
     
     windows = get_kwin_windows_in_activity(activity_id)
     

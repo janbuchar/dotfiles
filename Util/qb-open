@@ -71,8 +71,8 @@ def get_glide_profiles():
 
 if __name__ == "__main__":
     url = sys.argv[1]
-    current_activity = run("qdbus", "org.kde.ActivityManager", "/ActivityManager/Activities", "CurrentActivity")[0]
-    activity_name = run("qdbus", "org.kde.ActivityManager", "/ActivityManager/Activities", "ActivityName", current_activity)[0]
+    current_activity = run("qdbus6", "org.kde.ActivityManager", "/ActivityManager/Activities", "CurrentActivity")[0]
+    activity_name = run("qdbus6", "org.kde.ActivityManager", "/ActivityManager/Activities", "ActivityName", current_activity)[0]
 
     # Check if current activity matches a Glide profile
     glide_profiles = get_glide_profiles()

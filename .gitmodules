@@ -34,3 +34,6 @@
 [submodule ".zsh/zsh-vi-mode"]
 	path = .zsh/zsh-vi-mode
 	url = https://github.com/jeffreytse/zsh-vi-mode.git
+[submodule "/home/janbuchar/.zsh/zsh-defer"]
+	path = /home/janbuchar/.zsh/zsh-defer
+	url = https://github.com/romkatv/zsh-defer.git
