@@ -1,0 +1,22 @@
+#!/bin/sh
+# If we're under a git worktree, copy config files from _config directory.
+# See ~/Util/git-convert-worktree for more details on my preferred worktree usage.
+dir=$(realpath $1)
+while [ "$dir" != "/" ]; do
+  if [ -f "$dir/.git" ]; then
+    # Found the root of a git worktree
+    parent=$(dirname "$dir")
+
+    if [ -d "$parent/.git" ] && [ -d "$parent/_config" ]; then
+      for src in "$parent/_config"/* "$parent/_config"/.*; do
+        dst="$dir/$(basename "$src")"
+        [ -f "$src" ] && cp "$src" "$dst"
+      done
+    fi
+
+    break
+  fi
+
+  # Not a worktree root - go up one level
+  dir=$(dirname "$dir")
+done

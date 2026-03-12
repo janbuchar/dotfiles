@@ -3,6 +3,11 @@ experimental = true
 disable_hints = ["python_multi"]
 idiomatic_version_file_enable_tools = []
 
+[hooks]
+cd = """
+sync-configs-to-worktree "$MISE_ORIGINAL_CWD"
+"""
+
 [tools]
 actionlint = "latest"
 stylua = "latest"
