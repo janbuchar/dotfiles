@@ -68,6 +68,9 @@ glide.excmds.create(
 //// Disable translations
 glide.prefs.set("browser.translations.enable", false);
 
+//// Disable password management (we have bitwarden)
+glide.prefs.set("signon.rememberSignons", false);
+
 //// Use old sidebar (new one limits history to 60 days)
 glide.prefs.set("sidebar.revamp", false);
 
