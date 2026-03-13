@@ -1,6 +1,5 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "theme": "nord",
   "model": "anthropic/claude-sonnet-4-5-20250929",
   "provider": {
     "apify-openrouter": {
@@ -47,7 +46,7 @@
   "agent": {
     "chat": {
       "mode": "primary",
-      "model": "google/gemini-3-pro-preview",
+      "model": "google/gemini-3.1-pro-preview",
       "tools": {
         "write": false,
         "edit": false,
