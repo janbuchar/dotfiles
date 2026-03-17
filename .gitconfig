@@ -1,4 +1,9 @@
-# vim: set filetype=gitconfig:
+[include]
+	path = ~/.gitconfig.local
+
+[init]
+	defaultBranch = main
+
 [push]
 	default = current
 	autosetupremote = true
@@ -21,3 +26,6 @@
 
 [pager]
         difftool = true
+
+[advice]
+	mergeConflict = false
