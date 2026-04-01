@@ -1,0 +1,58 @@
+# Custom theme matching the old zsh-syntax-highlighting config
+
+# comments - dim them out
+"comment" = "#a0a0a0"
+
+# keywords (reserved words like for, do, done, if, then, etc.) - blue bold
+"keyword" = { foreground = "blue", bold = true }
+
+# storage (variable assignments, function keyword) - blue bold (matches precommand feel)
+"storage" = { foreground = "blue", bold = true }
+
+# support terms (double braces, let, test) - blue bold
+"support" = { foreground = "blue", bold = true }
+
+# commands / callables - cyan bold
+"variable.function" = { foreground = "cyan", bold = true }
+
+# strings - green
+"string" = "green"
+
+# escape characters - green (keep consistent with strings)
+"constant.character.escape" = "green"
+
+# regular expressions
+"keyword.operator.regexp" = "green"
+
+# parameters / options - yellow
+"variable.parameter" = "yellow"
+
+# environment variables - yellow
+"variable.other" = "yellow"
+"punctuation.definition.variable" = "yellow"
+
+# home directory ~
+"variable.language.tilde" = "magenta"
+
+# function names in definitions
+"entity.name.function" = { foreground = "cyan", bold = true }
+
+# braces / structural punctuation
+"punctuation.section" = "yellow"
+
+# file descriptors
+"constant.numeric.integer.decimal.file-descriptor" = "yellow"
+
+# dynamic highlighting
+# callables: cyan bold (matching builtin/command/alias/function = cyan bold)
+"dynamic.callable" = { foreground = "cyan", bold = true }
+"dynamic.callable.alias" = { foreground = "cyan", bold = true }
+"dynamic.callable.builtin" = { foreground = "cyan", bold = true }
+"dynamic.callable.command" = { foreground = "cyan", bold = true }
+"dynamic.callable.function" = { foreground = "cyan", bold = true }
+
+# missing/invalid commands - red
+"dynamic.callable.missing" = { foreground = "red", bold = true }
+
+# paths - default color, no underline (original config was fg=default with no decoration)
+"dynamic.path" = {}
