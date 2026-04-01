@@ -30,7 +30,7 @@ return {
             bufnr = buffer.number,
             file = fzf.path.relative_to(
               vim.api.nvim_buf_get_name(buffer.number),
-              vim.loop.cwd()
+              vim.uv.cwd()
             ),
             info = vim.fn.getbufinfo(buffer.number)[1],
           }
