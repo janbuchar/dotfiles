@@ -24,15 +24,10 @@ vim.opt.timeoutlen = 1000
 vim.opt.ttimeoutlen = 50
 vim.opt.updatetime = 250
 
-if vim.fn.has("nvim-0.8") then
-  vim.opt.cmdheight = 0
-end
+vim.opt.cmdheight = 0
 
 -- Autoreload
 vim.opt.autoread = true
-
--- Completions
-vim.opt.completeopt = "menu,menuone,noselect"
 
 -- Sessions
 vim.o.sessionoptions =

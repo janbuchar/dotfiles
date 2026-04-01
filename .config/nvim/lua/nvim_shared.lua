@@ -1,14 +1,5 @@
 local M = { formatters = {} }
 
-M.create_lsp_config = function()
-  return {
-    on_attach = function(client, bufnr)
-      client.server_capabilities.document_formatting = false
-    end,
-    capabilities = require("cmp_nvim_lsp").default_capabilities(),
-  }
-end
-
 M.formatters.prettier = function()
   return {
     exe = "prettier",
