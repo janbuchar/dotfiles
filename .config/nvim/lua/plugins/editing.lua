@@ -1,5 +1,3 @@
-local shared = require("nvim_shared")
-
 return {
   {
     "kylechui/nvim-surround",
@@ -44,13 +42,11 @@ return {
     opts = {},
   },
   {
-    "mhartington/formatter.nvim",
-    config = function()
-      require("formatter").setup({
-        filetype = {
-          lua = { shared.formatters.stylua },
-        },
-      })
-    end,
+    "stevearc/conform.nvim",
+    opts = {
+      formatters_by_ft = {
+        lua = { "stylua" },
+      },
+    },
   },
 }
