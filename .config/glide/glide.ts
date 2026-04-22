@@ -19,7 +19,7 @@
 // Addons
 
 const addons = [
-  "https://addons.mozilla.org/firefox/downloads/file/4599707/bitwarden_password_manager-2026.1.1.xpi",
+  "https://addons.mozilla.org/firefox/downloads/file/4715321/bitwarden_password_manager-2026.2.0.xpi",
   "https://addons.mozilla.org/firefox/downloads/file/4598854/ublock_origin-1.67.0.xpi",
   "https://addons.mozilla.org/firefox/downloads/file/4614817/plasma_integration-2.1.xpi",
   "https://addons.mozilla.org/firefox/downloads/file/3849722/nord_firefox-2.41.xpi",
@@ -110,8 +110,8 @@ glide.keymaps.set("normal", "L", async () => {
 });
 
 //// Tab management
-glide.keymaps.del("normal", "<C-j>");
-glide.keymaps.del("normal", "<C-k>");
+glide.keymaps.del(["normal", "insert"], "<C-j>");
+glide.keymaps.del(["normal", "insert"], "<C-k>");
 
 let tab_switch_timeout: number | null = null;
 
@@ -169,12 +169,18 @@ glide.keymaps.set("normal", "gO", async () => {
 });
 
 //// Scrolling
+glide.keymaps.del(["normal"], "d");
 glide.keymaps.set("normal", "d", async () => {
-  await glide.keys.send("<C-d>");
+  await glide.content.execute(function scroll_down() {
+    window.scrollBy({ top: window.innerHeight / 2, behavior: 'smooth' })
+  }, { tab_id: await glide.tabs.active() })
 });
 
+glide.keymaps.del(["normal"], "u");
 glide.keymaps.set("normal", "u", async () => {
-  await glide.keys.send("<C-u>");
+  await glide.content.execute(function scroll_up() {
+    window.scrollBy({ top: -window.innerHeight / 2, behavior: 'smooth' })
+  }, { tab_id: await glide.tabs.active() })
 });
 
 //// Misc actions
