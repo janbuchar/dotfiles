@@ -58,7 +58,17 @@ return {
         },
         lualine_b = { { "filename", path = 1 }, { "diff", source = diff_source } },
         lualine_c = { recording_status },
-        lualine_x = { "diagnostics" },
+        lualine_x = {
+          {
+            function()
+              if _G.rpc_has_socket and _G.rpc_has_socket() then
+                return "RPC"
+              end
+              return ""
+            end,
+          },
+          "diagnostics",
+        },
         lualine_y = { "encoding", "filetype", "progress" },
         lualine_z = {},
       },
