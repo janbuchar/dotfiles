@@ -8,6 +8,7 @@ feed_list_scope = "all"
 
 startup_commands = ["sync", "expandcategories all"]
 sync_every_minutes = 5
+notify_after_sync = false
 
 [theme.color_palette]
 background = "black"
