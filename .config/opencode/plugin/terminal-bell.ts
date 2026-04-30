@@ -1,5 +1,7 @@
 import type { Plugin } from "@opencode-ai/plugin"
 
+const bell = () => Bun.write(Bun.stdout, "\x07")
+
 export const TerminalBell: Plugin = async () => {
 	const subagentSessionIDs = new Set<string>()
 
@@ -12,7 +14,13 @@ export const TerminalBell: Plugin = async () => {
 				subagentSessionIDs.delete(event.properties.info.id)
 			}
 			if (event.type === "session.idle" && !subagentSessionIDs.has(event.properties.sessionID)) {
-				await Bun.write(Bun.stdout, "\x07")
+				await bell()
+			}
+			if ((event.type as string) === "permission.asked") {
+				await bell()
+			}
+			if ((event.type as string) === "question.asked") {
+				await bell()
 			}
 		}
 	}
