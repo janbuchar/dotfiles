@@ -19,20 +19,37 @@
       }
     }
   },
+  "plugin": [
+    "@ex-machina/opencode-anthropic-auth@1.7.5"
+  ],
   "mcp": {
     "neovim": {
       "type": "local",
-      "command": ["uv", "run", "/home/janbuchar/Projekty/nvim-mcp/.venv/bin/nvim-mcp"],
+      "command": [
+        "uv",
+        "run",
+        "/home/janbuchar/Projekty/nvim-mcp/.venv/bin/nvim-mcp"
+      ],
       "enabled": true,
     },
     "playwright": {
       "type": "local",
-      "command": ["npx", "-y", "@playwright/mcp@latest", "--isolated"],
+      "command": [
+        "npx",
+        "-y",
+        "@playwright/mcp@latest",
+        "--isolated"
+      ],
       "enabled": false,
     },
     "repomix": {
       "type": "local",
-      "command": ["npx", "-y", "repomix", "--mcp"],
+      "command": [
+        "npx",
+        "-y",
+        "repomix",
+        "--mcp"
+      ],
       "enabled": false,
     },
     "apify": {
