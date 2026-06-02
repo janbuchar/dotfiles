@@ -1,0 +1,9 @@
+[[plugin.prepend_fetchers]]
+group = "git"
+url   = "*"
+run   = "git"
+
+[[plugin.prepend_fetchers]]
+group = "git"
+url   = "*/"
+run   = "git"
