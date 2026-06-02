@@ -63,6 +63,21 @@ theme:
   ui:
     table:
       showSeparator: true
+  # Nord palette
+  colors:
+    text:
+      primary: "#ECEFF4"
+      secondary: "#D8DEE9"
+      inverted: "#2E3440"
+      faint: "#4C566A"
+      warning: "#BF616A"
+      success: "#A3BE8C"
+    background:
+      selected: "#3B4252"
+    border:
+      primary: "#81A1C1"
+      secondary: "#5E81AC"
+      faint: "#434C5E"
 pager:
   diff: ""
 confirmQuit: false
