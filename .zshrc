@@ -46,6 +46,7 @@ export BAT_THEME="Nord"
 ZLE_RPROMPT_INDENT=0
 
 alias vim=nvim
+alias oc=opencode
 
 # Vim mode
 source ~/.zsh/zsh-vi-mode/zsh-vi-mode.plugin.zsh
