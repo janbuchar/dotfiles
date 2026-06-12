@@ -1,3 +1,23 @@
+-- Returns true if the current working directory contains git-tracked files.
+local git_worktree_cache = {}
+local function in_git_worktree()
+  local cwd = vim.fn.getcwd()
+  local cached = git_worktree_cache[cwd]
+  if cached ~= nil then
+    return cached
+  end
+  local result = vim.fn.systemlist({ "git", "ls-files", "." })
+  local in_worktree = vim.v.shell_error == 0 and #result > 0
+  git_worktree_cache[cwd] = in_worktree
+  return in_worktree
+end
+
+-- True when auto-session has loaded/created a session for the current dir.
+local function has_active_session()
+  local ok, lib = pcall(require, "auto-session.lib")
+  return ok and lib.current_session_name ~= nil
+end
+
 return {
   {
     "EdenEast/nightfox.nvim",
@@ -7,20 +27,19 @@ return {
     "rmagatti/auto-session",
     enabled = not vim.g.vscode,
     opts = {
-      auto_session_create_enabled = false,
+      auto_create = function()
+        return in_git_worktree()
+      end,
     },
   },
   {
-    "https://git.sr.ht/~nedia/auto-save.nvim",
+    "okuuva/auto-save.nvim",
     enabled = not vim.g.vscode,
-    event = { "BufReadPre" },
+    version = "^1.0.0",
+    event = { "InsertLeave", "TextChanged" },
     opts = {
-      events = { "InsertLeave", "BufLeave", "TextChanged" },
-      save_fn = function()
-        -- If there is a session, we autosave - like vim-workspace did
-        if require("auto-session.lib").current_session_name ~= nil then
-          vim.cmd("silent! w")
-        end
+      condition = function()
+        return in_git_worktree() or has_active_session()
       end,
     },
   },

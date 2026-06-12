@@ -29,6 +29,24 @@ vim.opt.cmdheight = 0
 -- Autoreload
 vim.opt.autoread = true
 
+-- Keep buffers current even when the pane is out of focus. 
+local checktime_timer = vim.uv.new_timer()
+if checktime_timer then
+  checktime_timer:start(
+    1000,
+    1000,
+    vim.schedule_wrap(function()
+      -- Skip while editing the command line or in insert mode to avoid
+      -- disrupting active typing; the autocommands above cover those moments.
+      local mode = vim.fn.mode()
+      if mode == "c" or mode:sub(1, 1) == "i" then
+        return
+      end
+      vim.cmd("silent! checktime")
+    end)
+  )
+end
+
 -- Sessions
 vim.o.sessionoptions =
   "buffers,curdir,help,tabpages,winsize,winpos,terminal,localoptions"
