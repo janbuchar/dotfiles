@@ -113,11 +113,6 @@ mkcd() {
 	cd "$@"
 }
 
-# Syntax highlighting
-if command -v zsh-patina > /dev/null 2>&1; then
-	eval "$(zsh-patina activate)"
-fi
-
 # Deferred plugin loading
 source ~/.zsh/zsh-defer/zsh-defer.plugin.zsh
 
@@ -143,4 +138,9 @@ fi
 # Start atuin
 if command -v atuin > /dev/null 2>&1; then
 	eval "$(atuin init zsh)"
+fi
+
+# Syntax highlighting
+if command -v zsh-patina > /dev/null 2>&1; then
+	eval "$(zsh-patina activate)"
 fi
