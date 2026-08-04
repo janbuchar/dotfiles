@@ -40,7 +40,11 @@ map("n", "<leader>r", "<cmd>FzfLua resume<cr>", { silent = true })
 map("n", "<leader>n", function()
   require("fzf-lua").git_files({ cwd = vim.fn.getcwd() })
 end, { silent = true })
-map("n", "<leader>m", "<cmd>FzfLua git_status<cr>", { silent = true })
+-- Changed files, baselined off the same store that drives the gutter signs, so the
+-- picker and the signs cannot disagree. See _G.git_changes in lua/plugins/fzf.lua.
+map("n", "<leader>m", function()
+  _G.git_changes()
+end, { silent = true })
 map("n", "<leader>N", "<cmd>FzfLua files<cr>", { silent = true })
 map("n", "<leader>g", "<cmd>FzfLua live_grep<cr>", { silent = true })
 map("n", "<leader>z", "<cmd>FzfLua<cr>", { silent = true })

@@ -69,6 +69,55 @@ return {
         fzf.fzf_exec(entries, opts)
       end
 
+      -- Changed files relative to the base held in lua/gitbase.lua.
+      -- Deliberately fzf-lua's *git_status* picker rather than its git_diff one:
+      -- git_diff accepts a ref but renders bare filenames, whereas git_status'
+      -- fn_transform is what draws the status letters, colours and devicons. It just
+      -- insists on `git status --porcelain` input, which is what porcelain() below
+      -- reshapes the store's records into. With the base at the index there is
+      -- nothing to reconstruct, so the stock picker is handed the job untouched.
+      --
+      -- The `XY path` shape (renames spelled "old -> new") is required by fzf-lua.
+      --- @param change GitBase.Change
+      local function porcelain(change)
+        local path = change.orig
+            and ("%s -> %s"):format(change.orig, change.path)
+          or change.path
+        return ("%s%s %s"):format(change.x, change.y, path)
+      end
+
+      _G.git_changes = function()
+        local gitbase = require("gitbase")
+        if not gitbase.get() then
+          return fzf.git_status()
+        end
+
+        fzf.git_status({
+          -- A function rather than a table, so fzf-lua re-invokes it on `reload` and
+          -- the stage/unstage/reset actions keep working. Lines must be delivered
+          -- through the *table* callback: fn_transform, and hence every icon and
+          -- colour, is applied to batches only, never to individually written lines.
+          cmd = function(_, cb_lines)
+            cb_lines(vim.tbl_map(porcelain, gitbase.changes() or {}))
+            cb_lines(nil)
+          end,
+          -- fn_transform runs in-process; there is no external command to parallelise.
+          multiprocess = false,
+          -- Re-aim the diff preview at the base, or the pane contradicts the list it
+          -- came from. Safe to interpolate unquoted: the base is always a bare SHA.
+          previewer = vim.tbl_extend(
+            "force",
+            fzf.config.globals.previewers.git_diff,
+            {
+              cmd_modified = "git diff --color " .. gitbase.get(),
+              cmd_deleted = "git diff --color " .. gitbase.get() .. " --",
+            }
+          ),
+
+          prompt = ("%s❯ "):format(gitbase.name()),
+        })
+      end
+
       _G.macros = function(opts)
         opts = opts or {}
         opts.prompt = "Macros> "
