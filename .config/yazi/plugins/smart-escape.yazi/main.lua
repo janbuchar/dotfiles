@@ -4,10 +4,10 @@ return {
     local active = cx.active
     local current = active.current
 
-    local esc = active.mode.is_visual
+    local esc = not active.mode.is_normal
       or #active.selected > 0
       or current.files.filter
-      or current.cwd.is_search
-    ya.mgr_emit(esc and "escape" or "quit", {})
+      or current.cwd.spec.is_search
+    ya.emit(esc and "escape" or "quit", {})
   end,
 }
