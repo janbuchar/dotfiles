@@ -1,0 +1,360 @@
+#!/usr/bin/env python3
+"""List a GitHub user's activity over a timezone-bounded interval, as JSON.
+
+Built on the search API, not the events feed: `/users/{u}/events` keeps only the
+last 300 entries / 90 days, so anything longer than a few weeks silently
+truncates. Search date qualifiers accept offset-aware timestamps, which is what
+makes `--tz` exact rather than a UTC approximation.
+
+Entries are sorted by time and carry `kind`, `repo`, `title` and a `url` pointing
+at the event itself — a review comment anchors to its thread.
+
+Read-only — every call is a GET.
+
+Not covered: pushes to branches without an associated PR, and issues closed as a
+side effect of someone else's merge.
+"""
+
+import argparse
+import concurrent.futures
+import json
+import subprocess
+import sys
+import time
+from datetime import date, datetime, timedelta
+from typing import Any
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
+
+DEFAULT_TZ = "Europe/Prague"
+SEARCH_CAP = 1000  # GitHub returns at most 1000 search results per query
+INSPECT_WARN_AT = 25
+# Search allows 30 requests/minute and REST has an opaque points budget on top;
+# a long interval reaches both, so back off instead of failing the whole run.
+BACKOFF = (15, 30, 60, 120)
+RATE_LIMITED = ("rate limit", "abuse detection")
+
+
+def die(msg: str) -> None:
+    print(f"gh-activity: {msg}", file=sys.stderr)
+    sys.exit(1)
+
+
+def warn(msg: str) -> None:
+    print(f"gh-activity: {msg}", file=sys.stderr)
+
+
+def gh(*args: str, check: bool = True) -> str | None:
+    """Run gh and return stdout, or None when it failed and check is False."""
+    for delay in (*BACKOFF, None):
+        proc = subprocess.run(
+            ["gh", *args], capture_output=True, text=True, check=False,
+        )
+        if proc.returncode == 0:
+            return proc.stdout
+
+        error = proc.stderr.strip()
+        if delay is None or not any(hint in error.lower() for hint in RATE_LIMITED):
+            break
+        warn(f"rate limited, retrying in {delay}s…")
+        time.sleep(delay)
+
+    if check:
+        die(f"`gh {' '.join(args)}` failed: {error}")
+    return None
+
+
+def gh_lines(*args: str, check: bool = True) -> list[dict[str, Any]]:
+    """Run a gh call whose --jq emits one JSON object per line."""
+    out = gh(*args, check=check)
+    if out is None:
+        return []
+    return [json.loads(line) for line in out.splitlines() if line.strip()]
+
+
+def search(kind: str, query: str) -> list[dict[str, Any]]:
+    items = gh_lines(
+        "api", "-X", "GET", f"search/{kind}", "-f", f"q={query}",
+        "-F", "per_page=100", "--paginate", "--jq", ".items[]",
+    )
+    if len(items) >= SEARCH_CAP:
+        warn(f"hit the {SEARCH_CAP}-result ceiling, output is incomplete: {query}")
+    return items
+
+
+def paginate(path: str) -> list[dict[str, Any]]:
+    """List a REST collection; a repo we can no longer read yields nothing."""
+    items = gh_lines("api", "--paginate", "--jq", ".[]", path, check=False)
+    return items
+
+
+def parse_ts(value: str) -> datetime:
+    return datetime.fromisoformat(value.replace("Z", "+00:00"))
+
+
+def parse_bound(value: str, tz: ZoneInfo, *, end: bool) -> datetime:
+    """A bare date covers the whole local day; a timestamp is taken literally."""
+    try:
+        if len(value) == 10:
+            day = date.fromisoformat(value)
+            if end:
+                day += timedelta(days=1)
+            return datetime.combine(day, datetime.min.time(), tzinfo=tz)
+        parsed = datetime.fromisoformat(value)
+        return parsed if parsed.tzinfo else parsed.replace(tzinfo=tz)
+    except ValueError:
+        die(f"cannot parse {value!r} — expected YYYY-MM-DD or an ISO timestamp")
+        raise  # unreachable
+
+
+def qualifier(start: datetime, end: datetime) -> str:
+    """GitHub ranges are inclusive on both ends; our interval is [start, end)."""
+    last = end - timedelta(seconds=1)
+    return f"{start.isoformat(timespec='seconds')}..{last.isoformat(timespec='seconds')}"
+
+
+def event(
+    ts: datetime, kind: str, repo: str, item: dict[str, Any], url: str, **extra: Any,
+) -> dict[str, Any]:
+    """One activity entry; `url` points at the event itself, anchor included."""
+    return {
+        "ts": ts,
+        "kind": kind,
+        "repo": repo,
+        "title": item.get("title", ""),
+        "url": url,
+        **extra,
+    }
+
+
+def item_repo(item: dict[str, Any]) -> str:
+    return item["repository_url"].split("/repos/", 1)[1]
+
+
+def collect_authored(user: str, scope: str, start: datetime, end: datetime) -> list[dict[str, Any]]:
+    window = qualifier(start, end)
+    events: list[dict[str, Any]] = []
+
+    for item in search("issues", f"type:pr author:{user} created:{window}{scope}"):
+        events.append(event(
+            parse_ts(item["created_at"]), "opened PR", item_repo(item), item, item["html_url"],
+        ))
+
+    for item in search("issues", f"type:pr author:{user} merged:{window}{scope}"):
+        merged_at = (item.get("pull_request") or {}).get("merged_at")
+        if merged_at:
+            events.append(event(
+                parse_ts(merged_at), "merged PR", item_repo(item), item, item["html_url"],
+            ))
+
+    for item in search("issues", f"type:issue author:{user} created:{window}{scope}"):
+        events.append(event(
+            parse_ts(item["created_at"]), "opened issue", item_repo(item), item, item["html_url"],
+        ))
+
+    return events
+
+
+def commit_event(repo: str, sha: str, message: str, url: str, ts: datetime) -> dict[str, Any]:
+    return {
+        "ts": ts,
+        "kind": "commit",
+        "repo": repo,
+        "title": message.splitlines()[0],
+        "url": url,
+        "sha": sha,
+    }
+
+
+def collect_commits(user: str, scope: str, start: datetime, end: datetime) -> list[dict[str, Any]]:
+    args = [
+        "search", "commits", "--author", user, "--limit", str(SEARCH_CAP),
+        "--author-date", qualifier(start, end),
+        "--json", "sha,repository,commit,url",
+    ]
+    for token in scope.split():
+        key, value = token.split(":", 1)
+        args += ["--repo" if key == "repo" else "--owner", value]
+
+    out = gh(*args, check=False)
+    if not out:
+        return []
+
+    events = []
+    for commit in json.loads(out):
+        ts = parse_ts(commit["commit"]["author"]["date"])
+        if not start <= ts < end:
+            continue  # --author-date has day granularity, so re-check the edges
+        events.append(commit_event(
+            commit["repository"]["fullName"], commit["sha"],
+            commit["commit"]["message"], commit["url"], ts,
+        ))
+    return events
+
+
+def candidates(
+    user: str, scope: str, start: datetime, *, reviews: bool, comments: bool, commits: bool,
+) -> list[tuple[dict[str, Any], set[str]]]:
+    """Items to inspect, each with the kinds of activity worth fetching.
+
+    Bounded only from below: activity inside the interval bumps the item's
+    updated_at, but a later bump would push it out of an `updated:a..b` range and
+    lose it. Individual timestamps are filtered afterwards.
+    """
+    since = f"updated:>={start.isoformat(timespec='seconds')}"
+    queries = []
+    if reviews:
+        queries.append((f"type:pr reviewed-by:{user} {since}{scope}", {"reviews"}))
+    if commits:
+        # Commit search only indexes default branches, so commits still sitting on
+        # a PR branch are reachable only through the PR.
+        queries.append((f"type:pr author:{user} {since}{scope}", {"commits"}))
+    if comments:
+        queries.append((f"commenter:{user} {since}{scope}", set()))
+
+    found: dict[tuple[str, int], tuple[dict[str, Any], set[str]]] = {}
+    for query, needs in queries:
+        for item in search("issues", query):
+            entry = found.setdefault((item_repo(item), item["number"]), (item, set()))
+            entry[1].update(needs)
+            if comments:
+                entry[1].add("comments")
+    return list(found.values())
+
+
+def item_activity(
+    item: dict[str, Any], needs: set[str], user: str, start: datetime, end: datetime,
+) -> list[dict[str, Any]]:
+    repo, number = item_repo(item), item["number"]
+    is_pr = "pull_request" in item
+    events = []
+
+    def mine(entries: list[dict[str, Any]], field: str) -> list[dict[str, Any]]:
+        picked = []
+        for entry in entries:
+            if (entry.get("user") or {}).get("login") != user or not entry.get(field):
+                continue
+            ts = parse_ts(entry[field])
+            if start <= ts < end:
+                picked.append({**entry, "ts": ts})
+        return picked
+
+    if is_pr and "reviews" in needs:
+        for review in mine(paginate(f"repos/{repo}/pulls/{number}/reviews"), "submitted_at"):
+            events.append(event(
+                review["ts"], "review", repo, item, review["html_url"],
+                state=review["state"].lower().replace("_", " "),
+            ))
+
+    if is_pr and "commits" in needs:
+        for commit in paginate(f"repos/{repo}/pulls/{number}/commits"):
+            if (commit.get("author") or {}).get("login") != user:
+                continue
+            ts = parse_ts(commit["commit"]["author"]["date"])
+            if start <= ts < end:
+                events.append(commit_event(
+                    repo, commit["sha"], commit["commit"]["message"], commit["html_url"], ts,
+                ))
+
+    if "comments" in needs:
+        sources = [(f"repos/{repo}/issues/{number}/comments", "comment")]
+        if is_pr:
+            sources.append((f"repos/{repo}/pulls/{number}/comments", "review comment"))
+        for path, kind in sources:
+            for comment in mine(paginate(path), "created_at"):
+                events.append(event(comment["ts"], kind, repo, item, comment["html_url"]))
+
+    return events
+
+
+def dedupe_commits(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """A merge commit shows up in both commit search and the PR it landed from."""
+    seen: set[tuple[str, str]] = set()
+    kept = []
+    for entry in events:
+        if entry["kind"] == "commit":
+            key = (entry["repo"], entry["sha"])
+            if key in seen:
+                continue
+            seen.add(key)
+        kept.append(entry)
+    return kept
+
+
+def collect(user: str, scope: str, start: datetime, end: datetime, args: argparse.Namespace) -> list[dict[str, Any]]:
+    events = collect_authored(user, scope, start, end)
+    if not args.skip_commits:
+        events += collect_commits(user, scope, start, end)
+
+    wanted = {
+        "reviews": not args.skip_reviews,
+        "comments": not args.skip_comments,
+        "commits": not args.skip_commits,
+    }
+    if any(wanted.values()):
+        items = candidates(user, scope, start, **wanted)
+        if len(items) > INSPECT_WARN_AT:
+            warn(f"inspecting {len(items)} items…")
+        with concurrent.futures.ThreadPoolExecutor(max_workers=args.workers) as pool:
+            futures = [
+                pool.submit(item_activity, item, needs, user, start, end)
+                for item, needs in items
+            ]
+            for future in concurrent.futures.as_completed(futures):
+                events += future.result()
+
+    return dedupe_commits(events)
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="Summarize GitHub activity over a timezone-bounded interval.",
+        epilog=(
+            "examples: gh-activity | gh-activity --since 2026-03-01 --until 2026-09-08 "
+            "--skip-comments | gh-activity --since 2026-09-01 --org apify"
+        ),
+    )
+    parser.add_argument("--since", help="start date/timestamp (default: yesterday)")
+    parser.add_argument("--until", help="end date, inclusive (default: same as --since)")
+    parser.add_argument("--tz", default=DEFAULT_TZ, help=f"IANA timezone (default: {DEFAULT_TZ})")
+    parser.add_argument("--user", help="GitHub login (default: the authenticated user)")
+    parser.add_argument("--repo", action="append", default=[], metavar="OWNER/NAME",
+                        help="restrict to a repo (repeatable)")
+    parser.add_argument("--org", action="append", default=[], metavar="ORG",
+                        help="restrict to an org (repeatable)")
+    parser.add_argument("--skip-comments", action="store_true",
+                        help="omit comments; much faster over long intervals")
+    parser.add_argument("--skip-reviews", action="store_true", help="omit submitted reviews")
+    parser.add_argument("--skip-commits", action="store_true", help="omit commits")
+    parser.add_argument("--workers", type=int, default=4, metavar="N",
+                        help="parallel gh calls when inspecting items (default: 4)")
+    args = parser.parse_args()
+
+    try:
+        tz = ZoneInfo(args.tz)
+    except (ZoneInfoNotFoundError, ValueError):
+        die(f"unknown timezone {args.tz!r}")
+
+    if args.since:
+        start = parse_bound(args.since, tz, end=False)
+        end = parse_bound(args.until or args.since, tz, end=True)
+    else:
+        today = datetime.now(tz).date()
+        start = datetime.combine(today - timedelta(days=1), datetime.min.time(), tzinfo=tz)
+        end = parse_bound(args.until, tz, end=True) if args.until else start + timedelta(days=1)
+
+    if end <= start:
+        die(f"empty interval: {start.isoformat()} → {end.isoformat()}")
+
+    user = args.user or json.loads(gh("api", "user", "--jq", "{login:.login}"))["login"]
+    scope = "".join(f" repo:{repo}" for repo in args.repo) + "".join(f" org:{org}" for org in args.org)
+
+    events = collect(user, scope, start, end, args)
+    events.sort(key=lambda entry: entry["ts"])
+    print(json.dumps(
+        [{**entry, "ts": entry["ts"].astimezone(tz).isoformat()} for entry in events],
+        indent=2,
+    ))
+
+
+if __name__ == "__main__":
+    main()
