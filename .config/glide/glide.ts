@@ -19,12 +19,11 @@
 // Addons
 
 const addons = [
-  "https://addons.mozilla.org/firefox/downloads/file/4715321/bitwarden_password_manager-2026.2.0.xpi",
-  "https://addons.mozilla.org/firefox/downloads/file/4598854/ublock_origin-1.67.0.xpi",
+  "https://addons.mozilla.org/firefox/downloads/file/4915668/bitwarden_password_manager-2026.7.0.xpi",
+  "https://addons.mozilla.org/firefox/downloads/file/4598854/ublock_origin-1.75.0.xpi",
   "https://addons.mozilla.org/firefox/downloads/file/4614817/plasma_integration-2.1.xpi",
   "https://addons.mozilla.org/firefox/downloads/file/3849722/nord_firefox-2.41.xpi",
-  "https://addons.mozilla.org/firefox/downloads/file/4625462/refined_github-25.11.22.xpi",
-  "https://addons.mozilla.org/firefox/downloads/file/4357664/notifications_preview_github-24.9.23.xpi",
+  "https://addons.mozilla.org/firefox/downloads/file/4625462/refined_github-26.9.12.xpi",
 ];
 
 addons.forEach((url) => glide.addons.install(url));
@@ -68,8 +67,10 @@ glide.excmds.create(
 //// Disable translations
 glide.prefs.set("browser.translations.enable", false);
 
-//// Disable password management (we have bitwarden)
+//// Disable password/credit card management and passkeys (we have bitwarden)
 glide.prefs.set("signon.rememberSignons", false);
+glide.prefs.set("security.webauth.webauthn", false)
+glide.prefs.set("extensions.formautofill.creditCards.enabled", false);
 
 //// Use old sidebar (new one limits history to 60 days)
 glide.prefs.set("sidebar.revamp", false);
