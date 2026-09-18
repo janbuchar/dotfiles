@@ -1,0 +1,160 @@
+#!/bin/sh
+# Usage: wt --create <branch> [--base <ref>] [--name <dir>]
+#        wt --pr <number> [--name <dir>]
+#        wt --destroy [<dir>]
+
+set -eu
+
+usage() {
+	cat >&2 <<-'EOF'
+		usage: wt --create <branch> [--base <ref>] [--name <dir>]
+		       wt --pr <number> [--name <dir>]
+		       wt --destroy [<dir>]
+	EOF
+	exit 2
+}
+
+die() {
+	printf 'wt: %s\n' "$1" >&2
+	usage
+}
+
+# retarget <pane> <window-name> <dir>. The pane is always named explicitly: an
+# unqualified target means whatever pane the user last touched. send-keys types
+# into its tty, so the cd runs at the next prompt, once we have exited.
+retarget() {
+	tmux rename-window -t "$1" "$2"
+	# Ref names may contain quotes but never whitespace or globs.
+	tmux send-keys -t "$1" "cd '$(printf %s "$3" | sed "s/'/'\\\\''/g")'" Enter
+}
+
+mode=
+branch=
+pr=
+base=
+name=
+
+while [ $# -gt 0 ]; do
+	case $1 in
+	--create | --pr)
+		[ -z "$mode" ] || die "$1 conflicts with --$mode"
+		[ $# -ge 2 ] || die "$1 needs an argument"
+		mode=${1#--}
+		case $mode in
+		create) branch=$2 ;;
+		pr) pr=$2 ;;
+		esac
+		shift 2
+		;;
+	--destroy)
+		[ -z "$mode" ] || die "$1 conflicts with --$mode"
+		mode=destroy
+		shift
+		# Optional: bare --destroy means the worktree we stand in.
+		case ${1:-} in
+		'' | -*) ;;
+		*)
+			name=$1
+			shift
+			;;
+		esac
+		;;
+	--base)
+		[ $# -ge 2 ] || die "$1 needs an argument"
+		base=$2
+		shift 2
+		;;
+	--name)
+		[ $# -ge 2 ] || die "$1 needs an argument"
+		name=$2
+		shift 2
+		;;
+	-h | --help) usage ;;
+	*) die "unknown argument: $1" ;;
+	esac
+done
+
+[ -n "$mode" ] || die "one of --create, --pr, --destroy is required"
+if [ -n "$base" ] && [ "$mode" != create ]; then
+	die "--base is only valid with --create"
+fi
+
+# Worktree layout: toplevel isn't root.
+root=$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")
+
+if [ "$mode" = pr ]; then
+	branch=$(gh pr view "$pr" --json headRefName --jq .headRefName)
+fi
+if [ "$mode" = destroy ] && [ -z "$name" ]; then
+	name=$(git rev-parse --show-toplevel 2>/dev/null) ||
+		die "not inside a worktree; pass a name"
+	name=$(basename "$name")
+fi
+
+name=${name:-$branch}
+worktree=$root/$name
+
+if [ "$mode" = destroy ]; then
+	[ "$worktree" != "$root" ] || die "refusing to destroy $root"
+	[ "$(git -C "$worktree" rev-parse --show-toplevel 2>/dev/null)" = "$worktree" ] ||
+		die "not a worktree: $worktree"
+	# A bare prefix match would also take sibling dirs: feat, then feat2.
+	held="#{||:#{==:#{pane_current_path},$worktree},#{m:$worktree/*,#{pane_current_path}}}"
+	# Collected before the cd below: while this script is a pane's foreground
+	# process, tmux reports our cwd as that pane's.
+	panes=$(tmux list-panes -a -F '#{pane_id}' -f "$held" 2>/dev/null || true)
+
+	# Out of the tree before the sweep, so neither this script nor lsof turns
+	# up as one of its holders.
+	cd "$root"
+
+	self_pane=
+	# Panes first: kill-pane takes each shell's children with it.
+	for pane in $panes; do
+		if [ "$pane" = "${TMUX_PANE:-}" ]; then
+			self_pane=$pane
+		else
+			tmux kill-pane -t "$pane" || true
+		fi
+	done
+
+	# Stragglers, tmux or not: cwd, open file or mmap in the tree. Our own
+	# ancestry is exempt -- the login shell stands here too.
+	exempt=^$$
+	pid=$$
+	while pid=$(ps -o ppid= -p "$pid" 2>/dev/null | tr -cd 0-9); [ "${pid:-0}" -gt 1 ]; do
+		exempt="$exempt,^$pid"
+	done
+	victims=$(lsof -t -a +D "$worktree" -p "$exempt" 2>/dev/null || true)
+	# shellcheck disable=SC2086 # a pid list, splitting is the point
+	if [ -n "$victims" ]; then
+		kill $victims 2>/dev/null || true
+		sleep 2
+		kill -KILL $victims 2>/dev/null || true
+	fi
+
+	git worktree remove --force "$worktree"
+
+	if [ -n "$self_pane" ]; then
+		# Killing the session's last pane would take the terminal with it.
+		if [ "$(tmux list-panes -s -t "$self_pane" | wc -l)" -gt 1 ]; then
+			tmux kill-pane -t "$self_pane"
+		else
+			retarget "$self_pane" "$(basename "$root")" "$root"
+		fi
+	fi
+	exit 0
+fi
+
+if [ "$mode" = create ]; then
+	git worktree add --no-guess-remote -B "$branch" "$worktree" ${base:+"$base"}
+elif [ "$mode" = pr ]; then
+	# --worktree does the `git worktree add` itself. Creating the branch up front
+	# instead would send gh down its existing-branch path, whose --ff-only sync
+	# fails on a branch sitting at the base tip.
+	gh pr checkout "$pr" --worktree "$worktree"
+fi
+
+if [ -n "${TMUX_PANE:-}" ]; then
+	retarget "$TMUX_PANE" "$name" "$worktree"
+fi
